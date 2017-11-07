@@ -1,0 +1,33 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using HoloToolkit.Unity.InputModule;
+using System;
+
+public class PolygonPoint : MonoBehaviour, IInputClickHandler {
+
+    public Vector3 Position { get; set; }
+    public GameObject Root { get; set; }
+    public bool isStart { get; set; }
+    public PolygonLine IngoingEdge { get; set; }
+    public PolygonLine OutgoingEdge { get; set; }
+
+    public void OnInputClicked(InputClickedEventData eventData)
+    {
+        if (GazeManager.Instance.HitObject == gameObject)
+        {
+            Debug.Log("Hit");
+        }
+    }
+
+    private void deletePoint()
+    {
+        if (!PolygonManager.Instance.CurrentPolygon.IsFinished)
+        {
+            if(IngoingEdge)
+                Destroy(IngoingEdge.gameObject);
+            if (OutgoingEdge)
+                Destroy(OutgoingEdge.gameObject);
+        }
+    }
+}
