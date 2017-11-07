@@ -122,53 +122,17 @@ public class RoomManager : Singleton<RoomManager>, IInputClickHandler, IHoldHand
 
     private GameObject createFloor(Polygon polygon)
     {
-
-
-
         // get the center point of the polygon
-        Vector3 center = calculatePolygonCenter(polygon);
-        // create a polygon with one point more => the center point
-        Vector3[] vertices = new Vector3[polygon.Points.Count + 1];
-        // calculate the points in the center space
-        for (int i = 0; i < polygon.Points.Count; i++)
-        {
-            Vector3 pointNotOnPlane = polygon.Points[i] - center;
-            vertices[i] = new Vector3(pointNotOnPlane.x, 0, pointNotOnPlane.z);
-        }
-        vertices[vertices.Length - 1] = Vector3.zero;
-        // create triangles from two vertex border points and the center point
-        int[] triangles = new int[polygon.Points.Count * 3];
-        for (int i = 0; i < triangles.Length; i += 3)
-        {
-            triangles[i] = i / 3;
-            triangles[i + 1] = (i / 3 + 1) % (vertices.Length - 1);
-            triangles[i + 2] = vertices.Length - 1;
-        }
-        // point all normals up
-        Vector3[] normals = new Vector3[polygon.Points.Count + 1];
-        for (int i = 0; i < normals.Length; i++)
-        {
-            normals[i] = Vector3.up;
-        }
-        // create the actual mesh and assign the calculated mesh arrays
-        Mesh mesh = new Mesh();
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-        mesh.normals = normals;
-        mesh.RecalculateBounds();
-        mesh.RecalculateNormals();
-        //====================================================//
+        Vector3 polygonCenter = calculatePolygonCenter(polygon);
         List<Vector2> vertices2D = new List<Vector2>();
         foreach (var point in polygon.Points)
         {
-            // get the center point of the polygon
-            Vector3 polygonCenter = calculatePolygonCenter(polygon);
             vertices2D.Add(new Vector2(point.x - polygonCenter.x, point.z - polygonCenter.z));
         }
         Mesh realMesh = MeshUtility.CreatePolygonMesh(vertices2D);
         // create a new gameObject and add mesh components
         GameObject floor = new GameObject("Floor");
-        floor.transform.position = center;
+        floor.transform.position = polygonCenter;
         MeshFilter meshFiler = floor.AddComponent<MeshFilter>();
         meshFiler.mesh = realMesh;
         MeshRenderer meshRenderer = floor.AddComponent<MeshRenderer>();

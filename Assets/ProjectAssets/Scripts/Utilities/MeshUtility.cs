@@ -45,20 +45,22 @@ namespace HoloLensPlanner.Utilities
             {
                 meshNormalsList.Add(new List<Vector3>(new Vector3[meshVertices.Count]));
             }
-            CombineInstance[] combine = new CombineInstance[convexPolygons.Count];
+            CombineInstance[] combinedMeshes = new CombineInstance[convexPolygons.Count];
             for (int i = 0; i < convexPolygons.Count; i++)
             {
+                // create a mesh for each convex polygon
                 Mesh meshPart = new Mesh();
                 meshPart.vertices = meshVerticesList[i].ToArray();
                 meshPart.normals = meshNormalsList[i].ToArray();
                 meshPart.triangles = meshTrianglesList[i].ToArray();
                 meshPart.RecalculateBounds();
                 meshPart.RecalculateNormals();
-                combine[i].mesh = meshPart;
-                combine[i].transform = Matrix4x4.identity;
+                combinedMeshes[i].mesh = meshPart;
+                combinedMeshes[i].transform = Matrix4x4.identity;
             }
+            // combine the meshes to one mesh
             Mesh mesh = new Mesh();
-            mesh.CombineMeshes(combine);
+            mesh.CombineMeshes(combinedMeshes);
             return mesh;
         }
     }
