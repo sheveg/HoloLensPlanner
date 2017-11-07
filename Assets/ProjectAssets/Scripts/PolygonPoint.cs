@@ -12,6 +12,8 @@ public class PolygonPoint : MonoBehaviour, IInputClickHandler {
     public PolygonLine IngoingEdge { get; set; }
     public PolygonLine OutgoingEdge { get; set; }
 
+    #region Interface implementations
+
     public void OnInputClicked(InputClickedEventData eventData)
     {
         if (GazeManager.Instance.HitObject == gameObject)
@@ -19,6 +21,10 @@ public class PolygonPoint : MonoBehaviour, IInputClickHandler {
             Debug.Log("Hit");
         }
     }
+
+    #endregion // Interface implementations
+
+
 
     private void deletePoint()
     {
@@ -30,4 +36,6 @@ public class PolygonPoint : MonoBehaviour, IInputClickHandler {
                 Destroy(OutgoingEdge.gameObject);
         }
     }
+
+
 }
