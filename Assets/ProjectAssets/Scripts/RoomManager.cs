@@ -1,11 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using HoloToolkit.Unity;
 using HoloToolkit.Unity.InputModule;
-using HoloToolkit.Unity.SpatialMapping;
-using System;
+using HoloLensPlanner.Utilities;
 
 public class RoomManager : Singleton<RoomManager>, IInputClickHandler, IHoldHandler {
 
@@ -124,6 +122,9 @@ public class RoomManager : Singleton<RoomManager>, IInputClickHandler, IHoldHand
 
     private GameObject createFloor(Polygon polygon)
     {
+
+
+
         // get the center point of the polygon
         Vector3 center = calculatePolygonCenter(polygon);
         // create a polygon with one point more => the center point
@@ -156,11 +157,20 @@ public class RoomManager : Singleton<RoomManager>, IInputClickHandler, IHoldHand
         mesh.normals = normals;
         mesh.RecalculateBounds();
         mesh.RecalculateNormals();
+        //====================================================//
+        List<Vector2> vertices2D = new List<Vector2>();
+        foreach (var point in polygon.Points)
+        {
+            // get the center point of the polygon
+            Vector3 polygonCenter = calculatePolygonCenter(polygon);
+            vertices2D.Add(new Vector2(point.x - polygonCenter.x, point.z - polygonCenter.z));
+        }
+        Mesh realMesh = MeshUtility.CreatePolygonMesh(vertices2D);
         // create a new gameObject and add mesh components
         GameObject floor = new GameObject("Floor");
         floor.transform.position = center;
         MeshFilter meshFiler = floor.AddComponent<MeshFilter>();
-        meshFiler.mesh = mesh;
+        meshFiler.mesh = realMesh;
         MeshRenderer meshRenderer = floor.AddComponent<MeshRenderer>();
         meshRenderer.material = FloorMaterial;
         return floor;
