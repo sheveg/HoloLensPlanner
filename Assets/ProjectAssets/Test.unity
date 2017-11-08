@@ -412,7 +412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnFocus: 1
   m_EventScale: 1.1
-  m_EventColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EventColor: {r: 1, g: 0, b: 0, a: 1}
   m_EventOutlineColor: {r: 1, g: 1, b: 1, a: 1}
   m_EventOutlineThickness: 2
 --- !u!114 &636573963
@@ -645,7 +645,7 @@ MonoBehaviour:
   outlineCamera: {fileID: 1623115079}
   outlineShaderMaterial: {fileID: 0}
   renderTexture: {fileID: 231411115}
-  extraRenderTexture: {fileID: 1803756683}
+  extraRenderTexture: {fileID: 0}
 --- !u!20 &826362468 stripped
 Camera:
   m_PrefabParentObject: {fileID: 20398397884145480, guid: f46f9eddea7bd4d4e813283cdc60cb96,
@@ -947,7 +947,6 @@ GameObject:
   - component: {fileID: 1049657095}
   - component: {fileID: 1049657094}
   - component: {fileID: 1049657097}
-  - component: {fileID: 1049657093}
   m_Layer: 5
   m_Name: Create floor
   m_TagString: Untagged
@@ -974,20 +973,6 @@ RectTransform:
   m_AnchoredPosition: {x: -400, y: 0}
   m_SizeDelta: {x: 350, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1049657093
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1049657091}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.07586192, g: 0, b: 1, a: 1}
-  m_EffectDistance: {x: 4, y: -4}
-  m_UseGraphicAlpha: 1
 --- !u!114 &1049657094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1084,7 +1069,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28a6547c73c4ff141bcf166d8d96cd86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnFocus: 3
+  OnFocus: 1
   m_EventScale: 1.1
   m_EventColor: {r: 1, g: 1, b: 1, a: 1}
   m_EventOutlineColor: {r: 0.07586192, g: 0, b: 1, a: 1}
@@ -1463,33 +1448,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!84 &1803756683
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_Width: 928
-  m_Height: 592
-  m_AntiAliasing: 1
-  m_DepthFormat: 1
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!4 &1888177914 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4543495872665798, guid: f46f9eddea7bd4d4e813283cdc60cb96,

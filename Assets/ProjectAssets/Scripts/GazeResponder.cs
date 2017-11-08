@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HoloToolkit.Unity.InputModule;
 using System;
+using HoloLensPlanner.Utilities;
 
 namespace HoloLensPlanner
 {
@@ -13,7 +14,7 @@ namespace HoloLensPlanner
     {
         /// <summary>
         /// Indicates which event is triggered on focus change.
-        /// </summary>       
+        /// </summary
         public FocusEvent OnFocus = FocusEvent.None;
 
         /// <summary>

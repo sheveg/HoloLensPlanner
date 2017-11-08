@@ -5,6 +5,7 @@ using UnityEditor;
 
 namespace HoloLensPlanner
 {
+    [CanEditMultipleObjects]
     [CustomEditor(typeof(GazeResponder), true)]
     public class GazeResponderEditor : Editor
     {
