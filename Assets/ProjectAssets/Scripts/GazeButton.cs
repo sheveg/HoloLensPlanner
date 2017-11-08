@@ -13,6 +13,7 @@ namespace HoloLensPlanner
 
         public float EventOutlineThickness { get { return m_EventOutlineThickness; } set { m_EventOutlineThickness = value; } }
 
+        [SerializeField, HideInInspector]
         private float m_EventOutlineThickness = 2f;
 
         private void Start()

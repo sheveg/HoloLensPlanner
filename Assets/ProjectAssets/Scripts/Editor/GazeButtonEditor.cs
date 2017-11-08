@@ -23,6 +23,7 @@ namespace HoloLensPlanner
             switch (m_GazeButton.OnFocus)
             {
                 case FocusEvent.Outline:
+                    m_GazeButton.Outline.hideFlags = HideFlags.HideInInspector;
                     m_GazeButton.EventOutlineThickness = EditorGUILayout.FloatField("Thickness", m_GazeButton.EventOutlineThickness);
                     break;
                 default:
