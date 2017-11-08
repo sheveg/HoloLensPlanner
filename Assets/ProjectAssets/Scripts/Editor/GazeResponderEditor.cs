@@ -10,10 +10,9 @@ namespace HoloLensPlanner
     {
         private GazeResponder m_GazeResponder;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             m_GazeResponder = (GazeResponder)target;
-            m_GazeResponder.SetDefaults();
         }
 
         public override void OnInspectorGUI()
@@ -25,13 +24,13 @@ namespace HoloLensPlanner
             switch (m_GazeResponder.OnFocus)
             {
                 case FocusEvent.Color:
-                    EditorGUILayout.ColorField("Color", m_GazeResponder.EventColor);
+                    m_GazeResponder.EventColor = EditorGUILayout.ColorField("Color", m_GazeResponder.EventColor);
                     break;
                 case FocusEvent.Outline:
-                    EditorGUILayout.ColorField("Outline color", m_GazeResponder.EventOutlineColor);
+                    m_GazeResponder.EventOutlineColor = EditorGUILayout.ColorField("Outline color", m_GazeResponder.EventOutlineColor);
                     break;
                 case FocusEvent.Scale:
-                    EditorGUILayout.FloatField("Scale", m_GazeResponder.EventScale);
+                    m_GazeResponder.EventScale = EditorGUILayout.FloatField("Scale", m_GazeResponder.EventScale);
                     break;
                 case FocusEvent.None:
                 default:

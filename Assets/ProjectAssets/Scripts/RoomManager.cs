@@ -92,7 +92,6 @@ public class RoomManager : Singleton<RoomManager>, IInputClickHandler, IHoldHand
         IPolygonClosable client = PolygonManager.Instance;
         client.ClosePolygon();
         Polygon polygon = PolygonManager.Instance.CurrentPolygon;
-        Vector3 polygonCenter = calculatePolygonCenter(polygon);
         switch (m_CurrentPlaneType)
         {
             // for now we assume that the floor has no stairs or ramps,

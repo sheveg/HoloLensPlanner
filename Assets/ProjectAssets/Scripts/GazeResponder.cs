@@ -19,17 +19,17 @@ namespace HoloLensPlanner
         /// <summary>
         /// Scale value for the scale event.
         /// </summary>
-        public float EventScale { get; set; }
+        public float EventScale { get { return m_EventScale; } set { m_EventScale = value; } }
 
         /// <summary>
         /// Color for the color event.
         /// </summary>
-        public Color EventColor { get; set; }
+        public Color EventColor { get { return m_EventColor; } set { m_EventColor = value; } }
 
         /// <summary>
         /// Color for the outline event.
         /// </summary>
-        public Color EventOutlineColor { get; set; }
+        public Color EventOutlineColor { get { return m_EventOutlineColor; } set { m_EventOutlineColor = value; } }
 
         /// <summary>
         /// Helper variable to determine whether the object is focused.
@@ -42,6 +42,24 @@ namespace HoloLensPlanner
         /// </summary>
         protected IEnumerator m_EventCoroutine;
 
+        /// <summary>
+        /// Private variable for scale to avoid property serialization issues of unity.
+        /// </summary>
+        [SerializeField, HideInInspector]
+        private float m_EventScale = 1.1f;
+
+        /// <summary>
+        /// Private variable for color to avoid property serialization issues of unity.
+        /// </summary>
+        [SerializeField, HideInInspector]
+        private Color m_EventColor = Color.white;
+
+        /// <summary>
+        /// Private variable for outline color to avoid property serialization issues of unity.
+        /// </summary>
+        [SerializeField, HideInInspector]
+        private Color m_EventOutlineColor = Color.white;
+
         public void OnFocusEnter()
         {
             m_IsFocused = true;
@@ -52,16 +70,6 @@ namespace HoloLensPlanner
         {
             m_IsFocused = false;
             handleFocusChange();
-        }
-
-        /// <summary>
-        /// Sets default values of all event variables.
-        /// </summary>
-        public virtual void SetDefaults()
-        {
-            EventColor = Color.white;
-            EventOutlineColor = Color.white;
-            EventScale = 1.1f;
         }
 
         /// <summary>
