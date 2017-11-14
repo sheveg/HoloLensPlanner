@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33000010690052214}
   - component: {fileID: 65000011648711326}
   - component: {fileID: 23000011516511122}
+  - component: {fileID: 114995752127047466}
   m_Layer: 0
   m_Name: PolygonLine
   m_TagString: Untagged
@@ -93,3 +94,14 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114995752127047466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013919465970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f523ad951cfe2b4bacfcabcfdb3918c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class PolygonLine : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public void SetPosition(Vector3 from, Vector3 to)
+    {
+        var centerPos = (from + to) * 0.5f;
+        var direction = to - from;
+        var distance = Vector3.Distance(to, from);
+        transform.position = centerPos;
+        transform.rotation = Quaternion.LookRotation(direction);
+        transform.localScale = new Vector3(distance, 0.005f, 0.005f);
+        transform.Rotate(Vector3.down, 90f);
+    }
 }

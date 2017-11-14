@@ -3,184 +3,173 @@ using HoloToolkit.Unity;
 using System.Collections.Generic;
 using HoloToolkit.Unity.InputModule;
 
-/// <summary>
-/// Manages all geometries in the scene
-/// </summary>
-public class PolygonManager : Singleton<PolygonManager>, IGeometry, IPolygonClosable
+namespace HoloLensPlanner
 {
-    public GameObject LinePrefab;
-    public GameObject PointPrefab;
-    public GameObject TextPrefab;
-
-    // save all geometries
-    public Stack<Polygon> Polygons = new Stack<Polygon>();
-    public Polygon CurrentPolygon;
-
     /// <summary>
-    ///  Handle new point users place
+    /// Manages all geometries in the scene
     /// </summary>
-    public void AddPoint()
+    public class PolygonManager : Singleton<PolygonManager>, IGeometry, IPolygonClosable
     {
-        var hitPoint = GazeManager.Instance.HitPosition;
-        var point = Instantiate(PointPrefab, hitPoint, Quaternion.identity);
-        var newPoint = new Point
-        {
-            Position = hitPoint,
-            Root = point
-        };
-        if (CurrentPolygon.IsFinished)
-        {
-            CurrentPolygon = new Polygon()
-            {
-                IsFinished = false,
-                Root = new GameObject(),
-                Points = new List<Vector3>()
-            };
+        public PolygonLine LinePrefab;
+        public PolygonPoint PointPrefab;
 
-            CurrentPolygon.Points.Add(newPoint.Position);
-            newPoint.Root.transform.parent = CurrentPolygon.Root.transform;
-        }
-        else
+        // save all geometries
+        public Stack<Polygon> Polygons = new Stack<Polygon>();
+        [HideInInspector]
+        public Polygon CurrentPolygon;
+
+        /// <summary>
+        ///  Handle new point users place
+        /// </summary>
+        public void AddPoint()
         {
-            CurrentPolygon.Points.Add(newPoint.Position);
-            newPoint.Root.transform.parent = CurrentPolygon.Root.transform;
-            if (CurrentPolygon.Points.Count > 1)
+            if (CurrentPolygon == null)
             {
+                CurrentPolygon = CreateNewPolygon();
+            }
+            // create a new point and a new polygon if needed
+            var hitPoint = GazeManager.Instance.HitPosition;
+            var point = Instantiate(PointPrefab, hitPoint, Quaternion.identity);
+            if (CurrentPolygon.IsFinished)
+            {
+                CurrentPolygon = CreateNewPolygon();
+                CurrentPolygon.Points.Add(point);
+                point.transform.SetParent(CurrentPolygon.transform);
+            }
+            else
+            {
+                CurrentPolygon.Points.Add(point);
+                point.transform.SetParent(CurrentPolygon.transform);
+                // create a line if needed
+                if (CurrentPolygon.Points.Count > 1)
+                {
+                    // determine the position and direction of the line
+                    var index = CurrentPolygon.Points.Count - 1;
+                    var line = Instantiate(LinePrefab);
+                    line.SetPosition(CurrentPolygon.Points[index - 1].transform.position, CurrentPolygon.Points[index].transform.position);
+                    line.transform.parent = CurrentPolygon.transform;
+                    // connect the line from the previous point to the current point
+                    CurrentPolygon.Points[index - 1].OutgoingEdge = line;
+                    point.IngoingEdge = line;
+                }
+
+            }
+
+        }
+
+        /// <summary>
+        /// Finish current geometry
+        /// </summary>
+        public void ClosePolygon()
+        {
+            if (CurrentPolygon != null)
+            {
+                CurrentPolygon.IsFinished = true;
                 var index = CurrentPolygon.Points.Count - 1;
-                var centerPos = (CurrentPolygon.Points[index] + CurrentPolygon.Points[index - 1]) * 0.5f;
-                var direction = CurrentPolygon.Points[index] - CurrentPolygon.Points[index - 1];
-                var distance = Vector3.Distance(CurrentPolygon.Points[index], CurrentPolygon.Points[index - 1]);
-                var line = Instantiate(LinePrefab, centerPos, Quaternion.LookRotation(direction));
-                line.transform.localScale = new Vector3(distance, 0.005f, 0.005f);
-                line.transform.Rotate(Vector3.down, 90f);
-                line.transform.parent = CurrentPolygon.Root.transform;
-            }
+                var line = Instantiate(LinePrefab);
+                line.SetPosition(CurrentPolygon.Points[index - 1].transform.position, CurrentPolygon.Points[index].transform.position);
+                line.transform.parent = CurrentPolygon.transform;
 
+                // connect the last point with the first point
+                CurrentPolygon.Points[CurrentPolygon.Points.Count - 1].OutgoingEdge = line;
+                CurrentPolygon.Points[0].IngoingEdge = line;
+                Polygons.Push(CurrentPolygon);
+
+            }
         }
 
-    }
-
-    /// <summary>
-    /// Finish current geometry
-    /// </summary>
-    public void ClosePolygon()
-    {
-        if (CurrentPolygon != null)
+        /// <summary>
+        /// clear all geometries in the scene
+        /// </summary>
+        public void Clear()
         {
-            CurrentPolygon.IsFinished = true;
-            var area = CalculatePolygonArea(CurrentPolygon);
-            var index = CurrentPolygon.Points.Count - 1;
-            var centerPos = (CurrentPolygon.Points[index] + CurrentPolygon.Points[0]) * 0.5f;
-            var direction = CurrentPolygon.Points[index] - CurrentPolygon.Points[0];
-            var distance = Vector3.Distance(CurrentPolygon.Points[index], CurrentPolygon.Points[0]);
-            var line = Instantiate(LinePrefab, centerPos, Quaternion.LookRotation(direction));
-            line.transform.localScale = new Vector3(distance, 0.005f, 0.005f);
-            line.transform.Rotate(Vector3.down, 90f);
-            line.transform.parent = CurrentPolygon.Root.transform;
-
-            var vect = new Vector3(0, 0, 0);
-            foreach (var point in CurrentPolygon.Points)
+            if (Polygons != null && Polygons.Count > 0)
             {
-                vect += point;
+                while (Polygons.Count > 0)
+                {
+                    var lastLine = Polygons.Pop();
+                    Destroy(lastLine);
+                }
             }
-            var centerPoint = vect / (index + 1);
-            var direction1 = CurrentPolygon.Points[1] - CurrentPolygon.Points[0];
-            var directionF = Vector3.Cross(direction, direction1);
-            var tip = (GameObject)Instantiate(TextPrefab, centerPoint, Quaternion.LookRotation(directionF));//anchor.x + anchor.y + anchor.z < 0 ? -1 * anchor : anchor));
-
-            // unit is ㎡
-            tip.GetComponent<TextMesh>().text = area + "㎡";
-            tip.transform.parent = CurrentPolygon.Root.transform;
-            Polygons.Push(CurrentPolygon);
         }
-    }
 
-    /// <summary>
-    /// clear all geometries in the scene
-    /// </summary>
-    public void Clear()
-    {
-        if (Polygons != null && Polygons.Count > 0)
+        // delete latest geometry
+        public void Delete()
         {
-            while (Polygons.Count > 0)
+            if (Polygons != null && Polygons.Count > 0)
             {
                 var lastLine = Polygons.Pop();
-                Destroy(lastLine.Root);
+                Destroy(lastLine);
             }
         }
-    }
 
-    // delete latest geometry
-    public void Delete()
-    {
-        if (Polygons != null && Polygons.Count > 0)
+        /// <summary>
+        /// Calculate an area of triangle
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <param name="p3"></param>
+        /// <returns></returns>
+        private float CalculateTriangleArea(Vector3 p1, Vector3 p2, Vector3 p3)
         {
-            var lastLine = Polygons.Pop();
-            Destroy(lastLine.Root);
+            var a = Vector3.Distance(p1, p2);
+            var b = Vector3.Distance(p1, p3);
+            var c = Vector3.Distance(p3, p2);
+            var p = (a + b + c) / 2f;
+            var s = Mathf.Sqrt(p * (p - a) * (p - b) * (p - c));
+
+            return s;
         }
-    }
-
-    /// <summary>
-    /// Calculate an area of triangle
-    /// </summary>
-    /// <param name="p1"></param>
-    /// <param name="p2"></param>
-    /// <param name="p3"></param>
-    /// <returns></returns>
-    private float CalculateTriangleArea(Vector3 p1, Vector3 p2, Vector3 p3)
-    {
-        var a = Vector3.Distance(p1, p2);
-        var b = Vector3.Distance(p1, p3);
-        var c = Vector3.Distance(p3, p2);
-        var p = (a + b + c) / 2f;
-        var s = Mathf.Sqrt(p * (p - a) * (p - b) * (p - c));
-
-        return s;
-    }
-    /// <summary>
-    /// Calculate an area of geometry
-    /// </summary>
-    /// <param name="polygon"></param>
-    /// <returns></returns>
-    private float CalculatePolygonArea(Polygon polygon)
-    {
-        var s = 0.0f;
-        var i = 1;
-        var n = polygon.Points.Count;
-        for (; i < n - 1; i++)
-            s += CalculateTriangleArea(polygon.Points[0], polygon.Points[i], polygon.Points[i + 1]);
-        return 0.5f * Mathf.Abs(s);
-    }
-
-    // Use this for initialization
-    private void Start()
-    {
-        CurrentPolygon = new Polygon()
+        /// <summary>
+        /// Calculate an area of geometry
+        /// </summary>
+        /// <param name="polygon"></param>
+        /// <returns></returns>
+        private float CalculatePolygonArea(Polygon polygon)
         {
-            IsFinished = false,
-            Root = new GameObject(),
-            Points = new List<Vector3>()
-        };
-    }
+            var s = 0.0f;
+            var i = 1;
+            var n = polygon.Points.Count;
+            for (; i < n - 1; i++)
+                s += CalculateTriangleArea(polygon.Points[0].transform.position, polygon.Points[i].transform.position, polygon.Points[i + 1].transform.position);
+            return 0.5f * Mathf.Abs(s);
+        }
+
+        // Use this for initialization
+        //private void Start()
+        //{
+        //    CurrentPolygon = new Polygon()
+        //    {
+        //        IsFinished = false,
+        //        Root = new GameObject(),
+        //        Points = new List<PolygonPoint>()
+        //    };
+        //}
 
 
-    /// <summary>
-    /// reset current unfinished geometry
-    /// </summary>
-    public void Reset()
-    {
-        if (CurrentPolygon != null && !CurrentPolygon.IsFinished)
+        /// <summary>
+        /// reset current unfinished geometry
+        /// </summary>
+        public void Reset()
         {
-            Destroy(CurrentPolygon.Root);
-            CurrentPolygon = new Polygon()
+            if (CurrentPolygon != null && !CurrentPolygon.IsFinished)
             {
-                IsFinished = false,
-                Root = new GameObject(),
-                Points = new List<Vector3>()
-            };
+                Destroy(CurrentPolygon);
+                CurrentPolygon = CreateNewPolygon();
+            }
+        }
+
+        public Polygon CreateNewPolygon()
+        {
+            var newPolygonGO = new GameObject("Polygon");
+            Polygon newPolygon = newPolygonGO.AddComponent<Polygon>();
+            return newPolygon;
         }
     }
 }
+
+
+
 
 public class Point
 {
@@ -195,7 +184,7 @@ public class Polygon
 {
     public float Area { get; set; }
 
-    public List<Vector3> Points { get; set; }
+    public List<HoloLensPlanner.PolygonPoint> Points { get; set; }
 
     public GameObject Root { get; set; }
 

@@ -121,7 +121,7 @@ namespace HoloLensPlanner
             Vector3 center = Vector3.zero;
             foreach (var point in polygon.Points)
             {
-                center += point;
+                center += point.transform.position;
             }
             return center / polygon.Points.Count;
         }
@@ -133,7 +133,7 @@ namespace HoloLensPlanner
             List<Vector2> vertices2D = new List<Vector2>();
             foreach (var point in polygon.Points)
             {
-                vertices2D.Add(new Vector2(point.x - polygonCenter.x, point.z - polygonCenter.z));
+                vertices2D.Add(new Vector2(point.transform.position.x - polygonCenter.x, point.transform.position.z - polygonCenter.z));
             }
             Mesh realMesh = MeshUtility.CreatePolygonMesh(vertices2D);
             // create a new gameObject and add mesh components

@@ -4,38 +4,43 @@ using UnityEngine;
 using HoloToolkit.Unity.InputModule;
 using System;
 
-public class PolygonPoint : MonoBehaviour, IInputClickHandler {
-
-    public Vector3 Position { get; set; }
-    public GameObject Root { get; set; }
-    public bool isStart { get; set; }
-    public PolygonLine IngoingEdge { get; set; }
-    public PolygonLine OutgoingEdge { get; set; }
-
-    #region Interface implementations
-
-    public void OnInputClicked(InputClickedEventData eventData)
+namespace HoloLensPlanner
+{
+    public class PolygonPoint : MonoBehaviour, IInputClickHandler
     {
-        if (GazeManager.Instance.HitObject == gameObject)
+
+        public GameObject Root { get; set; }
+        public bool isStart { get; set; }
+        public PolygonLine IngoingEdge { get; set; }
+        public PolygonLine OutgoingEdge { get; set; }
+
+        #region Interface implementations
+
+        public void OnInputClicked(InputClickedEventData eventData)
         {
-            Debug.Log("Hit");
+            if (GazeManager.Instance.HitObject == gameObject)
+            {
+                Debug.Log("Hit");
+            }
         }
-    }
 
-    #endregion // Interface implementations
-
+        #endregion // Interface implementations
 
 
-    private void deletePoint()
-    {
-        if (!PolygonManager.Instance.CurrentPolygon.IsFinished)
+
+        private void deletePoint()
         {
-            if(IngoingEdge)
-                Destroy(IngoingEdge.gameObject);
-            if (OutgoingEdge)
-                Destroy(OutgoingEdge.gameObject);
+            if (!PolygonManager.Instance.CurrentPolygon.IsFinished)
+            {
+                if (IngoingEdge)
+                    Destroy(IngoingEdge.gameObject);
+                if (OutgoingEdge)
+                    Destroy(OutgoingEdge.gameObject);
+            }
         }
-    }
 
+
+    }
 
 }
+

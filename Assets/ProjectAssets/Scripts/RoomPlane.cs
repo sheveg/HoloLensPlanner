@@ -16,8 +16,27 @@ namespace HoloLensPlanner
         {
             MeshPolygon = polygon;
             Type = planeType;
-            polygon.Root.transform.SetParent(transform, true);
-            polygon.Root.name = "Polygon";
+            polygon.transform.SetParent(transform, true);
+            // level 
+            projectPointsOnPlane(polygon);
+
+        }
+
+        
+        private void projectPointsOnPlane(Polygon polygon)
+        {
+            // The projection of a point q onto a plane given by a point p and a normal n  is : q_proj = q - dot(q - p, n) * n
+            foreach (var point in polygon.Points)
+            {
+                point.transform.position -= Vector3.Dot(point.transform.position - transform.position, transform.up) * transform.up;
+            }
+            // correct the lines to the new projected points
+            for (int i = 1; i <= polygon.Points.Count; i++)
+            {
+                Vector3 from = polygon.Points[i - 1].transform.position;
+                Vector3 to = polygon.Points[i % polygon.Points.Count].transform.position;
+                polygon.Points[i - 1].OutgoingEdge.SetPosition(from, to);
+            }
         }
     }
 }
