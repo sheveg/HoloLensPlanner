@@ -10,7 +10,7 @@ namespace HoloLensPlanner
     public class RoomManager : Singleton<RoomManager>, IInputClickHandler, IHoldHandler
     {
 
-        public Material FloorMaterial;
+        public RoomPlane RoomPlanePrefab;
 
         public GameObject Floor { get; private set; }
         public GameObject Ceiling { get; private set; }
@@ -95,7 +95,7 @@ namespace HoloLensPlanner
             IPolygonClosable client = PolygonManager.Instance;
             client.ClosePolygon();
             Polygon polygon = PolygonManager.Instance.CurrentPolygon;
-            GameObject planeGO = null;
+            RoomPlane roomPlane = null;
             switch (m_CurrentPlaneType)
             {
                 // for now we assume that the floor has no stairs or ramps,
@@ -103,59 +103,32 @@ namespace HoloLensPlanner
                 case PlaneType.Floor:
                     if (Floor != null)
                         Destroy(Floor);
-                    Floor = createFloor(polygon);
-                    planeGO = Floor;
+                    roomPlane = createFloor(polygon.Center);
                     break;
                 case PlaneType.Ceiling:
                 case PlaneType.Wall:
                 default:
                     break;
             }
-            var roomPlane = planeGO.AddComponent<RoomPlane>();
+            if (roomPlane == null)
+                return;
+
             roomPlane.Setup(polygon, m_CurrentPlaneType.Value);
             m_CurrentPlaneType = null;
         }
 
-        private Vector3 calculatePolygonCenter(Polygon polygon)
+        private RoomPlane createFloor(Vector3 position)
         {
-            Vector3 center = Vector3.zero;
-            foreach (var point in polygon.Points)
-            {
-                center += point.transform.position;
-            }
-            return center / polygon.Points.Count;
-        }
-
-        private GameObject createFloor(Polygon polygon)
-        {
-            // get the center point of the polygon
-            Vector3 polygonCenter = calculatePolygonCenter(polygon);
-            List<Vector2> vertices2D = new List<Vector2>();
-            foreach (var point in polygon.Points)
-            {
-                vertices2D.Add(new Vector2(point.transform.position.x - polygonCenter.x, point.transform.position.z - polygonCenter.z));
-            }
-            Mesh realMesh = MeshUtility.CreatePolygonMesh(vertices2D);
-            // create a new gameObject and add mesh components
-            GameObject floor = new GameObject("Floor");
-            floor.transform.position = polygonCenter;
-            MeshFilter meshFiler = floor.AddComponent<MeshFilter>();
-            meshFiler.mesh = realMesh;
-            MeshRenderer meshRenderer = floor.AddComponent<MeshRenderer>();
-            meshRenderer.material = FloorMaterial;
+            RoomPlane floor = Instantiate(RoomPlanePrefab, position, Quaternion.identity);
+            floor.gameObject.name = "Floor";
+            Floor = floor.gameObject;
             return floor;
+
         }
 
         private bool checkIfPlacable(PlaneType planeType, Vector3 position)
         {
             return true;
         }
-    }
-
-    public enum PlaneType
-    {
-        Floor,
-        Ceiling,
-        Wall
     }
 }

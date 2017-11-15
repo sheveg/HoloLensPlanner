@@ -6,13 +6,13 @@ using System;
 
 namespace HoloLensPlanner
 {
-    public class PolygonPoint : MonoBehaviour, IInputClickHandler
+    public class PolygonPoint : PolygonObject, IInputClickHandler, IHoldHandler
     {
-
-        public GameObject Root { get; set; }
-        public bool isStart { get; set; }
         public PolygonLine IngoingEdge { get; set; }
         public PolygonLine OutgoingEdge { get; set; }
+
+        private IInputSource currentInputSource;
+        private uint currentInputSourceId;
 
         #region Interface implementations
 
@@ -24,9 +24,46 @@ namespace HoloLensPlanner
             }
         }
 
+        public void OnHoldCanceled(HoldEventData eventData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnHoldCompleted(HoldEventData eventData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnHoldStarted(HoldEventData eventData)
+        {
+            if (m_IsFocused)
+            {
+                eventData.Use();
+                currentInputSource = eventData.InputSource;
+                currentInputSourceId = eventData.SourceId;
+                startMoving();
+
+
+            }
+                
+        }
+
         #endregion // Interface implementations
 
+        private void startMoving()
+        {
+            if (m_IsMoving)
+                return;
 
+            m_IsMoving = true;
+            Vector3 handPosition;
+            currentInputSource.TryGetPointerPosition(currentInputSourceId, out handPosition);
+
+            if (m_RootPolygon.MeshPlane)
+            {
+                //currentI
+            }
+        }
 
         private void deletePoint()
         {

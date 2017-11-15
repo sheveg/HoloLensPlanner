@@ -617,40 +617,13 @@ MonoBehaviour:
   sourceCamera: {fileID: 826362468}
   outlineCamera: {fileID: 1623115079}
   outlineShaderMaterial: {fileID: 0}
-  renderTexture: {fileID: 830611111}
-  extraRenderTexture: {fileID: 1258181873}
+  renderTexture: {fileID: 1459595155}
+  extraRenderTexture: {fileID: 1352022423}
 --- !u!20 &826362468 stripped
 Camera:
   m_PrefabParentObject: {fileID: 20398397884145480, guid: f46f9eddea7bd4d4e813283cdc60cb96,
     type: 2}
   m_PrefabInternal: {fileID: 1924369394}
---- !u!84 &830611111
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_Width: 1077
-  m_Height: 592
-  m_AntiAliasing: 1
-  m_DepthFormat: 1
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 0
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1 &854081646
 GameObject:
   m_ObjectHideFlags: 0
@@ -1141,7 +1114,7 @@ Transform:
   m_PrefabParentObject: {fileID: 4000013298573622, guid: 2ed75ffdf9031c94e8bce4b3d17b9928,
     type: 2}
   m_PrefabInternal: {fileID: 1120241826}
---- !u!84 &1258181873
+--- !u!84 &1352022423
 RenderTexture:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -1150,8 +1123,8 @@ RenderTexture:
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
-  m_Width: 1077
-  m_Height: 592
+  m_Width: 867
+  m_Height: 547
   m_AntiAliasing: 1
   m_DepthFormat: 1
   m_ColorFormat: 0
@@ -1162,6 +1135,33 @@ RenderTexture:
     serializedVersion: 2
     m_FilterMode: 1
     m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+--- !u!84 &1459595155
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_Width: 867
+  m_Height: 547
+  m_AntiAliasing: 1
+  m_DepthFormat: 1
+  m_ColorFormat: 0
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 0
     m_MipBias: 0
     m_WrapU: 1
     m_WrapV: 1
@@ -1408,7 +1408,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 0
   m_RenderingPath: 1
-  m_TargetTexture: {fileID: 830611111}
+  m_TargetTexture: {fileID: 1459595155}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
@@ -1446,7 +1446,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e17b1b8ba62243843940d16ad213eef6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FloorMaterial: {fileID: 2100000, guid: 2d78d290068fbac42bb9fee3ebad141d, type: 2}
+  RoomPlanePrefab: {fileID: 114634397730507032, guid: b5e34a447cb36854aafaca629bb83703,
+    type: 2}
 --- !u!114 &1701645499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1462,7 +1463,6 @@ MonoBehaviour:
     type: 2}
   PointPrefab: {fileID: 114110847388651260, guid: 6be6418d06162604f8ab72d10973c759,
     type: 2}
-  TextPrefab: {fileID: 1000011564080456, guid: ee82c903f549fce46b7b0ad1219abb6f, type: 2}
   CurrentPolygon: {fileID: 0}
 --- !u!4 &1701645501
 Transform:

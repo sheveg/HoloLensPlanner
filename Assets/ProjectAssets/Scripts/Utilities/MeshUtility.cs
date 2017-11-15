@@ -15,7 +15,7 @@ namespace HoloLensPlanner.Utilities
         {
             // split the polygon into convex parts so we can use fan triangulation https://en.wikipedia.org/wiki/Fan_triangulation
             List<List<Vector2>> convexPolygons = BayazitDecomposer.ConvexPartition(vertices);
-            Debug.Log("Polygon is split into " + convexPolygons.Count + " parts");
+            //Debug.Log("Polygon is split into " + convexPolygons.Count + " parts");
             // create mesh arrays
             List<List<Vector3>> meshVerticesList = new List<List<Vector3>>();
             List<List<Vector3>> meshNormalsList = new List<List<Vector3>>();
@@ -44,6 +44,13 @@ namespace HoloLensPlanner.Utilities
             {
                 meshNormalsList.Add(new List<Vector3>(new Vector3[meshVertices.Count]));
             }
+            foreach (var meshNormalList in meshNormalsList)
+            {
+                for (int i = 0; i < meshNormalList.Count; i++)
+                {
+                    meshNormalList[i] = Vector3.up;
+                }
+            }
             CombineInstance[] combinedMeshes = new CombineInstance[convexPolygons.Count];
             for (int i = 0; i < convexPolygons.Count; i++)
             {
@@ -52,14 +59,14 @@ namespace HoloLensPlanner.Utilities
                 meshPart.vertices = meshVerticesList[i].ToArray();
                 meshPart.normals = meshNormalsList[i].ToArray();
                 meshPart.triangles = meshTrianglesList[i].ToArray();
-                meshPart.RecalculateBounds();
-                meshPart.RecalculateNormals();
                 combinedMeshes[i].mesh = meshPart;
                 combinedMeshes[i].transform = Matrix4x4.identity;
             }
             // combine the meshes to one mesh
             Mesh mesh = new Mesh();
             mesh.CombineMeshes(combinedMeshes);
+            mesh.RecalculateBounds();
+            mesh.RecalculateNormals();
             return mesh;
         }
     }

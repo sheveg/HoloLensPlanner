@@ -8,13 +8,11 @@ namespace HoloLensPlanner
     /// <summary>
     /// Manages all geometries in the scene
     /// </summary>
-    public class PolygonManager : Singleton<PolygonManager>, IGeometry, IPolygonClosable
+    public class PolygonManager : Singleton<PolygonManager>, IPolygonClosable
     {
         public PolygonLine LinePrefab;
         public PolygonPoint PointPrefab;
 
-        // save all geometries
-        public Stack<Polygon> Polygons = new Stack<Polygon>();
         [HideInInspector]
         public Polygon CurrentPolygon;
 
@@ -22,39 +20,27 @@ namespace HoloLensPlanner
         ///  Handle new point users place
         /// </summary>
         public void AddPoint()
-        {
-            if (CurrentPolygon == null)
+        {      
+            if (CurrentPolygon == null || CurrentPolygon.IsFinished)
             {
-                CurrentPolygon = CreateNewPolygon();
+                CurrentPolygon = CreateNewPolygon();         
             }
-            // create a new point and a new polygon if needed
             var hitPoint = GazeManager.Instance.HitPosition;
             var point = Instantiate(PointPrefab, hitPoint, Quaternion.identity);
-            if (CurrentPolygon.IsFinished)
+            point.SetRootPolygon(CurrentPolygon);
+            CurrentPolygon.Points.Add(point);
+            // create a line when we have more than one point
+            if (CurrentPolygon.Points.Count > 1)
             {
-                CurrentPolygon = CreateNewPolygon();
-                CurrentPolygon.Points.Add(point);
-                point.transform.SetParent(CurrentPolygon.transform);
-            }
-            else
-            {
-                CurrentPolygon.Points.Add(point);
-                point.transform.SetParent(CurrentPolygon.transform);
-                // create a line if needed
-                if (CurrentPolygon.Points.Count > 1)
-                {
-                    // determine the position and direction of the line
-                    var index = CurrentPolygon.Points.Count - 1;
-                    var line = Instantiate(LinePrefab);
-                    line.SetPosition(CurrentPolygon.Points[index - 1].transform.position, CurrentPolygon.Points[index].transform.position);
-                    line.transform.parent = CurrentPolygon.transform;
-                    // connect the line from the previous point to the current point
-                    CurrentPolygon.Points[index - 1].OutgoingEdge = line;
-                    point.IngoingEdge = line;
-                }
-
-            }
-
+                // determine the position and direction of the line
+                var index = CurrentPolygon.Points.Count - 1;
+                var line = Instantiate(LinePrefab);
+                line.SetPoints(CurrentPolygon.Points[index - 1], CurrentPolygon.Points[index]);
+                line.SetRootPolygon(CurrentPolygon);
+                // connect the line from the previous point to the current point
+                CurrentPolygon.Points[index - 1].OutgoingEdge = line;
+                point.IngoingEdge = line;
+            }  
         }
 
         /// <summary>
@@ -67,39 +53,12 @@ namespace HoloLensPlanner
                 CurrentPolygon.IsFinished = true;
                 var index = CurrentPolygon.Points.Count - 1;
                 var line = Instantiate(LinePrefab);
-                line.SetPosition(CurrentPolygon.Points[index - 1].transform.position, CurrentPolygon.Points[index].transform.position);
+                line.SetPoints(CurrentPolygon.Points[index - 1], CurrentPolygon.Points[index]);
                 line.transform.parent = CurrentPolygon.transform;
 
                 // connect the last point with the first point
                 CurrentPolygon.Points[CurrentPolygon.Points.Count - 1].OutgoingEdge = line;
                 CurrentPolygon.Points[0].IngoingEdge = line;
-                Polygons.Push(CurrentPolygon);
-
-            }
-        }
-
-        /// <summary>
-        /// clear all geometries in the scene
-        /// </summary>
-        public void Clear()
-        {
-            if (Polygons != null && Polygons.Count > 0)
-            {
-                while (Polygons.Count > 0)
-                {
-                    var lastLine = Polygons.Pop();
-                    Destroy(lastLine);
-                }
-            }
-        }
-
-        // delete latest geometry
-        public void Delete()
-        {
-            if (Polygons != null && Polygons.Count > 0)
-            {
-                var lastLine = Polygons.Pop();
-                Destroy(lastLine);
             }
         }
 
@@ -135,18 +94,6 @@ namespace HoloLensPlanner
             return 0.5f * Mathf.Abs(s);
         }
 
-        // Use this for initialization
-        //private void Start()
-        //{
-        //    CurrentPolygon = new Polygon()
-        //    {
-        //        IsFinished = false,
-        //        Root = new GameObject(),
-        //        Points = new List<PolygonPoint>()
-        //    };
-        //}
-
-
         /// <summary>
         /// reset current unfinished geometry
         /// </summary>
@@ -159,35 +106,11 @@ namespace HoloLensPlanner
             }
         }
 
-        public Polygon CreateNewPolygon()
+        private Polygon CreateNewPolygon()
         {
             var newPolygonGO = new GameObject("Polygon");
             Polygon newPolygon = newPolygonGO.AddComponent<Polygon>();
             return newPolygon;
         }
     }
-}
-
-
-
-
-public class Point
-{
-    public Vector3 Position { get; set; }
-
-    public GameObject Root { get; set; }
-    public bool IsStart { get; set; }
-}
-
-
-public class Polygon
-{
-    public float Area { get; set; }
-
-    public List<HoloLensPlanner.PolygonPoint> Points { get; set; }
-
-    public GameObject Root { get; set; }
-
-    public bool IsFinished { get; set; }
-
 }
