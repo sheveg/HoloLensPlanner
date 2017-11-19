@@ -137,24 +137,4 @@ namespace HoloLensPlanner
             transform.localScale = targetScale;
         }
     }
-
-    /// <summary>
-    /// Possible events for a focus change.
-    /// </summary>
-    public enum FocusEvent
-    {
-        None,
-        /// <summary>
-        /// Scale up/down on focus change.
-        /// </summary>
-        Scale,
-        /// <summary>
-        /// Change color on focus change.
-        /// </summary>
-        Color,
-        /// <summary>
-        /// Show/hide and outline on focus change.
-        /// </summary>
-        Outline
-    }
 }

@@ -6,11 +6,21 @@ using System.Collections;
 
 namespace HoloLensPlanner
 {
+    /// <summary>
+    /// GazeButton transforms an Unity UI component into an object which responds to the HoloLens gaze. Depending on the <see cref="GazeResponder.OnFocus"/> variable
+    /// the UI object reacts with the corresponding event, e.g. it scales up when <see cref="FocusEvent.Scale"/> is selected. 
+    /// </summary>
     [RequireComponent(typeof(Graphic))]
     public class GazeButton : GazeResponder
     {
+        /// <summary>
+        /// Unity UI outline component
+        /// </summary>
         public Outline Outline { get; private set; }
 
+        /// <summary>
+        /// How thick the outline is.
+        /// </summary>
         public float EventOutlineThickness { get { return m_EventOutlineThickness; } set { m_EventOutlineThickness = value; } }
 
         [SerializeField, HideInInspector]
@@ -44,6 +54,9 @@ namespace HoloLensPlanner
             base.OnScale();
         }
 
+        /// <summary>
+        /// If <see cref="GazeResponder.OnFocus"/> is set to <see cref="FocusEvent.Outline"/> it adds an outline component, otherwise it removes it.  
+        /// </summary>
         public void SetOutline()
         {
             if (OnFocus == FocusEvent.Outline)
@@ -57,7 +70,6 @@ namespace HoloLensPlanner
             }
             else if (OnFocus != FocusEvent.Outline && Outline != null)
             {
-                Debug.Log("Destroy");
                 DestroyImmediate(Outline);
             }
         }

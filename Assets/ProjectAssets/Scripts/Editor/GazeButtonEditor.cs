@@ -5,6 +5,9 @@ using UnityEditor;
 
 namespace HoloLensPlanner
 {
+    /// <summary>
+    /// Custom inspector for a <see cref="GazeButton"/>. Adds/Removes an <see cref="UnityEngine.UI.Outline"/> component dependent on the <see cref="GazeResponder.OnFocus"/> variable. 
+    /// </summary>
     [CustomEditor(typeof(GazeButton))]
     public class GazeButtonEditor : GazeResponderEditor
     {
@@ -23,6 +26,7 @@ namespace HoloLensPlanner
             switch (m_GazeButton.OnFocus)
             {
                 case FocusEvent.Outline:
+                    // hide the outline component in the inspector
                     m_GazeButton.Outline.hideFlags = HideFlags.HideInInspector;
                     m_GazeButton.EventOutlineThickness = EditorGUILayout.FloatField("Thickness", m_GazeButton.EventOutlineThickness);
                     break;

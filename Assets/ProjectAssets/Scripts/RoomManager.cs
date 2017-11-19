@@ -7,6 +7,9 @@ using HoloLensPlanner.Utilities;
 
 namespace HoloLensPlanner
 {
+    /// <summary>
+    /// RoomManager holds a reference of the current room the user is in. Provides functions to create a <see cref="RoomPlane"/>. 
+    /// </summary>
     public class RoomManager : Singleton<RoomManager>, IInputClickHandler, IHoldHandler
     {
 
@@ -16,6 +19,9 @@ namespace HoloLensPlanner
         public GameObject Ceiling { get; private set; }
         public List<GameObject> Walls { get; private set; }
 
+        /// <summary>
+        /// Planetype of the current roomplane which is in edit/creation mode.
+        /// </summary>
         private PlaneType? m_CurrentPlaneType;
 
         private void Start()
@@ -89,6 +95,9 @@ namespace HoloLensPlanner
 
         }
 
+        /// <summary>
+        /// Creates a RoomPlane of the current planetype.
+        /// </summary>
         public void FinishRoomPlane()
         {
             // first create the polygon

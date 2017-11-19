@@ -6,6 +6,9 @@ using System;
 
 namespace HoloLensPlanner
 {
+    /// <summary>
+    /// Boundary vertex of a polygon. Can be moved/focused by the HoloLens.
+    /// </summary>
     public class PolygonPoint : PolygonObject, IInputClickHandler, IHoldHandler
     {
         public PolygonLine IngoingEdge { get; set; }

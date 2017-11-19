@@ -7,6 +7,9 @@ using HoloLensPlanner.Utilities;
 
 namespace HoloLensPlanner
 {
+    /// <summary>
+    /// Represents a plane in a room e.g. a wall, ceiling or floor.
+    /// </summary>
     [RequireComponent(typeof(MeshRenderer))]
     [RequireComponent(typeof(MeshFilter))]
     public class RoomPlane : MonoBehaviour

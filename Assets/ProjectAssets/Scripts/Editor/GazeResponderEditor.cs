@@ -5,6 +5,9 @@ using UnityEditor;
 
 namespace HoloLensPlanner
 {
+    /// <summary>
+    /// Custom inspector for the <see cref="GazeResponder"/> . Displays only the variables affected by the <see cref="GazeResponder.OnFocus"/> variable. 
+    /// </summary>
     [CanEditMultipleObjects]
     [CustomEditor(typeof(GazeResponder), true)]
     public class GazeResponderEditor : Editor
