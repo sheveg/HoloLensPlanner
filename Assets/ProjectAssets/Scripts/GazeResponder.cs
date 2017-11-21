@@ -49,6 +49,8 @@ namespace HoloLensPlanner
         [SerializeField, HideInInspector]
         private float m_EventScale = 1.1f;
 
+        private Vector3 m_defaultScale;
+
         /// <summary>
         /// Private variable for color to avoid property serialization issues of unity.
         /// </summary>
@@ -60,6 +62,11 @@ namespace HoloLensPlanner
         /// </summary>
         [SerializeField, HideInInspector]
         private Color m_EventOutlineColor = Color.white;
+
+        public virtual void Awake()
+        {
+            m_defaultScale = transform.localScale;
+        }
 
         public void OnFocusEnter()
         {
@@ -125,7 +132,7 @@ namespace HoloLensPlanner
             float duration = 0.125f;
             float currentDuration = 0f;
             Vector3 initScale = transform.localScale;
-            Vector3 targetScale = Vector3.one;
+            Vector3 targetScale = m_defaultScale;
             if (m_IsFocused)
                 targetScale *= EventScale;
             while (currentDuration < duration)
