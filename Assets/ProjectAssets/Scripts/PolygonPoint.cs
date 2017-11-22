@@ -14,8 +14,18 @@ namespace HoloLensPlanner
         public PolygonLine IngoingEdge { get; set; }
         public PolygonLine OutgoingEdge { get; set; }
 
-        private IInputSource currentInputSource;
-        private uint currentInputSourceId;
+        private IInputSource m_CurrentInputSource;
+        private uint m_CurrentInputSourceId;
+
+        private Vector3 m_HandOffset;
+
+        void Update()
+        {
+            if (m_IsMoving)
+            {
+                updateMoving();
+            }
+        }
 
         #region Interface implementations
 
@@ -42,8 +52,8 @@ namespace HoloLensPlanner
             if (m_IsFocused)
             {
                 eventData.Use();
-                currentInputSource = eventData.InputSource;
-                currentInputSourceId = eventData.SourceId;
+                m_CurrentInputSource = eventData.InputSource;
+                m_CurrentInputSourceId = eventData.SourceId;
                 startMoving();
 
 
@@ -58,14 +68,36 @@ namespace HoloLensPlanner
             if (m_IsMoving)
                 return;
 
+            // mark that we are moving the point
             m_IsMoving = true;
-            Vector3 handPosition;
-            currentInputSource.TryGetPointerPosition(currentInputSourceId, out handPosition);
 
+            // Add self as a modal input handler, to get all inputs during the manipulation
+            InputManager.Instance.PushModalInputHandler(gameObject);
+
+            // get the hand position
+            Vector3 handPosition;
+            m_CurrentInputSource.TryGetPointerPosition(m_CurrentInputSourceId, out handPosition);
+
+            // if we already have a mesh, this means we have a plane on which we have to project to the point to
             if (m_RootPolygon.MeshPlane)
             {
                 //currentI
+
             }
+
+            m_HandOffset = transform.position - handPosition;
+        }
+
+        private void updateMoving()
+        {
+            if (!m_IsMoving)
+                return;
+
+            Vector3 handPosition;
+            m_CurrentInputSource.TryGetPointerPosition(m_CurrentInputSourceId, out handPosition);
+
+            transform.position = handPosition + m_HandOffset;
+
         }
 
         private void deletePoint()
