@@ -21,17 +21,13 @@ namespace HoloLensPlanner
         /// </summary>
         protected bool m_IsFocused { get; private set; }
 
-        /// <summary>
-        /// Is the object in movement mode?
-        /// </summary>
-        protected bool m_IsMoving { get; set; }
-
         public void OnFocusEnter()
         {
             if (m_RootPolygon.MeshPlane == null)
                 return;
 
             m_IsFocused = true;
+            InputManager.Instance.PushModalInputHandler(gameObject);
         }
 
         public void OnFocusExit()
@@ -40,6 +36,7 @@ namespace HoloLensPlanner
                 return;
 
             m_IsFocused = false;
+            InputManager.Instance.PopModalInputHandler();
         }
 
         public void SetRootPolygon(Polygon polygon)

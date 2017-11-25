@@ -89,11 +89,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1288938934369732}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cd24e89de1af324bad6007c4f4f236b, type: 3}
+  m_Script: {fileID: 11500000, guid: 7adc3d02e048b98438db47f004d4f807, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaterialInEditMode: {fileID: 2100000, guid: 1a41639f89b99cf4d8cd9f2af9e6f60f, type: 2}
-  PolygonMaterialInEditMode: {fileID: 2100000, guid: 42feac3506fd66d4aba01b5218d2c10b,
-    type: 2}
-  PolygonMaterialInFocusMode: {fileID: 2100000, guid: 57157c95054785942acfe10956ccc480,
-    type: 2}
+  Material: {fileID: 2100000, guid: 52887c57203fdd44a9648ed9bb24e736, type: 2}

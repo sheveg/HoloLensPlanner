@@ -22,7 +22,7 @@ namespace HoloLensPlanner
         /// <summary>
         /// Planetype of the current roomplane which is in edit/creation mode.
         /// </summary>
-        private PlaneType? m_CurrentPlaneType;
+        public PlaneType? CurrentPlaneType { get; private set; }
 
         private void Start()
         {
@@ -33,9 +33,9 @@ namespace HoloLensPlanner
 
         public void OnInputClicked(InputClickedEventData eventData)
         {
-            if (m_CurrentPlaneType.HasValue)
+            if (CurrentPlaneType.HasValue)
             {
-                switch (m_CurrentPlaneType)
+                switch (CurrentPlaneType)
                 {
                     case PlaneType.Floor:
                         // all points of the floor polygon should be under the users head
@@ -56,7 +56,7 @@ namespace HoloLensPlanner
 
         public void OnHoldStarted(HoldEventData eventData)
         {
-            if (m_CurrentPlaneType.HasValue)
+            if (CurrentPlaneType.HasValue)
             {
                 FinishRoomPlane();
             }
@@ -76,22 +76,22 @@ namespace HoloLensPlanner
 
         public void CreateFloorPlane()
         {
-            m_CurrentPlaneType = PlaneType.Floor;
+            CurrentPlaneType = PlaneType.Floor;
         }
 
         public void CreateWallPlane()
         {
-            m_CurrentPlaneType = PlaneType.Wall;
+            CurrentPlaneType = PlaneType.Wall;
         }
 
         public void CreateCeilingPlane()
         {
-            m_CurrentPlaneType = PlaneType.Ceiling;
+            CurrentPlaneType = PlaneType.Ceiling;
         }
 
         public void CreateRoomPlane(PlaneType planeType)
         {
-            m_CurrentPlaneType = planeType;
+            CurrentPlaneType = planeType;
 
         }
 
@@ -105,7 +105,7 @@ namespace HoloLensPlanner
             client.ClosePolygon();
             Polygon polygon = PolygonManager.Instance.CurrentPolygon;
             RoomPlane roomPlane = null;
-            switch (m_CurrentPlaneType)
+            switch (CurrentPlaneType)
             {
                 // for now we assume that the floor has no stairs or ramps,
                 // so it should consist of points approx. on the same plane
@@ -122,8 +122,8 @@ namespace HoloLensPlanner
             if (roomPlane == null)
                 return;
 
-            roomPlane.Setup(polygon, m_CurrentPlaneType.Value);
-            m_CurrentPlaneType = null;
+            roomPlane.Setup(polygon, CurrentPlaneType.Value);
+            CurrentPlaneType = null;
         }
 
         private RoomPlane createFloor(Vector3 position)

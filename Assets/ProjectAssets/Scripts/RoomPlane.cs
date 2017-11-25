@@ -15,13 +15,7 @@ namespace HoloLensPlanner
     public class RoomPlane : MonoBehaviour
     {
         [SerializeField]
-        private Material MaterialInEditMode;
-
-        [SerializeField]
-        private Material PolygonMaterialInEditMode;
-
-        [SerializeField]
-        private Material PolygonMaterialInFocusMode;
+        private Material Material;
 
         public Polygon MeshPolygon { get; private set; }
 
@@ -88,7 +82,7 @@ namespace HoloLensPlanner
             m_MeshFilter = GetComponent<MeshFilter>();
             m_MeshFilter.mesh = mesh;
             MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
-            m_MaterialInEditModeCopy = new Material(MaterialInEditMode);
+            m_MaterialInEditModeCopy = new Material(Material);
             meshRenderer.material = m_MaterialInEditModeCopy;
         }
     }

@@ -135,6 +135,7 @@ namespace HoloToolkit.Unity.InputModule
         public void PopFallbackInputHandler()
         {
             fallbackInputStack.Pop();
+
         }
 
         /// <summary>
