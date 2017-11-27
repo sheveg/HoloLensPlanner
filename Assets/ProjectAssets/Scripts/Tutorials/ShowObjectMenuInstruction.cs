@@ -35,7 +35,6 @@ namespace HoloLensPlanner.Tutorials
         {
             while (!PolygonManager.Instance.CurrentPolygon.IsFinished)
             {
-                Debug.Log("Waiting");
                 yield return null;
             }
 

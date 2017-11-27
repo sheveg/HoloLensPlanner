@@ -50,7 +50,5 @@ namespace HoloToolkit.Unity
             }
             return combinedLayerMask;
         }
-
-
     }
 }

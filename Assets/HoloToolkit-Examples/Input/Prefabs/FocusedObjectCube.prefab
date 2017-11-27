@@ -105,5 +105,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eb7f0cd16acf2a46abe30a369e0f336, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FocusedColor: {r: 0, g: 1, b: 0.25517225, a: 1}
+  FocusedColor: {r: 1, g: 0, b: 0, a: 1}
   SizeFactor: 2

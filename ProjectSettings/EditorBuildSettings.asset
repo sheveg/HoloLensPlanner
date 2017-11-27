@@ -6,11 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/ProjectAssets/Test.unity
+    path: 
     guid: 6224c6a981da8434689340db1ae25813
   - enabled: 0
     path: Assets/HoloToolkit-Examples/SpatialUnderstanding/Scenes/SpatialUnderstandingExample.unity
     guid: 7ecf1c34f0ac4b4449076e91efc011be
-  - enabled: 1
+  - enabled: 0
     path: Assets/HoloToolkit-Examples/GazeRuler/Scenes/GazeRulerExample.unity
     guid: 5cfd18f07ba96e54eb82e85707f53c58
+  - enabled: 1
+    path: Assets/ProjectAssets/FliesenScene.unity
+    guid: 7d821e914ef65b24cba6ccbecd3e71e5

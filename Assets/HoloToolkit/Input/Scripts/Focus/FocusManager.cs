@@ -430,6 +430,7 @@ namespace HoloToolkit.Unity.InputModule
 
             // Perform raycast to determine focused object
             RaycastPhysics(pointer, prioritizedLayerMasks);
+
             // If we have a unity event system, perform graphics raycasts as well to support Unity UI interactions
             if (EventSystem.current != null)
             {
