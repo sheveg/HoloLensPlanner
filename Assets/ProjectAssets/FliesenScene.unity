@@ -965,7 +965,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Hint: You can delete a point by clicking on it.'
+  m_Text: 'Hint: You can delete the last point by clicking on it.'
 --- !u!222 &1035411318
 CanvasRenderer:
   m_ObjectHideFlags: 0

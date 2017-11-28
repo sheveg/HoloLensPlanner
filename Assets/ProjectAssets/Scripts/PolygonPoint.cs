@@ -26,7 +26,8 @@ namespace HoloLensPlanner
 
         private void deletePoint()
         {
-            if (PolygonManager.Instance.CurrentPolygon == m_RootPolygon && !m_RootPolygon.IsFinished)
+            // if the polygon is in edit mode and this point is the last point created
+            if (PolygonManager.Instance.CurrentPolygon == m_RootPolygon && !m_RootPolygon.IsFinished && m_RootPolygon.Points[m_RootPolygon.Points.Count - 1] == this)
             {
                 // first clear the references in the polygon
                 PolygonPoint previousPoint;
@@ -42,6 +43,13 @@ namespace HoloLensPlanner
                     Destroy(IngoingEdge.gameObject);
                 if (OutgoingEdge)
                     Destroy(OutgoingEdge.gameObject);
+
+                // enable gazeObject component on previous point again, as this is the new last point
+                GazeObject pointGazeObject = previousPoint.GetComponent<GazeObject>();
+                if (pointGazeObject)
+                {
+                    pointGazeObject.enabled = true;
+                }
                 Destroy(gameObject);
             }
         }

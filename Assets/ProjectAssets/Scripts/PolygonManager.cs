@@ -40,6 +40,12 @@ namespace HoloLensPlanner
                 // connect the line from the previous point to the current point
                 CurrentPolygon.Points[index - 1].OutgoingEdge = line;
                 point.IngoingEdge = line;
+                //disable gazeObject component on last point so it is always only on last point
+                GazeObject pointGazeObject = CurrentPolygon.Points[index - 1].GetComponent<GazeObject>();
+                if (pointGazeObject)
+                {
+                    pointGazeObject.enabled = false;
+                }
             }  
         }
 
@@ -48,7 +54,7 @@ namespace HoloLensPlanner
         /// </summary>
         public void ClosePolygon()
         {
-            if (CurrentPolygon != null)
+            if (CurrentPolygon != null && CurrentPolygon.Points.Count > 3)
             {
                 CurrentPolygon.IsFinished = true;
                 var index = CurrentPolygon.Points.Count - 1;
