@@ -280,7 +280,7 @@ Canvas:
   m_GameObject: {fileID: 279409655}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 2
   m_Camera: {fileID: 826362469}
   m_PlaneDistance: 0.5
   m_PixelPerfect: 0
@@ -298,9 +298,9 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 279409655}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalScale: {x: 0.00019519564, y: 0.00019519564, z: 0.00019519564}
   m_Children:
   - {fileID: 192502803}
   - {fileID: 1627790407}
@@ -309,14 +309,14 @@ RectTransform:
   - {fileID: 1511156705}
   - {fileID: 889188671}
   - {fileID: 1903739183}
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 903124041}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_SizeDelta: {x: 1268, y: 720}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &438728225
 GameObject:
   m_ObjectHideFlags: 0
@@ -749,6 +749,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ObjectMenuInstruction: {fileID: 1903739182}
+--- !u!4 &903124041 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4543495872665798, guid: f46f9eddea7bd4d4e813283cdc60cb96,
+    type: 2}
+  m_PrefabInternal: {fileID: 1924369394}
 --- !u!1 &923485712
 GameObject:
   m_ObjectHideFlags: 0
@@ -1031,6 +1036,11 @@ Prefab:
       propertyPath: RoomModel
       value: 
       objectReference: {fileID: 100000, guid: 2663c3eaf2c531244ad01f03e32f5480, type: 3}
+    - target: {fileID: 114000012698980792, guid: 2ed75ffdf9031c94e8bce4b3d17b9928,
+        type: 2}
+      propertyPath: TrianglesPerCubicMeter
+      value: 20000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2ed75ffdf9031c94e8bce4b3d17b9928, type: 2}
   m_IsPrefabParent: 0
