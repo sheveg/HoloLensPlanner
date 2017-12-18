@@ -9,6 +9,8 @@ public class TilesGenerator : MonoBehaviour {
     public Transform SpawnPoint;
     public Transform DirectionPoint;
 
+    public float TileOffset = 0.01f;
+
     public List<Transform> AllPoints = new List<Transform>();
 
     private void Start()
@@ -88,14 +90,23 @@ public class TilesGenerator : MonoBehaviour {
         tilePlaneVertex0.transform.right = (tilePlaneVertex3.transform.position - tilePlaneVertex0.transform.position).normalized;
         Vector3 startingPosition = tilePlaneVertex0.transform.position + tilePlaneVertex0.transform.right * tileWidth / 2f +  tilePlaneVertex0.transform.forward * tileHeight / 2f;
 
+        Vector3 startOffset = tilePlaneVertex0.transform.InverseTransformPoint(SpawnPoint.position) * tilePlaneVertex0.transform.localScale.x;
+        float xOffset = tileWidth - Mathf.Repeat(startOffset.x, tileWidth);
+        float zOffset = tileHeight - Mathf.Repeat(startOffset.z, tileHeight);
+        Debug.Log(xOffset + " : " + zOffset);
+
+        startingPosition -= xOffset * tilePlaneVertex0.transform.right + zOffset * tilePlaneVertex0.transform.forward;
+        
+
         Debug.Log(rows + " : " + columns);
 
 
-        for (int i = 0; i < rows; i++)
+
+        for (int i = 0; i < rows+1; i++)
         {
-            for (int j = 0; j < columns; j++)
+            for (int j = 0; j < columns+1; j++)
             {
-                Vector3 offset = i * tileHeight * tilePlaneVertex0.transform.forward + j * tileWidth * tilePlaneVertex0.transform.right;
+                Vector3 offset = i * tileHeight * tilePlaneVertex0.transform.forward * (1+TileOffset / tileHeight) + j * tileWidth * tilePlaneVertex0.transform.right * (1 + TileOffset / tileWidth);
                 Transform tileCopy = Instantiate(Tile, startingPosition + offset, tilePlaneVertex0.transform.rotation);
                 tileCopy.transform.parent = tilePlane.transform;
             }
