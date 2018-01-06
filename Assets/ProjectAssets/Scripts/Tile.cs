@@ -11,5 +11,13 @@ namespace HoloLensPlanner
 
         public float Width;
 
+        public Mesh Mesh;
+      
+        public const float TileJoint = 1;
+
+        public void Awake()
+        {
+            Mesh = this.gameObject.GetComponent<MeshFilter>().mesh;
+        }
     }
 }
