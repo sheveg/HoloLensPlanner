@@ -29,6 +29,11 @@ namespace HoloLensPlanner
             // if the polygon is in edit mode and this point is the last point created
             if (PolygonManager.Instance.CurrentPolygon == m_RootPolygon && !m_RootPolygon.IsFinished && m_RootPolygon.Points[m_RootPolygon.Points.Count - 1] == this)
             {
+                if (m_RootPolygon.Points.Count == 1)
+                {
+                    Destroy(gameObject);
+                    return;
+                }
                 // first clear the references in the polygon
                 PolygonPoint previousPoint;
                 if (IngoingEdge.From == this)

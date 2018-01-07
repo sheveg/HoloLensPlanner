@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HoloLensPlanner.Utilities.Decomposition;
 
 namespace HoloLensPlanner.Utilities
 {
@@ -9,12 +10,13 @@ namespace HoloLensPlanner.Utilities
         /// <summary>
         /// Creates a mesh out of a polygon.
         /// </summary>
-        /// <param name="vertices"></param>
+        /// <param name="vertices">Boundary vertices of the polygon.</param>
+        /// <param name="holes">Hole vertices of the polygon if any.</param>
         /// <returns></returns>
-        public static Mesh CreatePolygonMesh(List<Vector2> vertices)
+        public static Mesh CreatePolygonMesh(List<Vector2> vertices, List<List<Vector2>> holes = null)
         {
             // split the polygon into convex parts so we can use fan triangulation https://en.wikipedia.org/wiki/Fan_triangulation
-            List<List<Vector2>> convexPolygons = BayazitDecomposer.ConvexPartition(vertices);
+            List<List<Vector2>> convexPolygons = CDTDecomposer.ConvexPartition(vertices, holes);
             //Debug.Log("Polygon is split into " + convexPolygons.Count + " parts");
             // create mesh arrays
             List<List<Vector3>> meshVerticesList = new List<List<Vector3>>();

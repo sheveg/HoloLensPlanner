@@ -1,35 +1,37 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HoloLensPlanner.Utilities;
 
 namespace HoloLensPlanner
 {
     public class TilesGenerator : MonoBehaviour
     {
 
-        public Transform Tile;
-
+        public Tile Tile;
+        public RoomPlane Plane;
         public Transform SpawnPoint;
         public Transform DirectionPoint;
 
-        public float TileOffset = 0.01f;
-
-        public List<Transform> AllPoints = new List<Transform>();
-
-        private IEnumerator Start()
+        private void Start()
         {
+        }
 
-            SpawnPoint.forward = DirectionPoint.position - SpawnPoint.position;
-
-            float maxZ = 0f;
-            float maxX = 0f;
-            float minX = 0f;
-            float minZ = 0f;
-
-            for (int i = 0; i < AllPoints.Count; i++)
+        public void createTiles(Tile tile, RoomPlane roomPlane, Transform spawnPoint, Transform directionPoint)
+        {
+            // first create the copy so we do not mess with the original spawnpoint, we will destroy this object later on
+            var spawnPointCopy = new GameObject("SpawnPointCopy");
+            spawnPointCopy.transform.position = spawnPoint.position;
+            spawnPointCopy.transform.rotation = spawnPoint.rotation;
+            spawnPointCopy.transform.forward = directionPoint.position - spawnPoint.position;
+            // now find the min and max values of the plane
+            float maxZ, maxX, minZ, minX;
+            maxZ = maxX = minZ = minX = 0f;
+            for (int i = 0; i < roomPlane.MeshPolygon.Points.Count; i++)
             {
-                Vector3 localPosition = SpawnPoint.InverseTransformPoint(AllPoints[i].position);
-
+                // transform the point into the local space of the plane
+                Vector3 localPosition = spawnPointCopy.transform.InverseTransformPoint(roomPlane.MeshPolygon.Points[i].transform.position);
+                // adjust min and max values
                 if (localPosition.x > maxX)
                 {
                     maxX = localPosition.x;
@@ -38,8 +40,6 @@ namespace HoloLensPlanner
                 {
                     minX = localPosition.x;
                 }
-
-
                 if (localPosition.z > maxZ)
                 {
                     maxZ = localPosition.z;
@@ -50,84 +50,111 @@ namespace HoloLensPlanner
                 }
             }
 
-            var tilePlaneVertex0 = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            tilePlaneVertex0.transform.localScale = Vector3.one * 0.3f;
-            Vector3 vertexLocalPosition = new Vector3(minX, Tile.position.y, minZ);
-            tilePlaneVertex0.transform.position = SpawnPoint.TransformPoint(vertexLocalPosition);
-            tilePlaneVertex0.name = "Vertex0";
-
-            var tilePlaneVertex1 = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            tilePlaneVertex1.transform.localScale = Vector3.one * 0.3f;
-            vertexLocalPosition = new Vector3(maxX, Tile.position.y, maxZ);
-            tilePlaneVertex1.transform.position = SpawnPoint.TransformPoint(vertexLocalPosition);
-            tilePlaneVertex1.name = "Vertex1";
-
-            var tilePlaneVertex2 = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            tilePlaneVertex2.transform.localScale = Vector3.one * 0.3f;
-            vertexLocalPosition = new Vector3(minX, Tile.position.y, maxZ);
-            tilePlaneVertex2.transform.position = SpawnPoint.TransformPoint(vertexLocalPosition);
-            tilePlaneVertex2.name = "Vertex2";
-
-            var tilePlaneVertex3 = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            tilePlaneVertex3.transform.localScale = Vector3.one * 0.3f;
-            vertexLocalPosition = new Vector3(maxX, Tile.position.y, minZ);
-            tilePlaneVertex3.transform.position = SpawnPoint.TransformPoint(vertexLocalPosition);
-            tilePlaneVertex3.name = "Vertex3";
-
-            GameObject tilePlane = new GameObject("TilePlane");
-            tilePlane.transform.position = (tilePlaneVertex0.transform.position + tilePlaneVertex1.transform.position + tilePlaneVertex2.transform.position + tilePlaneVertex3.transform.position) / 4f;
-            tilePlaneVertex0.transform.parent = tilePlane.transform;
-            tilePlaneVertex1.transform.parent = tilePlane.transform;
-            tilePlaneVertex2.transform.parent = tilePlane.transform;
-            tilePlaneVertex3.transform.parent = tilePlane.transform;
+            // create the border points of the plane given by the min and max values
+            var minXminZ_Point = new GameObject();
+            minXminZ_Point.transform.position = spawnPointCopy.transform.TransformPoint(new Vector3(minX, 0f, minZ));
 
 
-            //Tile.forward = DirectionPoint.position - SpawnPoint.position;
-            //Tile.position = SpawnPoint.position + Tile.right * tileMesh.bounds.extents.x * Tile.localScale.x + Tile.forward * tileMesh.bounds.extents.z * Tile.localScale.z;
-            Mesh tileMesh = Tile.GetComponent<MeshFilter>().mesh;
-            float tileWidth = tileMesh.bounds.extents.x * Tile.localScale.x * 2f;
-            float tileHeight = tileMesh.bounds.extents.z * Tile.localScale.z * 2f;
-            int columns = Mathf.CeilToInt((tilePlaneVertex0.transform.position - tilePlaneVertex3.transform.position).magnitude / tileWidth);
-            int rows = Mathf.CeilToInt((tilePlaneVertex0.transform.position - tilePlaneVertex2.transform.position).magnitude / tileHeight);
-            tilePlaneVertex0.transform.forward = (tilePlaneVertex2.transform.position - tilePlaneVertex0.transform.position).normalized;
-            tilePlaneVertex0.transform.right = (tilePlaneVertex3.transform.position - tilePlaneVertex0.transform.position).normalized;
-            Vector3 startingPosition = tilePlaneVertex0.transform.position + tilePlaneVertex0.transform.right * tileWidth / 2f + tilePlaneVertex0.transform.forward * tileHeight / 2f;
+            var minXmaxZ_Point = new GameObject();
+            minXmaxZ_Point.transform.position = spawnPointCopy.transform.TransformPoint(new Vector3(minX, 0f, maxZ));
 
-            Vector3 startOffset = tilePlaneVertex0.transform.InverseTransformPoint(SpawnPoint.position) * tilePlaneVertex0.transform.localScale.x;
-            float xOffset = tileWidth - Mathf.Repeat(startOffset.x, tileWidth);
-            float zOffset = tileHeight - Mathf.Repeat(startOffset.z, tileHeight);
-            Debug.Log(xOffset + " : " + zOffset);
+            var maxXminZ_Point = new GameObject();
+            maxXminZ_Point.transform.position = spawnPointCopy.transform.TransformPoint(new Vector3(maxX, 0f, minZ));
 
-            startingPosition -= xOffset * tilePlaneVertex0.transform.right + zOffset * tilePlaneVertex0.transform.forward;
+            var maxXmaxZ_Point = new GameObject();
+            maxXmaxZ_Point.transform.position = spawnPointCopy.transform.TransformPoint(new Vector3(maxX, 0f, maxZ));
 
+            // create a parent object for all the tiles
+            var tilePlane = new GameObject("TilePlane");
+            tilePlane.transform.position = roomPlane.MeshPolygon.Center;
 
-            Debug.Log(rows + " : " + columns);
+            var tileWidth = tile.Width;
+            var tileHeight = tile.Height;
 
+            // calculate how many rows and columns are needed for the tile creation, we go one row and column further because of the offset
+            int columns = Mathf.CeilToInt((minXminZ_Point.transform.position - maxXminZ_Point.transform.position).magnitude / tileWidth) + 1;
+            int rows = Mathf.CeilToInt((minXminZ_Point.transform.position - minXmaxZ_Point.transform.position).magnitude / tileHeight) + 1;
 
-
-            for (int i = 0; i < rows + 1; i++)
-            {
-                for (int j = 0; j < columns + 1; j++)
+            // adjust forward and right vector of the starting vertex of the plane
+            minXminZ_Point.transform.forward = (minXmaxZ_Point.transform.position - minXminZ_Point.transform.position).normalized;
+            minXminZ_Point.transform.right = (maxXminZ_Point.transform.position - minXminZ_Point.transform.position).normalized;
+            Vector3 startPosition = minXminZ_Point.transform.position + minXminZ_Point.transform.right * tileWidth / 2f + minXminZ_Point.transform.forward * tileHeight / 2f;
+            // calculate the offset needed so that the tiles align perfectely at the spawn point
+            Vector3 minToSpawn = minXminZ_Point.transform.InverseTransformPoint(spawnPoint.position);
+            float xOffset = tileWidth - Mathf.Repeat(minToSpawn.x, tileWidth);
+            float zOffset = tileHeight - Mathf.Repeat(minToSpawn.z, tileHeight);
+            startPosition -= xOffset * minXminZ_Point.transform.right + zOffset * minXminZ_Point.transform.forward;
+            // place the tiles
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < columns; j++)
                 {
-                    yield return new WaitForSeconds(1f);
-                    Vector3 offset = i * tileHeight * tilePlaneVertex0.transform.forward * (1 + TileOffset / tileHeight) + j * tileWidth * tilePlaneVertex0.transform.right * (1 + TileOffset / tileWidth);
-                    Transform tileCopy = Instantiate(Tile, startingPosition + offset, tilePlaneVertex0.transform.rotation);
-                    tileCopy.transform.parent = tilePlane.transform;
+                    Vector3 offset = i * tileHeight * minXminZ_Point.transform.forward + j * tileWidth * minXminZ_Point.transform.right;
+                    var currentTile = Instantiate(tile, startPosition + offset, minXminZ_Point.transform.rotation);
+                    currentTile.transform.parent = tilePlane.transform;
                 }
+
+            // create the mask plane with has the room plane polygon as a hole
+            var maskPlaneVertices = new List<Vector2>();
+            // max and min points as boundary points
+            Vector3 mask_minXminZ = startPosition - (minXminZ_Point.transform.right * tileWidth / 2f + minXminZ_Point.transform.forward * tileHeight / 2f);
+            Vector3 mask_minXmaxZ = mask_minXminZ + minXminZ_Point.transform.forward * tileHeight * rows;
+            Vector3 mask_maxXminZ = mask_minXminZ + minXminZ_Point.transform.right * tileWidth * columns;
+            Vector3 mask_maxXmaxZ = mask_minXminZ + minXminZ_Point.transform.forward * tileHeight * rows + minXminZ_Point.transform.right * tileWidth * columns;
+            Vector3 mask_center = (mask_minXminZ + mask_minXmaxZ + mask_maxXminZ + mask_maxXmaxZ) / 4f;
+            //--------------------------
+            var v1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            v1.transform.localScale = Vector3.one * 0.1f;
+            v1.transform.position = mask_minXminZ;
+            v1.name = "v1";
+
+            var v2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            v2.transform.localScale = Vector3.one * 0.1f;
+            v2.transform.position = mask_minXmaxZ;
+            v2.name = "v2";
+
+            var v3 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            v3.transform.localScale = Vector3.one * 0.1f;
+            v3.transform.position = mask_maxXmaxZ;
+            v3.name = "v3";
+
+            var v4 = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            v4.transform.localScale = Vector3.one * 0.1f;
+            v4.transform.position = mask_maxXminZ;
+            v4.name = "v4";
+            //--------------------------
+
+
+            maskPlaneVertices.Add(new Vector2(mask_minXminZ.x - mask_center.x, mask_minXminZ.z - mask_center.z));
+            maskPlaneVertices.Add(new Vector2(mask_minXmaxZ.x - mask_center.x, mask_minXmaxZ.z - mask_center.z));
+            maskPlaneVertices.Add(new Vector2(mask_maxXmaxZ.x - mask_center.x, mask_maxXmaxZ.z - mask_center.z));
+            maskPlaneVertices.Add(new Vector2(mask_maxXminZ.x - mask_center.x, mask_maxXminZ.z - mask_center.z));
+            var maskPlaneHoles = new List<List<Vector2>>();
+            var maskPlaneHole = new List<Vector2>();
+            // room plane as hole
+            foreach (var point in roomPlane.MeshPolygon.Points)
+            {
+                maskPlaneHole.Add(new Vector2(point.transform.position.x - mask_center.x, point.transform.position.z - mask_center.z));
             }
+            maskPlaneHoles.Add(maskPlaneHole);
+            Mesh maskPlaneMesh = MeshUtility.CreatePolygonMesh(maskPlaneVertices, maskPlaneHoles);
+            var maskPlane = new GameObject("MaskPlane");
+            var maskPlaneMeshFilter = maskPlane.AddComponent<MeshFilter>();
+            maskPlaneMeshFilter.mesh = maskPlaneMesh;
+            var maskPlaneMeshRenderer = maskPlane.AddComponent<MeshRenderer>();
+            maskPlane.transform.position = (mask_minXminZ + mask_minXmaxZ + mask_maxXminZ + mask_maxXmaxZ) / 4f;
         }
 
-        private void createTiles(RoomPlane plane, Transform spawnPoint, Transform directionPoint)
+        public bool InsidePolygon(Polygon polygon, Vector3 point)
         {
-            // first create the copy so we do not mess with the original spawnpoint, we will destroy this object later on
-            GameObject spawnPointCopy = new GameObject("SpawnPointCopy");
-            spawnPointCopy.transform.position = spawnPoint.position;
-            spawnPointCopy.transform.rotation = spawnPoint.rotation;
-            spawnPointCopy.transform.localScale = spawnPoint.localScale;
-
-
+            int j = polygon.Points.Count - 1;
+            bool inside = false;
+            for (int i = 0; i < polygon.Points.Count; j = i++)
+            {
+                if (((polygon.Points[i].transform.position.z <= point.z && point.z < polygon.Points[j].transform.position.z) || (polygon.Points[j].transform.position.z <= point.z && point.z < polygon.Points[i].transform.position.z))
+                    && (point.x < (polygon.Points[j].transform.position.x - polygon.Points[i].transform.position.x) * (point.z - polygon.Points[i].transform.position.z) / (polygon.Points[j].transform.position.z - polygon.Points[i].transform.position.z) + polygon.Points[i].transform.position.x))
+                    inside = !inside;
+            }
+            return inside;
         }
     }
-
-
 }

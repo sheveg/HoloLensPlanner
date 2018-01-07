@@ -19,7 +19,7 @@ using System.Collections.Generic;
 /// Convex decomposition algorithm created by Mark Bayazit (http://mnbayazit.com/)
 /// For more information about this algorithm, see http://mnbayazit.com/406/bayazit
 /// </summary>
-namespace HoloLensPlanner.Utilities
+namespace HoloLensPlanner.Utilities.Decomposition
 {
     public static class BayazitDecomposer
     {

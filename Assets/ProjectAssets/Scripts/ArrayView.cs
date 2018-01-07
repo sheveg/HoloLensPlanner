@@ -18,7 +18,8 @@ public class ArrayView : Singleton<ArrayView> {
 
         for (int i = 0; i < spawnPoints.Length; i++)
         {
-            spawnPoints[i].gameObject.GetComponent<Button>().onClick.AddListener(() => TilesPreviewManager.Instance.Navigate(i));
+            int index = i;
+            spawnPoints[i].gameObject.GetComponent<Button>().onClick.AddListener(() => TilesPreviewManager.Instance.Navigate(index));
         }
 	}
 	

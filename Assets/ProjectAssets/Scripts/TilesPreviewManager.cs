@@ -65,6 +65,7 @@ public class TilesPreviewManager : Singleton<TilesPreviewManager> {
 
     public void Navigate(int i)
     {
+        Debug.Log(i);
         singleView.Tile = tiles[pageNumber * 6 + i];
 
         arrayView.Activate(false);
