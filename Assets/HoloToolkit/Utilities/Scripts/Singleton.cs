@@ -27,7 +27,9 @@ namespace HoloToolkit.Unity
                 if (instance == null && searchForInstance)
                 {
                     searchForInstance = false;
-                    T[] objects = FindObjectsOfType<T>();
+                    //T[] objects = FindObjectsOfType<T>();
+                    // Change 08.01.17 by Egor, finds also inactive objects
+                    T[] objects = Resources.FindObjectsOfTypeAll<T>();
                     if (objects.Length == 1)
                     {
                         instance = objects[0];

@@ -2,22 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HoloLensPlanner.Utilities;
+using HoloLensPlanner.TEST;
 
 namespace HoloLensPlanner
 {
     public class TilesGenerator : MonoBehaviour
     {
 
-        public Tile Tile;
+        public TileObject DefaultTile;
         public RoomPlane Plane;
-        public Transform SpawnPoint;
-        public Transform DirectionPoint;
+        public Transform Spawn;
+        public Transform Direction;
 
         private void Start()
         {
         }
 
-        public void createTiles(Tile tile, RoomPlane roomPlane, Transform spawnPoint, Transform directionPoint)
+        public void SpawnTilesOnFloor(TileData tileData, RoomPlane roomPlane, Transform spawnPoint, Transform directionPoint)
         {
             // first create the copy so we do not mess with the original spawnpoint, we will destroy this object later on
             var spawnPointCopy = new GameObject("SpawnPointCopy");
@@ -68,8 +69,9 @@ namespace HoloLensPlanner
             var tilePlane = new GameObject("TilePlane");
             tilePlane.transform.position = roomPlane.MeshPolygon.Center;
 
-            var tileWidth = tile.Width;
-            var tileHeight = tile.Height;
+            var jointSize = TileDimensionsLibrary.GetJointThickness(tileData.JointThickness) * 0.5f;
+            var tileWidth = (tileData.Width + jointSize);
+            var tileHeight = (tileData.Height + jointSize);
 
             // calculate how many rows and columns are needed for the tile creation, we go one row and column further because of the offset
             int columns = Mathf.CeilToInt((minXminZ_Point.transform.position - maxXminZ_Point.transform.position).magnitude / tileWidth) + 1;
@@ -89,8 +91,9 @@ namespace HoloLensPlanner
                 for (int j = 0; j < columns; j++)
                 {
                     Vector3 offset = i * tileHeight * minXminZ_Point.transform.forward + j * tileWidth * minXminZ_Point.transform.right;
-                    var currentTile = Instantiate(tile, startPosition + offset, minXminZ_Point.transform.rotation);
+                    var currentTile = Instantiate(DefaultTile, startPosition + offset, minXminZ_Point.transform.rotation);
                     currentTile.transform.parent = tilePlane.transform;
+                    currentTile.LinkTile(tileData);
                 }
 
             // create the mask plane with has the room plane polygon as a hole

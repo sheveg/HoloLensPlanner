@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using HoloLensPlanner;
+using HoloLensPlanner.TEST;
 
 [CustomEditor(typeof(TilesGenerator))]
-public class TestEditor : Editor {
+public class TestEditor : Editor
+{
 
     public override void OnInspectorGUI()
     {
@@ -13,6 +15,6 @@ public class TestEditor : Editor {
         TilesGenerator gen = (TilesGenerator)target;
 
         if (GUILayout.Button("test"))
-            gen.createTiles(gen.Tile, gen.Plane, gen.SpawnPoint, gen.DirectionPoint);
+            gen.SpawnTilesOnFloor(TileMenuManager.Instance.SavedTiles[0], gen.Plane, gen.Spawn, gen.Direction);
     }
 }

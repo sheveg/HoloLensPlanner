@@ -2,6 +2,7 @@
 using HoloToolkit.Unity;
 using System.Collections.Generic;
 using HoloToolkit.Unity.InputModule;
+using HoloLensPlanner.GazeResponse;
 
 namespace HoloLensPlanner
 {
