@@ -60,11 +60,22 @@ namespace HoloLensPlanner.TEST
         public string CreationDate;
 
         /// <summary>
+        /// Unique global identifier
+        /// </summary>
+        public string ID;
+
+        /// <summary>
+        /// Identifier as Guid class.
+        /// </summary>
+        private Guid m_ID;
+
+        /// <summary>
         /// Saves the tile data in JSON format.
         /// </summary>
         public void SaveToJson()
         {
             CreationDate = DateTime.Now.ToString();
+            ID = m_ID.ToString("N");
             string json = JsonUtility.ToJson(this, true);
             string filePath = Path.Combine(GlobalSettings.Instance.PathLibrary.SavedTilesPath, Name + ".json");
             File.WriteAllText(filePath, json);
@@ -82,6 +93,7 @@ namespace HoloLensPlanner.TEST
                 string jsonTile = File.ReadAllText(filePath);
                 JsonUtility.FromJsonOverwrite(jsonTile, this);
                 m_Texture = GlobalSettings.Instance.TextureLibrary.Textures[TextureIndex];
+                m_ID = new Guid(ID);
             }
         }
     }
