@@ -10,6 +10,12 @@ namespace HoloLensPlanner
         public TEST.TextureLibrary TextureLibrary;
 
         public TEST.PathLibrary PathLibrary;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            TextureLibrary.LoadPNGsIntoTextures(PathLibrary.TileTexturesPath);
+        }
     }
 }
 

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Name: TextureLibrary
   m_EditorClassIdentifier: 
   Textures:
-  - {fileID: 2800000, guid: 2cc801e5853b43b499402103ca5e3486, type: 3}
-  - {fileID: 2800000, guid: b6147fc7683459446b11e31d1cd51147, type: 3}
-  - {fileID: 2800000, guid: 97fbd57a8ea9181498033199bd4e0a71, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

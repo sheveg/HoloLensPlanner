@@ -10,7 +10,8 @@ namespace HoloLensPlanner.TEST
     public enum TileMenuState
     {
         ListView,
-        DetailView
+        DetailView,
+        NewTileView
     }
 
     public class TileMenuManager : Singleton<TileMenuManager>
@@ -26,6 +27,9 @@ namespace HoloLensPlanner.TEST
 
         [SerializeField]
         private Button ShowDetailViewButton;
+
+        [SerializeField]
+        private Button NewTileButton;
 
         public List<TileData> SavedTiles { get { return m_SavedTiles; } }
 
@@ -45,6 +49,7 @@ namespace HoloLensPlanner.TEST
             ShowPreviousButton.onClick.AddListener(showPrevious);
             ShowDetailViewButton.onClick.AddListener(showDetailView);
             ShowListViewButton.onClick.AddListener(showListView);
+            NewTileButton.onClick.AddListener(showListView);
 
             TileMenuListView.Instance.gameObject.SetActive(true);
             TileMenuDetailView.Instance.gameObject.SetActive(false);
