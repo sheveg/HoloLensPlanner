@@ -75,6 +75,8 @@ namespace HoloLensPlanner.TEST
         public void SaveToJson()
         {
             CreationDate = DateTime.Now.ToString();
+            if (m_ID == null)
+                m_ID = Guid.NewGuid();
             ID = m_ID.ToString("N");
             string json = JsonUtility.ToJson(this, true);
             string filePath = Path.Combine(GlobalSettings.Instance.PathLibrary.SavedTilesPath, Name + ".json");
