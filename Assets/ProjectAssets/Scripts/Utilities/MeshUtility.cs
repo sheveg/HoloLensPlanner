@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HoloLensPlanner.Utilities.Decomposition;
+using System;
 
 namespace HoloLensPlanner.Utilities
 {
@@ -13,10 +14,26 @@ namespace HoloLensPlanner.Utilities
         /// <param name="vertices">Boundary vertices of the polygon.</param>
         /// <param name="holes">Hole vertices of the polygon if any.</param>
         /// <returns></returns>
-        public static Mesh CreatePolygonMesh(List<Vector2> vertices, List<List<Vector2>> holes = null)
+        public static Mesh CreatePolygonMesh(List<Vector2> vertices, List<List<Vector2>> holes = null, int tries = 0)
         {
-            // split the polygon into convex parts so we can use fan triangulation https://en.wikipedia.org/wiki/Fan_triangulation
-            List<List<Vector2>> convexPolygons = CDTDecomposer.ConvexPartition(vertices, holes);
+            if (tries > 100)
+            {
+                Debug.LogError("Too many tries creating a convex partition using the CDTDecomposer!");
+                return null;
+            }
+                
+            List<List<Vector2>> convexPolygons = null;
+            try
+            {
+                // split the polygon into convex parts so we can use fan triangulation https://en.wikipedia.org/wiki/Fan_triangulation
+                convexPolygons = CDTDecomposer.ConvexPartition(vertices, holes);
+            }
+            catch(Exception e)
+            {
+                Debug.Log(e);
+                CreatePolygonMesh(vertices, holes, tries++);
+            }
+            
             //Debug.Log("Polygon is split into " + convexPolygons.Count + " parts");
             // create mesh arrays
             List<List<Vector3>> meshVerticesList = new List<List<Vector3>>();

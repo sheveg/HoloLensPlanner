@@ -6,18 +6,27 @@ using HoloLensPlanner.TEST;
 
 namespace HoloLensPlanner
 {
+    /// <summary>
+    /// TilesGenerator can generate tile floor for a given tile on a given roomplane.
+    /// </summary>
     public class TilesGenerator : MonoBehaviour
     {
 
         public TileObject DefaultTile;
+        public Material DepthMaskMaterial;
+        public Material MaskResistentMaterial;
+
         public RoomPlane Plane;
         public Transform Spawn;
         public Transform Direction;
 
-        private void Start()
-        {
-        }
-
+        /// <summary>
+        /// Spawns an object which has the chosen tile spawned on the roomPlane with a mask around it.
+        /// </summary>
+        /// <param name="tileData"></param>
+        /// <param name="roomPlane"></param>
+        /// <param name="spawnPoint"></param>
+        /// <param name="directionPoint"></param>
         public void SpawnTilesOnFloor(TileData tileData, RoomPlane roomPlane, Transform spawnPoint, Transform directionPoint)
         {
             // first create the copy so we do not mess with the original spawnpoint, we will destroy this object later on
@@ -54,7 +63,6 @@ namespace HoloLensPlanner
             // create the border points of the plane given by the min and max values
             var minXminZ_Point = new GameObject();
             minXminZ_Point.transform.position = spawnPointCopy.transform.TransformPoint(new Vector3(minX, 0f, minZ));
-
 
             var minXmaxZ_Point = new GameObject();
             minXmaxZ_Point.transform.position = spawnPointCopy.transform.TransformPoint(new Vector3(minX, 0f, maxZ));
@@ -104,29 +112,8 @@ namespace HoloLensPlanner
             Vector3 mask_maxXminZ = mask_minXminZ + minXminZ_Point.transform.right * tileWidth * columns;
             Vector3 mask_maxXmaxZ = mask_minXminZ + minXminZ_Point.transform.forward * tileHeight * rows + minXminZ_Point.transform.right * tileWidth * columns;
             Vector3 mask_center = (mask_minXminZ + mask_minXmaxZ + mask_maxXminZ + mask_maxXmaxZ) / 4f;
-            //--------------------------
-            var v1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            v1.transform.localScale = Vector3.one * 0.1f;
-            v1.transform.position = mask_minXminZ;
-            v1.name = "v1";
-
-            var v2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            v2.transform.localScale = Vector3.one * 0.1f;
-            v2.transform.position = mask_minXmaxZ;
-            v2.name = "v2";
-
-            var v3 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            v3.transform.localScale = Vector3.one * 0.1f;
-            v3.transform.position = mask_maxXmaxZ;
-            v3.name = "v3";
-
-            var v4 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            v4.transform.localScale = Vector3.one * 0.1f;
-            v4.transform.position = mask_maxXminZ;
-            v4.name = "v4";
-            //--------------------------
-
-
+            // add the outer mask boundary as list for later uses
+            List<Vector3> maskBoundaries = new List<Vector3> { mask_minXminZ, mask_minXmaxZ, mask_maxXmaxZ, mask_maxXminZ};
             maskPlaneVertices.Add(new Vector2(mask_minXminZ.x - mask_center.x, mask_minXminZ.z - mask_center.z));
             maskPlaneVertices.Add(new Vector2(mask_minXmaxZ.x - mask_center.x, mask_minXmaxZ.z - mask_center.z));
             maskPlaneVertices.Add(new Vector2(mask_maxXmaxZ.x - mask_center.x, mask_maxXmaxZ.z - mask_center.z));
@@ -145,19 +132,68 @@ namespace HoloLensPlanner
             maskPlaneMeshFilter.mesh = maskPlaneMesh;
             var maskPlaneMeshRenderer = maskPlane.AddComponent<MeshRenderer>();
             maskPlane.transform.position = (mask_minXminZ + mask_minXmaxZ + mask_maxXminZ + mask_maxXmaxZ) / 4f;
-        }
+            maskPlane.transform.position += new Vector3(0f, TileDimensionsLibrary.GetTileThickness(tileData.TileThickness) * 0.5f + 0.0001f, 0f);
+            maskPlane.transform.localScale = new Vector3(1f, -1f, 1f);
+            maskPlane.GetComponent<Renderer>().material = DepthMaskMaterial;
 
-        public bool InsidePolygon(Polygon polygon, Vector3 point)
-        {
-            int j = polygon.Points.Count - 1;
-            bool inside = false;
-            for (int i = 0; i < polygon.Points.Count; j = i++)
+            // create mask planes at the outer boundary of the maskplane so we mask the border tile joints as well
+            for (int i = 0; i < maskBoundaries.Count; i++)
             {
-                if (((polygon.Points[i].transform.position.z <= point.z && point.z < polygon.Points[j].transform.position.z) || (polygon.Points[j].transform.position.z <= point.z && point.z < polygon.Points[i].transform.position.z))
-                    && (point.x < (polygon.Points[j].transform.position.x - polygon.Points[i].transform.position.x) * (point.z - polygon.Points[i].transform.position.z) / (polygon.Points[j].transform.position.z - polygon.Points[i].transform.position.z) + polygon.Points[i].transform.position.x))
-                    inside = !inside;
+                var point1 = maskBoundaries[i];
+                var point2 = maskBoundaries[MathUtility.WrapArrayIndex(i + 1, maskBoundaries.Count)];
+                var point3 = point1 - new Vector3(0f, TileDimensionsLibrary.GetTileThickness(tileData.TileThickness), 0f);
+                // create the joint plane in the center of two points
+                var jointMaskPlanePosition = (point1 + point2) * 0.5f;
+                // lower it depending on the tile thickness
+                //jointPlanePosition -= new Vector3(0f, TileDimensionsLibrary.GetTileThickness(tileData.TileThickness) * 0.5f, 0f);
+                var jointMaskPlaneScale = new Vector3((point2 - point1).magnitude, 0.001f, (point3 - point1).magnitude);
+                // create joint plane
+                var jointMaskPlane = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                // adjust position and forward vector
+                jointMaskPlane.transform.position = jointMaskPlanePosition;
+                jointMaskPlane.transform.right = (point2 - point1).normalized;
+                jointMaskPlane.transform.localEulerAngles = new Vector3(90f, jointMaskPlane.transform.localEulerAngles.y, jointMaskPlane.transform.localEulerAngles.z);
+                jointMaskPlane.transform.localScale = jointMaskPlaneScale;
+                jointMaskPlane.GetComponent<Renderer>().material = DepthMaskMaterial;
+                jointMaskPlane.name = "jointMaskPlane";
+                jointMaskPlane.transform.parent = maskPlane.transform;
             }
-            return inside;
+
+            // create planes at the corner of the roomplane so it looks like these are the tiles ends so we can see the joints from the side
+            for (int i = 0; i < roomPlane.MeshPolygon.Points.Count; i++)
+            {
+                var point1 = roomPlane.MeshPolygon.Points[i].transform.position;
+                var point2 = roomPlane.MeshPolygon.Points[MathUtility.WrapArrayIndex(i + 1, roomPlane.MeshPolygon.Points.Count)].transform.position;
+                var point3 = point1 - new Vector3(0f, TileDimensionsLibrary.GetTileThickness(tileData.TileThickness), 0f);
+                // create the joint plane in the center of two points
+                var jointPlanePosition = (point1 + point2) * 0.5f;
+                // lower it depending on the tile thickness
+                //jointPlanePosition -= new Vector3(0f, TileDimensionsLibrary.GetTileThickness(tileData.TileThickness) * 0.5f, 0f);
+                var jointPlaneScale = new Vector3((point2 - point1).magnitude, 0.001f, (point3 - point1).magnitude);
+                // create joint plane
+                var jointPlane = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                // adjust position and forward vector
+                jointPlane.transform.position = jointPlanePosition;
+                jointPlane.transform.right = (point2 - point1).normalized;
+                jointPlane.transform.localEulerAngles = new Vector3(90f, jointPlane.transform.localEulerAngles.y, jointPlane.transform.localEulerAngles.z);
+                jointPlane.transform.localScale = jointPlaneScale;
+                jointPlane.GetComponent<Renderer>().material = MaskResistentMaterial;
+                jointPlane.name = "jointPlane";
+                jointPlane.transform.parent = maskPlane.transform;
+
+            }
+            // create a parent for overview purposes
+            var maskedTilePlane = new GameObject("maskedTilePlane");
+            maskedTilePlane.transform.position = tilePlane.transform.position;
+            tilePlane.transform.parent = maskedTilePlane.transform;
+            maskPlane.transform.parent = maskedTilePlane.transform;
+
+            // cleanup
+            Destroy(minXminZ_Point);
+            Destroy(minXmaxZ_Point);
+            Destroy(maxXminZ_Point);
+            Destroy(maxXmaxZ_Point);
+            Destroy(spawnPointCopy);
         }
     }
 }
