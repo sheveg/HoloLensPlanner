@@ -13,3 +13,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SavedTilesPath: SavedTiles
   SavedTilesType: json
+  m_TileTexturesPath: TileTextures
