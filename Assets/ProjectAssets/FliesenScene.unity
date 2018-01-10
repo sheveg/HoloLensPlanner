@@ -263,6 +263,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DefaultTile: {fileID: 114600801358265854, guid: 27c40b40ce34e53458fdde1a6ab8fb32,
     type: 2}
+  DepthMaskMaterial: {fileID: 2100000, guid: 9fc6c6c00b28a8a48957d5c8e911b7cd, type: 2}
+  MaskResistentMaterial: {fileID: 2100000, guid: 5bd9fa09d9eaeed449c4b4eeb45c83e0,
+    type: 2}
   Plane: {fileID: 0}
   Spawn: {fileID: 0}
   Direction: {fileID: 0}
@@ -295,7 +298,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &279409660
 MonoBehaviour:
   m_ObjectHideFlags: 0
