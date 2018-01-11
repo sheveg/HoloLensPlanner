@@ -49,7 +49,7 @@ namespace HoloLensPlanner.TEST
             ShowPreviousButton.onClick.AddListener(showPrevious);
             ShowDetailViewButton.onClick.AddListener(showDetailView);
             ShowListViewButton.onClick.AddListener(showListView);
-            NewTileButton.onClick.AddListener(showListView);
+            NewTileButton.onClick.AddListener(createTile);
 
             TileMenuListView.Instance.gameObject.SetActive(true);
             TileMenuDetailView.Instance.gameObject.SetActive(false);
@@ -139,8 +139,11 @@ namespace HoloLensPlanner.TEST
             m_State = TileMenuState.DetailView;
             TileMenuListView.Instance.Hide();
 
+
             int tileIndex = TileMenuListView.Instance.CurrentPage * ObjectPage.MaxObjectsCount;
             TileMenuDetailView.Instance.Show(tileIndex);
+
+            
         }
 
         private void showListView()
@@ -156,7 +159,10 @@ namespace HoloLensPlanner.TEST
             TileMenuListView.Instance.Show(pageIndex);
         }
 
-        private void createTile() { }
+        private void createTile()
+        {
+
+        }
 
         private void printStateError()
         {

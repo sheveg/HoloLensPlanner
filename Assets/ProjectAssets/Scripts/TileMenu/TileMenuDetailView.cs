@@ -68,6 +68,12 @@ namespace HoloLensPlanner.TEST
             updateTileIndexText();
         }
 
+        public void NewTile()
+        {
+            gameObject.SetActive(true);
+
+        }
+
         public void ShowNextTile()
         {
             Show(CurrentTile + 1);
