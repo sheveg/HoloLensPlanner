@@ -49,7 +49,8 @@ namespace HoloLensPlanner.TEST
             ShowPreviousButton.onClick.AddListener(showPrevious);
             ShowDetailViewButton.onClick.AddListener(showDetailView);
             ShowListViewButton.onClick.AddListener(showListView);
-            NewTileButton.onClick.AddListener(showListView);
+
+            NewTileButton.onClick.AddListener(createTile);
 
             TileMenuListView.Instance.gameObject.SetActive(true);
             TileMenuDetailView.Instance.gameObject.SetActive(false);

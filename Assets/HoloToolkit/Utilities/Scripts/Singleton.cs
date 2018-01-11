@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using System.Linq;
 using UnityEngine;
 
 namespace HoloToolkit.Unity
@@ -36,7 +37,19 @@ namespace HoloToolkit.Unity
                     }
                     else if (objects.Length > 1)
                     {
-                        Debug.LogErrorFormat("Expected exactly 1 {0} but found {1}.", typeof(T).ToString(), objects.Length);
+                        objects = objects.Distinct().ToArray();
+                        if (objects.Length == 1)
+                        {
+                            instance = objects[0];
+                        }
+                        else if (objects.Length > 1)
+                        {
+                            foreach (var obj in objects)
+                            {
+                                Debug.Log("Found " + obj.name);
+                            }
+                            Debug.LogErrorFormat("Expected exactly 1 {0} but found {1}.", typeof(T).ToString(), objects.Length);
+                        }
                     }
                 }
                 return instance;

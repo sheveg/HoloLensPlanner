@@ -115,12 +115,12 @@ namespace HoloLensPlanner.TEST
 
         private void loadTexture()
         {
-            Texture2D tileTexture = GlobalSettings.Instance.TextureLibrary.Textures[TileMenuManager.Instance.SavedTiles[CurrentTile].TextureIndex];
-            Sprite tileSprite = Sprite.Create(
-                tileTexture,
-                new Rect(0, 0, tileTexture.width, tileTexture.height),
-                new Vector2(0.5f, 0.5f));
-            TextureButton.image.sprite = tileSprite;
+            //Texture2D tileTexture = GlobalSettings.Instance.TextureLibrary.Textures[TileMenuManager.Instance.SavedTiles[CurrentTile].TextureIndex];
+            //Sprite tileSprite = Sprite.Create(
+            //    tileTexture,
+            //    new Rect(0, 0, tileTexture.width, tileTexture.height),
+            //    new Vector2(0.5f, 0.5f));
+            TextureButton.GetComponent<RawImage>().texture = GlobalSettings.Instance.TextureLibrary.Textures[TileMenuManager.Instance.SavedTiles[CurrentTile].TextureIndex];
         }
 
         private void loadWidth()

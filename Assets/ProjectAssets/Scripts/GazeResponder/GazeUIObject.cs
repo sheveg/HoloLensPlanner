@@ -10,7 +10,7 @@ namespace HoloLensPlanner.GazeResponse
     /// Gaze UI Object transforms a Unity UI component into an object which responds to the HoloLens gaze. Depending on the <see cref="GazeResponder.OnFocus"/> variable
     /// the UI object reacts with the corresponding event, e.g. it scales up when <see cref="FocusEvent.Scale"/> is selected. 
     /// </summary>
-    [RequireComponent(typeof(Graphic))]
+    //[RequireComponent(typeof(Graphic))]
     public class GazeUIObject : GazeObject
     {
         /// <summary>
