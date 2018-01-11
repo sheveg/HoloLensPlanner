@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/HoloToolkit-Examples/GazeRuler/Scenes/GazeRulerExample.unity
     guid: 5cfd18f07ba96e54eb82e85707f53c58
-  - enabled: 1
+  - enabled: 0
     path: Assets/ProjectAssets/FliesenScene.unity
     guid: 7d821e914ef65b24cba6ccbecd3e71e5
+  - enabled: 1
+    path: Assets/ProjectAssets/EmptyScene.unity
+    guid: 5d8f00ce697015c4dba52d0ef6154bdb
