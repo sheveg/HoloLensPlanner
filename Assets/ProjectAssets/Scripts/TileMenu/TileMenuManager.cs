@@ -50,7 +50,7 @@ namespace HoloLensPlanner.TEST
             ShowDetailViewButton.onClick.AddListener(showDetailView);
             ShowListViewButton.onClick.AddListener(showListView);
 
-            NewTileButton.onClick.AddListener(createTile);
+            NewTileButton.onClick.AddListener(CreateTile);
 
             TileMenuListView.Instance.gameObject.SetActive(true);
             TileMenuDetailView.Instance.gameObject.SetActive(false);
@@ -160,9 +160,26 @@ namespace HoloLensPlanner.TEST
             TileMenuListView.Instance.Show(pageIndex);
         }
 
-        private void createTile()
+        private void CreateTile()
         {
+            // nothing to do if already in new tile view
+            if (m_State == TileMenuState.NewTileView)
+            {
+                return;
+            }
+            else if(m_State == TileMenuState.ListView)
+            {
+                TileMenuListView.Instance.Hide();
+            }
 
+            m_State = TileMenuState.NewTileView;
+
+            TileMenuDetailView.Instance.NewTile();
+        }
+
+        private void SaveTile()
+        {
+            TileMenuDetailView.Instance.SaveTile();
         }
 
         private void printStateError()

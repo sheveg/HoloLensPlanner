@@ -70,6 +70,46 @@ namespace HoloLensPlanner.TEST
         private Guid m_ID;
 
         /// <summary>
+        /// Constants for new tile creation.
+        /// </summary>
+        public const float DefaultHeightInCM = 10;
+        public const float DefaultWidthInCM = 10;
+        public const TileThickness DefaultTileThickness = TileThickness.Five;
+        public const JointThickness DefaultJointThickness = JointThickness.Four;
+        public const int DefaultTextureIndex = 0;
+
+        public TileData()
+        {
+
+        }
+
+        /// <summary>
+        /// Creates new tile data object
+        /// </summary>
+        /// <param name="Height"></param>
+        /// <param name="Width"></param>
+        /// <param name="TileThickness"></param>
+        /// <param name="JointThickness"></param>
+        /// <param name="TextureIndex"></param>
+        /// <param name="Name"></param>
+        public TileData(float Height, float Width, float TileThickness, float JointThickness, int TextureIndex, string Name)
+        {
+            this.Height = Height;
+            this.Width = Width;
+            this.TileThickness = TileDimensionsLibrary.SetTileThickness(TileThickness);
+            this.JointThickness = TileDimensionsLibrary.SetJointThickness(JointThickness);
+            this.TextureIndex = TextureIndex;
+            if (Name == null)
+            {
+                this.Name = "";
+            }
+            else
+            {
+                this.Name = Name;
+            }
+        }
+
+        /// <summary>
         /// Saves the tile data in JSON format.
         /// </summary>
         public void SaveToJson()
@@ -79,7 +119,7 @@ namespace HoloLensPlanner.TEST
                 m_ID = Guid.NewGuid();
             ID = m_ID.ToString("N");
             string json = JsonUtility.ToJson(this, true);
-            string filePath = Path.Combine(GlobalSettings.Instance.PathLibrary.SavedTilesPath, Name + ".json");
+            string filePath = Path.Combine(GlobalSettings.Instance.PathLibrary.SavedTilesPath, m_ID + ".json");
             File.WriteAllText(filePath, json);
         }
 

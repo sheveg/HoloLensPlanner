@@ -44,6 +44,8 @@ namespace HoloLensPlanner.TEST
         /// </summary>
         public int CurrentTile { get; private set; }
 
+        private int currentTextureIndex;
+
         private void Start()
         {
             EditButton.onClick.AddListener(enableEditing);
@@ -61,6 +63,10 @@ namespace HoloLensPlanner.TEST
         public void Show(int tileIndex)
         {
             gameObject.SetActive(true);
+            if (!TileCountText.gameObject.activeSelf)
+            {
+                TileCountText.gameObject.SetActive(true);
+            }
             CurrentTile = wrapTileIndex(tileIndex);
             loadCurrentTile();
             if(m_EditMode)
@@ -70,8 +76,24 @@ namespace HoloLensPlanner.TEST
 
         public void NewTile()
         {
-            gameObject.SetActive(true);
+            if (gameObject.activeSelf == false)
+            {
+                gameObject.SetActive(true);
+            }
 
+            //Hide tile count
+            TileCountText.gameObject.SetActive(false);
+
+            WidthButton.GetComponentInChildren<Text>().text = TileData.DefaultWidthInCM.ToString("n0") + " cm";
+            HeightButton.GetComponentInChildren<Text>().text = TileData.DefaultHeightInCM.ToString("n0") + " cm";
+
+            float jointSizeInM = TileDimensionsLibrary.GetJointThickness(TileData.DefaultJointThickness);
+            JointSizeButton.GetComponentInChildren<Text>().text = (jointSizeInM * 1000).ToString("n0") + " mm";
+
+            float thicknessInM = TileDimensionsLibrary.GetTileThickness(TileData.DefaultTileThickness);
+            ThicknessButton.GetComponentInChildren<Text>().text = (thicknessInM * 1000).ToString("n0") + " mm";
+
+            TextureButton.GetComponent<RawImage>().texture = GlobalSettings.Instance.TextureLibrary.Textures[TileData.DefaultTextureIndex];
         }
 
         public void ShowNextTile()
@@ -105,12 +127,24 @@ namespace HoloLensPlanner.TEST
 
         private void enableEditing()
         {
-            m_EditMode = true;
-            enableButton(TextureButton);
-            enableButton(WidthButton);
-            enableButton(HeightButton);
-            enableButton(JointSizeButton);
-            enableButton(ThicknessButton);
+            if (m_EditMode == false)
+            {
+                m_EditMode = true;
+                enableButton(TextureButton);
+                enableButton(WidthButton);
+                enableButton(HeightButton);
+                enableButton(JointSizeButton);
+                enableButton(ThicknessButton);
+            }
+            else if (m_EditMode == true)
+            {
+                m_EditMode = false;
+                disableButton(TextureButton);
+                disableButton(WidthButton);
+                disableButton(HeightButton);
+                disableButton(JointSizeButton);
+                disableButton(ThicknessButton);
+            }
         }
 
         private void loadTexture()
@@ -179,5 +213,13 @@ namespace HoloLensPlanner.TEST
             return (tileIndex % TileMenuManager.Instance.SavedTiles.Count + TileMenuManager.Instance.SavedTiles.Count) % TileMenuManager.Instance.SavedTiles.Count;
         }
 
+        public void SaveTile()
+        {
+            //TileData tile = new TileData(TileDimensionsLibrary.StringToFloat(HeightButton.GetComponentInChildren<Text>().text),
+            //    TileDimensionsLibrary.StringToFloat(WidthButton.GetComponentInChildren<Text>().text),
+            //    TileDimensionsLibrary.StringToFloat(ThicknessButton.GetComponentInChildren<Text>().text),
+            //    TileDimensionsLibrary.StringToFloat(JointSizeButton.GetComponentInChildren<Text>().text),
+            //    TileDimensionsLibrary.StringToFloat())
+        }
     }
 }

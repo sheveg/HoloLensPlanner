@@ -56,6 +56,40 @@ namespace HoloLensPlanner.TEST
         }
 
         /// <summary>
+        /// Returns tile thickness as TileThickness.
+        /// Enter float.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static TileThickness SetTileThickness(float t)
+        {
+            if (t == 5f)
+            {
+                return TileThickness.Five;
+            }
+            else if(t == 8f)
+            {
+                return TileThickness.Eight;
+            }
+            else if (t == 12f)
+            {
+                return TileThickness.Twelve;
+            }
+            else if (t == 20f)
+            {
+                return TileThickness.Twenty;
+            }
+            else if (t == 30f)
+            {
+                return TileThickness.Thirty;
+            }
+            else
+            {
+                return TileThickness.Eight;
+            }
+        }
+
+        /// <summary>
         /// Returns the joint thickness in m.
         /// </summary>
         /// <param name="j"></param>
@@ -74,6 +108,42 @@ namespace HoloLensPlanner.TEST
                 default:
                     return 0.002f;
             }
+        } 
+
+        /// <summary>
+        /// Returns joint thickness as JointThickness.
+        /// Enter float.
+        /// </summary>
+        /// <param name="j"></param>
+        /// <returns></returns>
+        public static JointThickness SetJointThickness(float j)
+        {
+            if (j == 1f)
+            {
+                return JointThickness.One;
+            }
+            else if (j == 2f)
+            {
+                return JointThickness.Two;
+            }
+            else if (j == 4f)
+            {
+                return JointThickness.Four;
+            }
+            else if (j == 10f)
+            {
+                return JointThickness.Ten;
+            }
+            else
+            {
+                return JointThickness.Two;
+            }
+        }
+
+        public static float StringToFloat(string s)
+        {
+            string[] stringParts = s.Split(' ');
+            return float.Parse(stringParts[0], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
         }
     }
 }
