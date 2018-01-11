@@ -24,22 +24,18 @@ namespace HoloLensPlanner
         /// </summary>
         public PlaneType? CurrentPlaneType { get; private set; }
 
-        private void Start()
-        {
-            InputManager.Instance.PushFallbackInputHandler(gameObject);
-        }
-
         #region Interface implementations
 
         public void OnInputClicked(InputClickedEventData eventData)
         {
             if (CurrentPlaneType.HasValue)
             {
+                eventData.Use();
                 switch (CurrentPlaneType)
                 {
                     case PlaneType.Floor:
                         // all points of the floor polygon should be under the users head
-                        if (GazeManager.Instance.HitPosition.y < GazeManager.Instance.GazeOrigin.y)
+                        if (GazeManager.Instance.HitObject.layer == 31 && GazeManager.Instance.HitPosition.y < GazeManager.Instance.GazeOrigin.y)
                         {
                             PolygonManager.Instance.AddPoint();
                         }
@@ -77,6 +73,7 @@ namespace HoloLensPlanner
         public void CreateFloorPlane()
         {
             CurrentPlaneType = PlaneType.Floor;
+            InputManager.Instance.PushModalInputHandler(gameObject);
         }
 
         public void CreateWallPlane()
@@ -124,6 +121,8 @@ namespace HoloLensPlanner
 
             roomPlane.Setup(polygon, CurrentPlaneType.Value);
             CurrentPlaneType = null;
+            InputManager.Instance.PopModalInputHandler();
+            MainMenuManager.Instance.Show();
         }
 
         private RoomPlane createFloor(Vector3 position)

@@ -15,6 +15,7 @@ namespace HoloLensPlanner
         {
             base.Awake();
             TextureLibrary.LoadPNGsIntoTextures(PathLibrary.TileTexturesPath);
+            DontDestroyOnLoad(this);
         }
     }
 }
