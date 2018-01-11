@@ -27,7 +27,7 @@ namespace HoloLensPlanner
                 return;
 
             m_IsFocused = true;
-            InputManager.Instance.PushModalInputHandler(gameObject);
+            InputManager.Instance.PushFallbackInputHandler(gameObject);
         }
 
         public void OnFocusExit()
@@ -36,7 +36,7 @@ namespace HoloLensPlanner
                 return;
 
             m_IsFocused = false;
-            InputManager.Instance.PopModalInputHandler();
+            InputManager.Instance.PopFallbackInputHandler();
         }
 
         public void SetRootPolygon(Polygon polygon)
