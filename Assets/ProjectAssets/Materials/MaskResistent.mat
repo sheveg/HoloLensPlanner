@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: MaskResistent
-  m_Shader: {fileID: 4800000, guid: eed083514b98f98458be03b580ab132a, type: 3}
+  m_Shader: {fileID: 4800000, guid: 58061a3857648e249a8377919805d50e, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0

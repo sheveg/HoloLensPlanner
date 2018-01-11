@@ -95,7 +95,10 @@ namespace HoloLensPlanner.TEST
                 string jsonTile = File.ReadAllText(filePath);
                 JsonUtility.FromJsonOverwrite(jsonTile, this);
                 m_Texture = GlobalSettings.Instance.TextureLibrary.Textures[TextureIndex];
-                m_ID = new Guid(ID);
+                if (string.IsNullOrEmpty(ID))
+                    m_ID = Guid.NewGuid();
+                else
+                    m_ID = new Guid(ID);
             }
         }
     }
