@@ -4,6 +4,7 @@ using UnityEngine;
 using HoloToolkit.Unity;
 using UnityEngine.UI;
 using HoloLensPlanner.GazeResponse;
+using System;
 
 namespace HoloLensPlanner.TEST
 {
@@ -34,6 +35,9 @@ namespace HoloLensPlanner.TEST
         [SerializeField]
         private Button EditButton;
 
+        [SerializeField]
+        private Button SaveTileButton;
+
         /// <summary>
         /// In Edit mode we can change the values of the current tile.
         /// </summary>
@@ -44,11 +48,14 @@ namespace HoloLensPlanner.TEST
         /// </summary>
         public int CurrentTile { get; private set; }
 
-        private int currentTextureIndex;
+        private int CurrentTextureIndex;
+
+        private Guid CurrentGuid;
 
         private void Start()
         {
             EditButton.onClick.AddListener(enableEditing);
+            SaveTileButton.onClick.AddListener(SaveTile);
         }
 
         public void Hide()
@@ -68,6 +75,12 @@ namespace HoloLensPlanner.TEST
                 TileCountText.gameObject.SetActive(true);
             }
             CurrentTile = wrapTileIndex(tileIndex);
+
+            //Save GUID and textureIndex of tile
+            //Both needed to correctly store tile later
+            CurrentTextureIndex = TileMenuManager.Instance.SavedTiles[CurrentTile].TextureIndex;
+            CurrentGuid = TileMenuManager.Instance.SavedTiles[CurrentTile].Guid;
+
             loadCurrentTile();
             if(m_EditMode)
                 disableEditing();
@@ -94,6 +107,8 @@ namespace HoloLensPlanner.TEST
             ThicknessButton.GetComponentInChildren<Text>().text = (thicknessInM * 1000).ToString("n0") + " mm";
 
             TextureButton.GetComponent<RawImage>().texture = GlobalSettings.Instance.TextureLibrary.Textures[TileData.DefaultTextureIndex];
+            CurrentTextureIndex = TileData.DefaultTextureIndex;
+            CurrentGuid = Guid.Empty;
         }
 
         public void ShowNextTile()
@@ -159,14 +174,14 @@ namespace HoloLensPlanner.TEST
 
         private void loadWidth()
         {
-            float widthInM = TileMenuManager.Instance.SavedTiles[CurrentTile].Width;
-            WidthButton.GetComponentInChildren<Text>().text = (widthInM * 100).ToString("n0") + " cm";
+            float widthInCM = TileMenuManager.Instance.SavedTiles[CurrentTile].Width;
+            WidthButton.GetComponentInChildren<Text>().text = (widthInCM).ToString("n0") + " cm";
         }
 
         private void loadHeight()
         {
-            float heightInM = TileMenuManager.Instance.SavedTiles[CurrentTile].Height;
-            HeightButton.GetComponentInChildren<Text>().text = (heightInM * 100).ToString("n0") + " cm";
+            float heightInCM = TileMenuManager.Instance.SavedTiles[CurrentTile].Height;
+            HeightButton.GetComponentInChildren<Text>().text = (heightInCM).ToString("n0") + " cm";
         }
 
         private void loadJointSize()
@@ -215,11 +230,41 @@ namespace HoloLensPlanner.TEST
 
         public void SaveTile()
         {
-            //TileData tile = new TileData(TileDimensionsLibrary.StringToFloat(HeightButton.GetComponentInChildren<Text>().text),
-            //    TileDimensionsLibrary.StringToFloat(WidthButton.GetComponentInChildren<Text>().text),
-            //    TileDimensionsLibrary.StringToFloat(ThicknessButton.GetComponentInChildren<Text>().text),
-            //    TileDimensionsLibrary.StringToFloat(JointSizeButton.GetComponentInChildren<Text>().text),
-            //    TileDimensionsLibrary.StringToFloat())
+            //if CurrentGuid == null it's a new tile
+            if (CurrentGuid.ToString().Equals("00000000-0000-0000-0000-000000000000"))
+            {
+                //TODO: add name
+                TileData tile = new TileData(TileDimensionsLibrary.StringToFloat(HeightButton.GetComponentInChildren<Text>().text),
+                    TileDimensionsLibrary.StringToFloat(WidthButton.GetComponentInChildren<Text>().text),
+                    TileDimensionsLibrary.StringToFloat(ThicknessButton.GetComponentInChildren<Text>().text),
+                    TileDimensionsLibrary.StringToFloat(JointSizeButton.GetComponentInChildren<Text>().text),
+                    CurrentTextureIndex, 
+                    "",
+                    Guid.NewGuid());
+                tile.SaveToJson();
+                TileMenuManager.Instance.addToCachedTiles(tile);
+                CurrentTile = TileMenuManager.Instance.SavedTiles.Count;
+
+                //TODO: change to correct view (probably lay tiles on floor)
+                TileMenuManager.Instance.ShowListView(Mathf.CeilToInt(CurrentTile / ObjectPage.MaxObjectsCount));
+            }
+            //if CurrentGuid is set, save old tile
+            else
+            {
+                //TODO: add name
+                TileData tile = new TileData(TileDimensionsLibrary.StringToFloat(HeightButton.GetComponentInChildren<Text>().text),
+                    TileDimensionsLibrary.StringToFloat(WidthButton.GetComponentInChildren<Text>().text),
+                    TileDimensionsLibrary.StringToFloat(ThicknessButton.GetComponentInChildren<Text>().text),
+                    TileDimensionsLibrary.StringToFloat(JointSizeButton.GetComponentInChildren<Text>().text),
+                    CurrentTextureIndex, 
+                    "", 
+                    CurrentGuid);
+                tile.SaveToJson();
+                TileMenuManager.Instance.updateCachedTiles(tile);
+
+                //TODO: change to correct view (probably lay tiles on floor)
+                TileMenuManager.Instance.ShowListView(Mathf.CeilToInt(CurrentTile / ObjectPage.MaxObjectsCount));
+            }
         }
     }
 }

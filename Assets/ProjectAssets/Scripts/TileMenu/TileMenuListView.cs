@@ -154,7 +154,15 @@ namespace HoloLensPlanner.TEST
         /// <returns></returns>
         private int wrapPageIndex(int index)
         {
-            return (index % m_ObjectPages.Count + m_ObjectPages.Count) % m_ObjectPages.Count;
+            if (m_ObjectPages.Count == 0)
+            {
+                Debug.Log("First tile. If not check code in TileMenuListView.cs.");
+                return (index % 1 + 1) % 1;
+            }
+            else
+            {
+                return (index % m_ObjectPages.Count + m_ObjectPages.Count) % m_ObjectPages.Count;
+            }
         }
     }
 }

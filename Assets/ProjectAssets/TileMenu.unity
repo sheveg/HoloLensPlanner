@@ -501,14 +501,6 @@ Prefab:
       propertyPath: TargetTransform
       value: 
       objectReference: {fileID: 1941516129}
-    - target: {fileID: 1877437365155584, guid: 9b786fa82a1f06545aa7547fa01a6c88, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1190766269408898, guid: 9b786fa82a1f06545aa7547fa01a6c88, type: 2}
-      propertyPath: m_Name
-      value: Button_New_Tile
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9b786fa82a1f06545aa7547fa01a6c88, type: 2}
   m_IsPrefabParent: 0

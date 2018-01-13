@@ -28,6 +28,14 @@ namespace HoloLensPlanner.TEST
         /// </summary>
         public float Area { get { return Height * Width; } }
 
+        public Guid Guid
+        {
+            get
+            {
+                return m_ID;
+            }
+        }
+
         /// <summary>
         /// Tile thickness in specific format.
         /// </summary>
@@ -92,7 +100,7 @@ namespace HoloLensPlanner.TEST
         /// <param name="JointThickness"></param>
         /// <param name="TextureIndex"></param>
         /// <param name="Name"></param>
-        public TileData(float Height, float Width, float TileThickness, float JointThickness, int TextureIndex, string Name)
+        public TileData(float Height, float Width, float TileThickness, float JointThickness, int TextureIndex, string Name, Guid guid)
         {
             this.Height = Height;
             this.Width = Width;
@@ -107,6 +115,7 @@ namespace HoloLensPlanner.TEST
             {
                 this.Name = Name;
             }
+            this.m_ID = guid;
         }
 
         /// <summary>

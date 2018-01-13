@@ -4,6 +4,7 @@ using UnityEngine;
 using HoloToolkit.Unity;
 using System.IO;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace HoloLensPlanner.TEST
 {
@@ -177,14 +178,23 @@ namespace HoloLensPlanner.TEST
             TileMenuDetailView.Instance.NewTile();
         }
 
-        private void SaveTile()
-        {
-            TileMenuDetailView.Instance.SaveTile();
-        }
-
         private void printStateError()
         {
             Debug.Log("Case " + m_State + " not implemented!");
+        }
+
+        public void addToCachedTiles(TileData tile)
+        {
+            m_SavedTiles.Add(tile);
+        }
+
+        public void updateCachedTiles(TileData tile)
+        {
+            TileData tmp_tile = m_SavedTiles.Where(t => t.Guid == tile.Guid).FirstOrDefault();
+            if (tmp_tile != null)
+            {
+                tmp_tile = tile;
+            }
         }
     }
 }
