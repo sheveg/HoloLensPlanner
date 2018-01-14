@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace HoloLensPlanner
 {
-    public class MainMenuManager : Singleton<MainMenuManager>
+    public class MainMenuManager : SingleInstance<MainMenuManager>
     {
         [SerializeField]
         private Button CreateFloorButton;

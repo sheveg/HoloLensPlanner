@@ -9,7 +9,7 @@ namespace HoloLensPlanner.TEST
     /// <summary>
     /// TileMenuListView is responsible for handling input from the list view buttons and showing the saved tiles in a list display.
     /// </summary>
-    public class TileMenuListView : Singleton<TileMenuListView>
+    public class TileMenuListView : SingleInstance<TileMenuListView>
     {
         [SerializeField]
         private ObjectPage ObjectPagePrefab;

@@ -11,7 +11,7 @@ namespace HoloLensPlanner.TEST
     /// <summary>
     /// TileMenuDetailView is responsible for handling input from detail view buttons and showing the saved tiles in a detail view.
     /// </summary>
-    public class TileMenuDetailView : Singleton<TileMenuDetailView>
+    public class TileMenuDetailView : SingleInstance<TileMenuDetailView>
     {
         // Editor buttons
         [SerializeField]

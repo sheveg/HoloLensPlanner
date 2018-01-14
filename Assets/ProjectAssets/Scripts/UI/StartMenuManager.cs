@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace HoloLensPlanner
 {
-    public class StartMenuManager : Singleton<StartMenuManager>
+    public class StartMenuManager : SingleInstance<StartMenuManager>
     {
         /// <summary>
         /// Loads the main scene?

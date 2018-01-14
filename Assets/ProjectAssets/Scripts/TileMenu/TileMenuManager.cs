@@ -15,7 +15,7 @@ namespace HoloLensPlanner.TEST
         NewTileView
     }
 
-    public class TileMenuManager : Singleton<TileMenuManager>
+    public class TileMenuManager : SingleInstance<TileMenuManager>
     {
         [SerializeField]
         private Button ShowNextButton;

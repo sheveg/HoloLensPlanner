@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System.Linq;
 using UnityEngine;
 
 namespace HoloToolkit.Unity
 {
     /// <summary>
-    /// Singleton behaviour class, used for components that should only have one instance
+    /// Singleton behaviour class, used for components that should only have one instance.
+    /// <remarks>Singleton classes live on through scene transitions and will mark their 
+    /// parent root GameObject with <see cref="Object.DontDestroyOnLoad"/></remarks>
     /// </summary>
     /// <typeparam name="T">The Singleton Type</typeparam>
     public class Singleton<T> : MonoBehaviour where T : Singleton<T>
@@ -25,31 +26,18 @@ namespace HoloToolkit.Unity
         {
             get
             {
-                if (instance == null && searchForInstance)
+                if (!IsInitialized && searchForInstance)
                 {
                     searchForInstance = false;
                     T[] objects = FindObjectsOfType<T>();
-                    // Change 08.01.17 by Egor, finds also inactive objects
-                    //T[] objects = Resources.FindObjectsOfTypeAll<T>();
                     if (objects.Length == 1)
                     {
                         instance = objects[0];
+                        instance.gameObject.GetParentRoot().DontDestroyOnLoad();
                     }
                     else if (objects.Length > 1)
                     {
-                        objects = objects.Distinct().ToArray();
-                        if (objects.Length == 1)
-                        {
-                            instance = objects[0];
-                        }
-                        else if (objects.Length > 1)
-                        {
-                            foreach (var obj in objects)
-                            {
-                                Debug.Log("Found " + obj.name);
-                            }
-                            Debug.LogErrorFormat("Expected exactly 1 {0} but found {1}.", typeof(T).ToString(), objects.Length);
-                        }
+                        Debug.LogErrorFormat("Expected exactly 1 {0} but found {1}.", typeof(T).Name, objects.Length);
                     }
                 }
                 return instance;
@@ -92,12 +80,14 @@ namespace HoloToolkit.Unity
                 {
                     Destroy(this);
                 }
-                // changed to Debug.Log because it is not an error, but actually desired behaviour
-                Debug.LogFormat("Trying to instantiate a second instance of singleton class {0}. Additional Instance was destroyed", GetType().Name);
+
+                Debug.LogErrorFormat("Trying to instantiate a second instance of singleton class {0}. Additional Instance was destroyed", GetType().Name);
             }
             else if (!IsInitialized)
             {
                 instance = (T)this;
+                searchForInstance = false;
+                gameObject.GetParentRoot().DontDestroyOnLoad();
             }
         }
 
