@@ -167,8 +167,9 @@ namespace HoloLensPlanner.TEST
         private void editNumbers(Button b)
         {
             KeyboardNumbers.Instance.gameObject.SetActive(true);
-            //TODO position Keyboard
-            KeyboardNumbers.Instance.gameObject.transform.position = new Vector3(b.transform.position.x, b.transform.position.y, b.transform.position.z - 0.4f);
+            
+            //Now done by simpleTagalong script
+            //KeyboardNumbers.Instance.gameObject.transform.position = b.transform.position - 0.4f * b.transform.forward;
 
             selectedButton = b;
             KeyboardNumbers.Instance.OnTextSubmitted += acceptKeyboardInput;
