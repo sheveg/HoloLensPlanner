@@ -57,7 +57,7 @@ namespace HoloLensPlanner.TEST
             TileMenuDetailView.Instance.gameObject.SetActive(false);
         }
 
-        private void loadTiles()
+        public void loadTiles()
         {
             // first get all saved tile files
             string[] savedTilesPaths = Directory.GetFiles(GlobalSettings.Instance.PathLibrary.SavedTilesPath, "*." + GlobalSettings.Instance.PathLibrary.SavedTilesType);
@@ -190,10 +190,15 @@ namespace HoloLensPlanner.TEST
 
         public void updateCachedTiles(TileData tile)
         {
-            TileData tmp_tile = m_SavedTiles.Where(t => t.Guid == tile.Guid).FirstOrDefault();
-            if (tmp_tile != null)
+            try
             {
-                tmp_tile = tile;
+                int tileIndex = m_SavedTiles.FindIndex(t => t.Guid == tile.Guid);
+                m_SavedTiles[tileIndex] = tile;
+            }
+            catch (System.Exception)
+            {
+
+                throw;
             }
         }
     }

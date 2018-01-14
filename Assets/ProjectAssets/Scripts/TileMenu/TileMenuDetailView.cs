@@ -38,6 +38,8 @@ namespace HoloLensPlanner.TEST
         [SerializeField]
         private Button SaveTileButton;
 
+        private Button selectedButton;
+
         /// <summary>
         /// In Edit mode we can change the values of the current tile.
         /// </summary>
@@ -162,6 +164,26 @@ namespace HoloLensPlanner.TEST
             }
         }
 
+        private void editNumbers(Button b)
+        {
+            KeyboardNumbers.Instance.gameObject.SetActive(true);
+            //TODO position Keyboard
+            selectedButton = b;
+            KeyboardNumbers.Instance.OnTextSubmitted += acceptKeyboardInput;
+        }
+
+        private void acceptKeyboardInput(object sender, EventArgs e)
+        {
+            if (selectedButton.Equals(HeightButton))
+            {
+                HeightButton.GetComponentInChildren<Text>().text = KeyboardNumbers.Instance.InputField.text + " cm";
+            }
+            else if (selectedButton.Equals(WidthButton))
+            {
+                WidthButton.GetComponentInChildren<Text>().text = KeyboardNumbers.Instance.InputField.text + " cm";
+            }
+        }
+
         private void loadTexture()
         {
             //Texture2D tileTexture = GlobalSettings.Instance.TextureLibrary.Textures[TileMenuManager.Instance.SavedTiles[CurrentTile].TextureIndex];
@@ -216,6 +238,13 @@ namespace HoloLensPlanner.TEST
             Outline o;
             if ((o = b.GetComponent<Outline>()) != null)
                 o.enabled = true;
+
+            //TODO: Other Buttons
+            //Number Pad for Height and Width
+            if (b.Equals(HeightButton) || b.Equals(WidthButton))
+            {
+                b.onClick.AddListener(delegate { editNumbers(b); });
+            }
         }
 
         private void updateTileIndexText()
@@ -244,9 +273,6 @@ namespace HoloLensPlanner.TEST
                 tile.SaveToJson();
                 TileMenuManager.Instance.addToCachedTiles(tile);
                 CurrentTile = TileMenuManager.Instance.SavedTiles.Count;
-
-                //TODO: change to correct view (probably lay tiles on floor)
-                TileMenuManager.Instance.ShowListView(Mathf.CeilToInt(CurrentTile / ObjectPage.MaxObjectsCount));
             }
             //if CurrentGuid is set, save old tile
             else
@@ -260,11 +286,11 @@ namespace HoloLensPlanner.TEST
                     "", 
                     CurrentGuid);
                 tile.SaveToJson();
-                TileMenuManager.Instance.updateCachedTiles(tile);
-
-                //TODO: change to correct view (probably lay tiles on floor)
-                TileMenuManager.Instance.ShowListView(Mathf.CeilToInt(CurrentTile / ObjectPage.MaxObjectsCount));
+                TileMenuManager.Instance.updateCachedTiles(tile);               
             }
+            //TODO: Delete two lines if scene should change to "place tiles" not go back to ListView
+            TileMenuListView.Instance.CreatePages(TileMenuManager.Instance.SavedTiles);
+            TileMenuManager.Instance.ShowListView(Mathf.CeilToInt(CurrentTile / ObjectPage.MaxObjectsCount));
         }
     }
 }
