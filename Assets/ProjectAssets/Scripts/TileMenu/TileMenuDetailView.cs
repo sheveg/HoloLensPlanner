@@ -168,6 +168,8 @@ namespace HoloLensPlanner.TEST
         {
             KeyboardNumbers.Instance.gameObject.SetActive(true);
             //TODO position Keyboard
+            KeyboardNumbers.Instance.gameObject.transform.position = new Vector3(b.transform.position.x, b.transform.position.y, b.transform.position.z - 0.4f);
+
             selectedButton = b;
             KeyboardNumbers.Instance.OnTextSubmitted += acceptKeyboardInput;
         }
