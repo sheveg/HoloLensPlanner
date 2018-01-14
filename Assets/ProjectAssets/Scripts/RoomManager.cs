@@ -54,7 +54,14 @@ namespace HoloLensPlanner
         {
             if (CurrentPlaneType.HasValue)
             {
-                FinishRoomPlane();
+                if (PolygonManager.Instance.CurrentPolygon.Points.Count >= 4)
+                {
+                    FinishRoomPlane();
+                }
+                else
+                {
+                    WarningManager.Instance.ShowWarning("You need at least four points to create a floor!");
+                }
             }
         }
 
@@ -122,7 +129,7 @@ namespace HoloLensPlanner
             roomPlane.Setup(polygon, CurrentPlaneType.Value);
             CurrentPlaneType = null;
             InputManager.Instance.PopModalInputHandler();
-            MainMenuManager.Instance.Show();
+            MainMenuManager.Instance.StartFollow();
         }
 
         private RoomPlane createFloor(Vector3 position)

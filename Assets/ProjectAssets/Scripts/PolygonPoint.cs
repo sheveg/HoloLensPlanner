@@ -17,6 +17,7 @@ namespace HoloLensPlanner
 
         public void OnInputClicked(InputClickedEventData eventData)
         {
+            Debug.Log("HitPoint");
             if (GazeManager.Instance.HitObject == gameObject)
             {
                 Debug.Log("HitPoint");
@@ -58,6 +59,7 @@ namespace HoloLensPlanner
                 {
                     pointGazeObject.enabled = true;
                 }
+                base.OnFocusExit();
                 Destroy(gameObject);
             }
         }

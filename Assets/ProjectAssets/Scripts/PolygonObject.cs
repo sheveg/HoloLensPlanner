@@ -23,20 +23,16 @@ namespace HoloLensPlanner
 
         public void OnFocusEnter()
         {
-            if (m_RootPolygon.MeshPlane == null)
-                return;
-
             m_IsFocused = true;
-            InputManager.Instance.PushFallbackInputHandler(gameObject);
+            InputManager.Instance.PushModalInputHandler(gameObject);
+            Debug.Log("FocusEnter");
         }
 
         public void OnFocusExit()
         {
-            if (m_RootPolygon.MeshPlane == null)
-                return;
-
             m_IsFocused = false;
-            InputManager.Instance.PopFallbackInputHandler();
+            Debug.Log("FocusExit");
+            InputManager.Instance.PopModalInputHandler();
         }
 
         public void SetRootPolygon(Polygon polygon)

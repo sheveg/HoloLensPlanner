@@ -55,9 +55,11 @@ namespace HoloLensPlanner.TEST
 
             TileMenuListView.Instance.gameObject.SetActive(true);
             TileMenuDetailView.Instance.gameObject.SetActive(false);
+
+            //Hide();
         }
 
-        public void loadTiles()
+        private void loadTiles()
         {
             // first get all saved tile files
             string[] savedTilesPaths = Directory.GetFiles(GlobalSettings.Instance.PathLibrary.SavedTilesPath, "*." + GlobalSettings.Instance.PathLibrary.SavedTilesType);
@@ -130,6 +132,16 @@ namespace HoloLensPlanner.TEST
             m_State = TileMenuState.ListView;
             TileMenuDetailView.Instance.Hide();
             TileMenuListView.Instance.Show(pageIndex);
+        }
+
+        public void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
         }
 
         private void showDetailView()

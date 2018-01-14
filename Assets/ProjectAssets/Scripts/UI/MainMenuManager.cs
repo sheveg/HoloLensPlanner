@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HoloToolkit.Unity;
 using UnityEngine.UI;
+using HoloLensPlanner.TEST;
 
 namespace HoloLensPlanner
 {
@@ -37,24 +38,36 @@ namespace HoloLensPlanner
 
             m_CanvasGroup = GetComponent<CanvasGroup>();
             m_TagAlong = GetComponent<SimpleTagalong>();
+
+            TileMenuManager.Instance.Hide();
         }
 
-        public void Show()
+        public void StartFollow()
         {
             m_CanvasGroup.alpha = 1f;
             m_TagAlong.enabled = true;
         }
 
-        public void Hide()
+        public void StopFollow()
         {
             m_CanvasGroup.alpha = m_HideAlpha;
             m_TagAlong.enabled = false;
         }
 
+        public void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
         private void createFloor()
         {
             RoomManager.Instance.CreateFloorPlane();
-            Hide();
+            StopFollow();
         }
 
         private void showObjectMenu()
@@ -64,7 +77,8 @@ namespace HoloLensPlanner
 
         private void showTileMenu()
         {
-            Debug.Log("Not implemented!");
+            TileMenuManager.Instance.Show();
+            Hide();
         }
 
 
