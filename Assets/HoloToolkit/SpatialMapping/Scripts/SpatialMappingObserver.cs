@@ -290,7 +290,7 @@ namespace HoloToolkit.Unity.SpatialMapping
 
             if (ObserverState != ObserverStates.Running)
             {
-                Debug.Log("Starting the observer.");
+                //Debug.Log("Starting the observer.");
                 ObserverState = ObserverStates.Running;
 
                 // We want the first update immediately.
@@ -308,7 +308,7 @@ namespace HoloToolkit.Unity.SpatialMapping
 #if UNITY_WSA
             if (ObserverState == ObserverStates.Running)
             {
-                Debug.Log("Stopping the observer.");
+                //Debug.Log("Stopping the observer.");
                 ObserverState = ObserverStates.Stopped;
 
                 surfaceWorkQueue.Clear();

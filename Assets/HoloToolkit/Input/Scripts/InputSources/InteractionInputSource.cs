@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 #if UNITY_WSA
 #if UNITY_2017_2_OR_NEWER
@@ -179,7 +180,7 @@ namespace HoloToolkit.Unity.InputModule
 #if UNITY_WSA
             if (RecognizerStart == RecognizerStartBehavior.AutoStart)
             {
-                StartGestureRecognizer();
+                StartGestureRecognizer();              
             }
 
             InteractionSourceState[] states = InteractionManager.GetCurrentReading();

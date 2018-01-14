@@ -28,9 +28,9 @@ namespace HoloToolkit.Unity
                 if (instance == null && searchForInstance)
                 {
                     searchForInstance = false;
-                    //T[] objects = FindObjectsOfType<T>();
+                    T[] objects = FindObjectsOfType<T>();
                     // Change 08.01.17 by Egor, finds also inactive objects
-                    T[] objects = Resources.FindObjectsOfTypeAll<T>();
+                    //T[] objects = Resources.FindObjectsOfTypeAll<T>();
                     if (objects.Length == 1)
                     {
                         instance = objects[0];
@@ -92,8 +92,8 @@ namespace HoloToolkit.Unity
                 {
                     Destroy(this);
                 }
-
-                Debug.LogErrorFormat("Trying to instantiate a second instance of singleton class {0}. Additional Instance was destroyed", GetType().Name);
+                // changed to Debug.Log because it is not an error, but actually desired behaviour
+                Debug.LogFormat("Trying to instantiate a second instance of singleton class {0}. Additional Instance was destroyed", GetType().Name);
             }
             else if (!IsInitialized)
             {
