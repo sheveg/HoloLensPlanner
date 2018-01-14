@@ -5,6 +5,7 @@ using HoloToolkit.Unity;
 using UnityEngine.UI;
 using HoloLensPlanner.GazeResponse;
 using System;
+using HoloToolkit.UI.Keyboard;
 
 namespace HoloLensPlanner.TEST
 {
@@ -37,6 +38,9 @@ namespace HoloLensPlanner.TEST
 
         [SerializeField]
         private Button SaveTileButton;
+
+        [SerializeField]
+        private Button NameButton;
 
         private Button selectedButton;
 
@@ -130,6 +134,7 @@ namespace HoloLensPlanner.TEST
             loadHeight();
             loadJointSize();
             loadThickness();
+            loadName();
         }
 
         private void disableEditing()
@@ -140,6 +145,7 @@ namespace HoloLensPlanner.TEST
             disableButton(HeightButton);
             disableButton(JointSizeButton);
             disableButton(ThicknessButton);
+            disableButton(NameButton);
         }
 
         private void enableEditing()
@@ -152,6 +158,7 @@ namespace HoloLensPlanner.TEST
                 enableButton(HeightButton);
                 enableButton(JointSizeButton);
                 enableButton(ThicknessButton);
+                enableButton(NameButton);
             }
             else if (m_EditMode == true)
             {
@@ -161,18 +168,29 @@ namespace HoloLensPlanner.TEST
                 disableButton(HeightButton);
                 disableButton(JointSizeButton);
                 disableButton(ThicknessButton);
+                disableButton(NameButton);
             }
         }
 
-        private void editNumbers(Button b)
+        private void edit(Button b)
         {
-            KeyboardNumbers.Instance.gameObject.SetActive(true);
-            
-            //Now done by simpleTagalong script
-            //KeyboardNumbers.Instance.gameObject.transform.position = b.transform.position - 0.4f * b.transform.forward;
-
             selectedButton = b;
-            KeyboardNumbers.Instance.OnTextSubmitted += acceptKeyboardInput;
+
+            if (b.Equals(HeightButton) || b.Equals(WidthButton))
+            {
+                KeyboardNumbers.Instance.gameObject.SetActive(true);
+
+                //Now done by simpleTagalong script
+                //KeyboardNumbers.Instance.gameObject.transform.position = b.transform.position - 0.4f * b.transform.forward;
+
+                KeyboardNumbers.Instance.OnTextSubmitted += acceptKeyboardInput;
+            }
+            else if (b.Equals(NameButton))
+            {
+                Keyboard.Instance.gameObject.SetActive(true);
+                Keyboard.Instance.OnTextSubmitted += acceptKeyboardInput;
+            }
+            
         }
 
         private void acceptKeyboardInput(object sender, EventArgs e)
@@ -184,6 +202,10 @@ namespace HoloLensPlanner.TEST
             else if (selectedButton.Equals(WidthButton))
             {
                 WidthButton.GetComponentInChildren<Text>().text = KeyboardNumbers.Instance.InputField.text + " cm";
+            }
+            else if (selectedButton.Equals(NameButton))
+            {
+                NameButton.GetComponentInChildren<Text>().text = Keyboard.Instance.InputField.text;
             }
         }
 
@@ -221,6 +243,12 @@ namespace HoloLensPlanner.TEST
             ThicknessButton.GetComponentInChildren<Text>().text = (thicknessInM * 1000).ToString("n0") + " mm";
         }
 
+        private void loadName()
+        {
+            string name = TileMenuManager.Instance.SavedTiles[CurrentTile].Name;
+            NameButton.GetComponentInChildren<Text>().text = name;
+        }
+
         private void disableButton(Button b)
         {
             b.enabled = false;
@@ -242,12 +270,8 @@ namespace HoloLensPlanner.TEST
             if ((o = b.GetComponent<Outline>()) != null)
                 o.enabled = true;
 
-            //TODO: Other Buttons
-            //Number Pad for Height and Width
-            if (b.Equals(HeightButton) || b.Equals(WidthButton))
-            {
-                b.onClick.AddListener(delegate { editNumbers(b); });
-            }
+            b.onClick.AddListener(delegate { edit(b); });
+
         }
 
         private void updateTileIndexText()
@@ -271,7 +295,7 @@ namespace HoloLensPlanner.TEST
                     TileDimensionsLibrary.StringToFloat(ThicknessButton.GetComponentInChildren<Text>().text),
                     TileDimensionsLibrary.StringToFloat(JointSizeButton.GetComponentInChildren<Text>().text),
                     CurrentTextureIndex, 
-                    "",
+                    NameButton.GetComponentInChildren<Text>().text,
                     Guid.NewGuid());
                 tile.SaveToJson();
                 TileMenuManager.Instance.addToCachedTiles(tile);
@@ -285,8 +309,8 @@ namespace HoloLensPlanner.TEST
                     TileDimensionsLibrary.StringToFloat(WidthButton.GetComponentInChildren<Text>().text),
                     TileDimensionsLibrary.StringToFloat(ThicknessButton.GetComponentInChildren<Text>().text),
                     TileDimensionsLibrary.StringToFloat(JointSizeButton.GetComponentInChildren<Text>().text),
-                    CurrentTextureIndex, 
-                    "", 
+                    CurrentTextureIndex,
+                    NameButton.GetComponentInChildren<Text>().text, 
                     CurrentGuid);
                 tile.SaveToJson();
                 TileMenuManager.Instance.updateCachedTiles(tile);               
