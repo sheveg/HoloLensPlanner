@@ -118,6 +118,7 @@ GameObject:
   - component: {fileID: 114880852244877502}
   - component: {fileID: 114627678740240432}
   - component: {fileID: 114679710264446606}
+  - component: {fileID: 114454550894590432}
   m_Layer: 5
   m_Name: StartMenu
   m_TagString: Untagged
@@ -286,6 +287,17 @@ MonoBehaviour:
   m_EffectColor: {r: 0.6544118, g: 0.6544118, b: 0.6544118, a: 1}
   m_EffectDistance: {x: 3, y: -3}
   m_UseGraphicAlpha: 1
+--- !u!114 &114454550894590432
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1821970652592704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cab6a8d90543154585ddc0d6d9bb15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114542473995221938
 MonoBehaviour:
   m_ObjectHideFlags: 1

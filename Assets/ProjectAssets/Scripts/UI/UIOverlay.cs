@@ -27,6 +27,11 @@ namespace HoloLensPlanner
             {
                 text.material = OverlayMaterialText;
             }
+            var rawImgs = GetComponentsInChildren<RawImage>(true);
+            foreach (var rawImg in rawImgs)
+            {
+                rawImg.material = OverlayMaterialImage;
+            }
         }
     }
 }

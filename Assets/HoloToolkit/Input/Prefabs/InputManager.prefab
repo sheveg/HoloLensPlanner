@@ -289,7 +289,9 @@ MonoBehaviour:
   MaxGazeCollisionDistance: 20
   RaycastLayerMasks:
   - serializedVersion: 2
-    m_Bits: 4294967291
+    m_Bits: 32
+  - serializedVersion: 2
+    m_Bits: 4294967259
   Stabilizer: {fileID: 114000011980027866}
   GazeTransform: {fileID: 0}
   DebugDrawRay: 0
@@ -457,7 +459,7 @@ MonoBehaviour:
     m_Bits: 4294967291
   registeredPointers: []
   autoRegisterGazePointerIfNoPointersRegistered: 1
-  debugDrawPointingRays: 0
+  debugDrawPointingRays: 1
   debugDrawPointingRayColors: []
   uiRaycastCamera: {fileID: 20049547090947856}
 --- !u!114 &114742747811649402
