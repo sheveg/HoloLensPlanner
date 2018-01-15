@@ -198,14 +198,17 @@ namespace HoloLensPlanner.TEST
             if (selectedButton.Equals(HeightButton))
             {
                 HeightButton.GetComponentInChildren<Text>().text = KeyboardNumbers.Instance.InputField.text + " cm";
+                KeyboardNumbers.Instance.OnTextSubmitted -= acceptKeyboardInput;
             }
             else if (selectedButton.Equals(WidthButton))
             {
                 WidthButton.GetComponentInChildren<Text>().text = KeyboardNumbers.Instance.InputField.text + " cm";
+                KeyboardNumbers.Instance.OnTextSubmitted -= acceptKeyboardInput;
             }
             else if (selectedButton.Equals(NameButton))
             {
                 NameButton.GetComponentInChildren<Text>().text = Keyboard.Instance.InputField.text;
+                Keyboard.Instance.OnTextSubmitted -= acceptKeyboardInput;
             }
         }
 
