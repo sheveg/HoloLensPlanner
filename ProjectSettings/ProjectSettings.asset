@@ -521,11 +521,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: HoloLensTest
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: Assets\WSATestCertificate.pfx
+  metroCertificatePath: 
   metroCertificatePassword: 
-  metroCertificateSubject: DefaultCompany
-  metroCertificateIssuer: DefaultCompany
-  metroCertificateNotAfter: 80bee22edfa9d401
+  metroCertificateSubject: 
+  metroCertificateIssuer: 
+  metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: HoloLens Test
   wsaImages: {}
   metroTileShortName: 
