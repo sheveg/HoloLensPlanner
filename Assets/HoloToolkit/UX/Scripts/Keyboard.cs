@@ -33,7 +33,6 @@ namespace HoloToolkit.UI.Keyboard
             Symbol,
             URL,
             Email,
-            Number, // change 15.01.18 by Egor, to extend the keyboard functionality to be able to show a number keyboard in a derived class
         }
 
         #region Callbacks
@@ -125,7 +124,7 @@ namespace HoloToolkit.UI.Keyboard
         /// </summary>
         public Image AlphaMailKeys = null;
 
-        protected LayoutType m_LastKeyboardLayout = LayoutType.Alpha; // change 15.01.18 to extend keyboard func
+        private LayoutType m_LastKeyboardLayout = LayoutType.Alpha;
 
         /// <summary>
         /// The scale the keyboard should be at its maximum distance.
@@ -419,7 +418,7 @@ namespace HoloToolkit.UI.Keyboard
         /// Activates a specific keyboard layout, and any sub keys.
         /// </summary>
         /// <param name="keyboardType"></param>
-        protected virtual void ActivateSpecificKeyboard(LayoutType keyboardType) // // change 15.01.18 by Egor, to extend the keyboard functionality to be able to show a number keyboard in a derived class
+        private void ActivateSpecificKeyboard(LayoutType keyboardType)
         {
             DisableAllKeyboards();
             ResetKeyboardState();
@@ -823,7 +822,7 @@ namespace HoloToolkit.UI.Keyboard
         /// Show the default subkeys only on the Alphanumeric keyboard.
         /// </summary>
         /// <returns></returns>
-        protected bool TryToShowAlphaSubkeys() // change 15.01.18 by Egor, to extend the keyboard functionality to be able to show a number keyboard in a derived class
+        private bool TryToShowAlphaSubkeys()
         {
             if (AlphaKeyboard.IsActive())
             {
@@ -840,7 +839,7 @@ namespace HoloToolkit.UI.Keyboard
         /// Show the email subkeys only on the Alphanumeric keyboard.
         /// </summary>
         /// <returns></returns>
-        protected bool TryToShowEmailSubkeys() // change 15.01.18 by Egor, to extend the keyboard functionality to be able to show a number keyboard in a derived class
+        private bool TryToShowEmailSubkeys()
         {
             if (AlphaKeyboard.IsActive())
             {
@@ -858,7 +857,7 @@ namespace HoloToolkit.UI.Keyboard
         /// Show the URL subkeys only on the Alphanumeric keyboard.
         /// </summary>
         /// <returns></returns>
-        protected bool TryToShowURLSubkeys() // change 15.01.18 by Egor, to extend the keyboard functionality to be able to show a number keyboard in a derived class
+        private bool TryToShowURLSubkeys()
         {
             if (AlphaKeyboard.IsActive())
             {
@@ -883,7 +882,7 @@ namespace HoloToolkit.UI.Keyboard
         /// <summary>
         /// Disable GameObjects for all keyboard elements.
         /// </summary>
-        protected virtual void DisableAllKeyboards() // change 15.01.18 by Egor, to extend the keyboard functionality to be able to show a number keyboard in a derived class
+        private void DisableAllKeyboards()
         {
             AlphaKeyboard.gameObject.SetActive(false);
             SymbolKeyboard.gameObject.SetActive(false);
@@ -896,7 +895,7 @@ namespace HoloToolkit.UI.Keyboard
         /// <summary>
         /// Reset temporary states of keyboard.
         /// </summary>
-        protected void ResetKeyboardState()  // change 15.01.18 by Egor, to extend the keyboard functionality to be able to show a number keyboard in a derived class
+        private void ResetKeyboardState()
         {
             CapsLock(false);
         }

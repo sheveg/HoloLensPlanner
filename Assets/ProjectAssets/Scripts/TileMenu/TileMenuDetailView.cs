@@ -5,7 +5,7 @@ using HoloToolkit.Unity;
 using UnityEngine.UI;
 using HoloLensPlanner.GazeResponse;
 using System;
-using HoloToolkit.UI.Keyboard;
+using HoloLensPlanner;
 
 namespace HoloLensPlanner.TEST
 {
@@ -177,39 +177,46 @@ namespace HoloLensPlanner.TEST
             selectedButton = b;
 
             if (b.Equals(HeightButton) || b.Equals(WidthButton))
-            {
-                KeyboardNumbers.Instance.gameObject.SetActive(true);
+            {                
+                KeyboardWithNumbers.Instance.FollowWithOffset(b.transform, 0.01f);
+                KeyboardWithNumbers.Instance.PresentKeyboard(KeyboardWithNumbers.LayoutType.Number);
 
                 //Now done by simpleTagalong script
                 //KeyboardNumbers.Instance.gameObject.transform.position = b.transform.position - 0.4f * b.transform.forward;
 
-                KeyboardNumbers.Instance.OnTextSubmitted += acceptKeyboardInput;
+                KeyboardWithNumbers.Instance.OnTextSubmitted += acceptKeyboardInput;
             }
             else if (b.Equals(NameButton))
             {
-                Keyboard.Instance.gameObject.SetActive(true);
-                Keyboard.Instance.OnTextSubmitted += acceptKeyboardInput;
+                KeyboardWithNumbers.Instance.FollowWithOffset(b.transform, 0.01f);
+                KeyboardWithNumbers.Instance.PresentKeyboard(KeyboardWithNumbers.LayoutType.Number);
+                KeyboardWithNumbers.Instance.OnTextSubmitted += acceptKeyboardInput;
             }
-            
+            else if (b.Equals(TextureButton))
+            {
+
+                this.gameObject.SetActive(false);
+                TextureListView.Instance.CreatePages();
+                TextureListView.Instance.Show(Mathf.CeilToInt(CurrentTextureIndex / ObjectPage.MaxObjectsCount));
+            }
         }
 
         private void acceptKeyboardInput(object sender, EventArgs e)
         {
             if (selectedButton.Equals(HeightButton))
             {
-                HeightButton.GetComponentInChildren<Text>().text = KeyboardNumbers.Instance.InputField.text + " cm";
-                KeyboardNumbers.Instance.OnTextSubmitted -= acceptKeyboardInput;
+                HeightButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text + " cm";                
             }
             else if (selectedButton.Equals(WidthButton))
             {
-                WidthButton.GetComponentInChildren<Text>().text = KeyboardNumbers.Instance.InputField.text + " cm";
-                KeyboardNumbers.Instance.OnTextSubmitted -= acceptKeyboardInput;
+                WidthButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text + " cm";
             }
             else if (selectedButton.Equals(NameButton))
             {
-                NameButton.GetComponentInChildren<Text>().text = Keyboard.Instance.InputField.text;
-                Keyboard.Instance.OnTextSubmitted -= acceptKeyboardInput;
+                NameButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text;
             }
+            KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptKeyboardInput;
+            KeyboardWithNumbers.Instance.StopFollow();
         }
 
         private void loadTexture()

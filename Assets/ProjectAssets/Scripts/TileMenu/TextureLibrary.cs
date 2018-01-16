@@ -15,7 +15,7 @@ namespace HoloLensPlanner.TEST
 
         public Texture2D[] Textures;
         
-        public void LoadPNGsIntoTextures(string path)
+        public void LoadPNGsJPGsIntoTextures(string path)
         {
             var directory = new DirectoryInfo(path);
             var directoryInfo = directory.GetFiles();

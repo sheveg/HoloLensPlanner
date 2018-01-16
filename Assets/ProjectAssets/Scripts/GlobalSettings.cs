@@ -14,7 +14,7 @@ namespace HoloLensPlanner
         protected override void Awake()
         {
             base.Awake();
-            TextureLibrary.LoadPNGsIntoTextures(PathLibrary.TileTexturesPath);
+            TextureLibrary.LoadPNGsJPGsIntoTextures(PathLibrary.TileTexturesPath);
             DontDestroyOnLoad(this);
         }
     }
