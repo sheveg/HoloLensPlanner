@@ -70,6 +70,9 @@ namespace HoloLensPlanner.GazeResponse
 
         public void OnFocusEnter()
         {
+            if (!InputManager.Instance.IsInputEnabled)
+                return;
+
             m_IsFocused = true;
             handleFocusChange();
         }

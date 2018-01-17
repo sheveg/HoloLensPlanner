@@ -20,7 +20,7 @@ namespace HoloLensPlanner
     ///       To retrieve the input from the Keyboard, subscribe to the textEntered event. Note that
     ///       tapping 'Close' on the Keyboard will not fire the textEntered event. You must tap 'Enter' to
     ///       get the textEntered event.
-    public class KeyboardWithNumbers : Singleton<KeyboardWithNumbers>
+    public class KeyboardWithNumbers : Singleton<KeyboardWithNumbers>, IFocusable
     {
         /// <summary>
         /// Layout type enum for the type of keyboard layout to use.  
@@ -233,7 +233,6 @@ namespace HoloLensPlanner
         /// </summary>
         private Vector3 m_ObjectBounds;
 
-
         /// <summary>
         /// Deactivate on Awake.
         /// </summary>
@@ -266,7 +265,22 @@ namespace HoloLensPlanner
             {
                 transform.position = m_TargetFollow.transform.position - m_TargetFollow.transform.forward * m_TargetOffset;
             }
+        }
 
+        /// <summary>
+        /// Enable input again when the user focuses the keyboard.
+        /// </summary>
+        public void OnFocusEnter()
+        {
+            InputManager.Instance.PopInputDisable();
+        }
+
+        /// <summary>
+        /// Disables the input when the user is not focusing the keyboard when it is open.
+        /// </summary>
+        public void OnFocusExit()
+        {
+            InputManager.Instance.PushInputDisable();
         }
 
         /// <summary>
@@ -301,11 +315,17 @@ namespace HoloLensPlanner
             InputField.caretPosition = newPos;
         }
 
+        private void OnEnable()
+        {
+            InputManager.Instance.PushInputDisable();
+        }
+
         /// <summary>
         /// Called whenever the keyboard is disabled or deactivated.
         /// </summary>
         private void OnDisable()
         {
+            scaleBackgroundToOriginalSize();
             m_LastKeyboardLayout = LayoutType.Alpha;
             Clear();
         }
@@ -939,7 +959,6 @@ namespace HoloLensPlanner
         private void scaleBackgroundToOriginalSize()
         {
             checkParameters();
-
             if (m_LastKeyboardLayout == LayoutType.Number)
             {
                 m_BackgroundRectTransform.sizeDelta = new Vector2(m_BackgroundWidth, m_BackgroundRectTransform.sizeDelta.y);
@@ -972,12 +991,20 @@ namespace HoloLensPlanner
             AlphaSubKeys.gameObject.SetActive(false);
         }
 
-        public void FollowWithOffset(Transform parent, float verticalOffset = 0.0f)
+        /// <summary>
+        /// Starts to follow the target with an offset. Call <see cref="StopFollow"/> to disable it. 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="verticalOffset"></param>
+        public void FollowWithOffset(Transform target, float verticalOffset = 0.0f)
         {
-            m_TargetFollow = parent;
+            m_TargetFollow = target;
             m_TargetOffset = verticalOffset;
         }
 
+        /// <summary>
+        /// Stops the following behaviour.
+        /// </summary>
         public void StopFollow()
         {
             m_TargetFollow = null;

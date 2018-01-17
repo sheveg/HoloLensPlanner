@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using HoloToolkit.Unity;
 using UnityEngine.UI;
-using HoloLensPlanner.TEST;
 
 namespace HoloLensPlanner
 {

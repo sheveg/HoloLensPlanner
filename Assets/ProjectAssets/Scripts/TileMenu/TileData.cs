@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Globalization;
 
-namespace HoloLensPlanner.TEST
+namespace HoloLensPlanner
 {
     /// <summary>
     /// TileData is only used to save/load a tile and store data. It cannot be instantiated as a component to a gameobject as it does not derive from MonoBehaviour. Use <see cref="TileObject"/> for that. 
@@ -24,39 +24,43 @@ namespace HoloLensPlanner.TEST
         public float Width;
 
         /// <summary>
+        /// Tile thickness in m.
+        /// </summary>
+        public float TileThickness;
+        
+        /// <summary>
+        /// Joint thickness in m.
+        /// </summary>
+        public float JointSize;
+
+        /// <summary>
         /// Area in m²
         /// </summary>
         public float Area { get { return Height * Width; } }
 
+        /// <summary>
+        /// Unique global ID.
+        /// </summary>
         public Guid Guid
         {
             get
             {
-                return m_ID;
+                if (string.IsNullOrEmpty(m_GuidString))
+                    return Guid.Empty;
+                else
+                    return new Guid(m_GuidString);
+            }
+            set
+            {
+                m_GuidString = value.ToString("N");
             }
         }
-
-        /// <summary>
-        /// Tile thickness in specific format.
-        /// </summary>
-        public TileThickness TileThickness;
-
-
-        /// <summary>
-        /// Joint thickness in specific format.
-        /// </summary>
-        public JointThickness JointThickness;
-
+        
         /// <summary>
         /// TextureIndex in the TextureLibrary.
         /// </summary>
         public int TextureIndex;
-
-        /// <summary>
-        /// Respective texture when loaded.
-        /// </summary>
-        private Texture2D m_Texture;
-
+        
         /// <summary>
         /// Name of the tile. Change to unique identifier?? or make unique identifier responsible for loading purposes.
         /// </summary>
@@ -68,23 +72,24 @@ namespace HoloLensPlanner.TEST
         public string CreationDate;
 
         /// <summary>
-        /// Unique global identifier
+        /// Respective texture when loaded.
         /// </summary>
-        public string ID;
+        private Texture2D m_Texture;
 
         /// <summary>
         /// Identifier as Guid class.
         /// </summary>
-        private Guid m_ID;
+        private string m_GuidString;
 
         /// <summary>
         /// Constants for new tile creation.
         /// </summary>
         public const float DefaultHeightInCM = 10;
         public const float DefaultWidthInCM = 10;
-        public const TileThickness DefaultTileThickness = TileThickness.Five;
-        public const JointThickness DefaultJointThickness = JointThickness.Four;
+        public const float DefaultTileThicknessInMM = 8f;
+        public const float DefaultJointThicknessInMM = 2f;
         public const int DefaultTextureIndex = 0;
+        public const string DefaultName = "New Tile";
 
         public TileData()
         {
@@ -104,8 +109,8 @@ namespace HoloLensPlanner.TEST
         {
             this.Height = Height;
             this.Width = Width;
-            this.TileThickness = TileDimensionsLibrary.SetTileThickness(TileThickness);
-            this.JointThickness = TileDimensionsLibrary.SetJointThickness(JointThickness);
+            this.TileThickness = TileThickness;
+            this.JointSize = JointThickness;
             this.TextureIndex = TextureIndex;
             if (Name == null)
             {
@@ -115,7 +120,7 @@ namespace HoloLensPlanner.TEST
             {
                 this.Name = Name;
             }
-            this.m_ID = guid;
+            this.m_GuidString = guid.ToString("N");
         }
 
         /// <summary>
@@ -124,30 +129,24 @@ namespace HoloLensPlanner.TEST
         public void SaveToJson()
         {
             CreationDate = DateTime.Now.ToString();
-            if (m_ID == null)
-                m_ID = Guid.NewGuid();
-            ID = m_ID.ToString("N");
             string json = JsonUtility.ToJson(this, true);
-            string filePath = Path.Combine(GlobalSettings.Instance.PathLibrary.SavedTilesPath, m_ID + ".json");
+            string filePath = Path.Combine(GlobalSettings.Instance.PathLibrary.SavedTilesPath, m_GuidString + ".json");
             File.WriteAllText(filePath, json);
         }
 
         /// <summary>
         /// Loads the tile data from JSON format.
         /// </summary>
-        /// <param name="name"></param>
-        public void LoadFromJson(string name)
+        /// <param name="guid"></param>
+        public void LoadFromJson(string guid)
         {
-            string filePath = Path.Combine(GlobalSettings.Instance.PathLibrary.SavedTilesPath, name + ".json");
+            string filePath = Path.Combine(GlobalSettings.Instance.PathLibrary.SavedTilesPath, guid + ".json");
             if (File.Exists(filePath))
             {
                 string jsonTile = File.ReadAllText(filePath);
                 JsonUtility.FromJsonOverwrite(jsonTile, this);
                 m_Texture = GlobalSettings.Instance.TextureLibrary.Textures[TextureIndex];
-                if (string.IsNullOrEmpty(ID))
-                    m_ID = Guid.NewGuid();
-                else
-                    m_ID = new Guid(ID);
+                m_GuidString = guid;
             }
         }
     }

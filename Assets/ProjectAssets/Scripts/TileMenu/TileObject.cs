@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoloLensPlanner.TEST
+namespace HoloLensPlanner
 {
     /// <summary>
     /// TileObject is used to be spawned on a plane according to a <see cref="TileData"/>. 
@@ -21,9 +21,9 @@ namespace HoloLensPlanner.TEST
         {
             m_Tile = tileData;
             // scale tile and joint size
-            transform.localScale = new Vector3(tileData.Width, TileDimensionsLibrary.GetTileThickness(tileData.TileThickness), tileData.Height);
+            transform.localScale = new Vector3(tileData.Width, tileData.TileThickness, tileData.Height);
             // we half the joint size because when the tiles are placed next to each other they sum up again to the original size
-            var jointSize = TileDimensionsLibrary.GetJointThickness(tileData.JointThickness) * 0.5f;
+            var jointSize = tileData.JointSize * 0.5f;
             TileJoint.localScale = new Vector3((tileData.Width + jointSize) / tileData.Width, 0.95f, (tileData.Height + jointSize) / tileData.Height);
             FaceMaterial.mainTexture = GlobalSettings.Instance.TextureLibrary.Textures[tileData.TextureIndex];
             // we need to tile the texture when the tile is not quadratic so the texture does not get stretched

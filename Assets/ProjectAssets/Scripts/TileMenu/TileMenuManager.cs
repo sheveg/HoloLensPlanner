@@ -6,31 +6,65 @@ using System.IO;
 using UnityEngine.UI;
 using System.Linq;
 
-namespace HoloLensPlanner.TEST
+namespace HoloLensPlanner
 {
+    /// <summary>
+    /// Possible states of <see cref="TileMenuManager"/>. 
+    /// </summary>
     public enum TileMenuState
     {
+        /// <summary>
+        /// Corresponds to <see cref="TileMenuListView"/> 
+        /// </summary>
         ListView,
+        /// <summary>
+        /// Corresponds to <see cref="TileMenuDetailView"/> 
+        /// </summary>
         DetailView,
+        /// <summary>
+        /// Corresponds to <see cref="TileMenuDetailView"/> in creation mode. 
+        /// </summary>
         NewTileView
     }
 
+    /// <summary>
+    /// TileMenuManager is the central unit handling the TileMenu. It works together with <see cref="TileMenuListView"/> and <see cref="TileMenuDetailView"/>.  
+    /// </summary>
     public class TileMenuManager : SingleInstance<TileMenuManager>
     {
+        #region Editor variables
+
+        /// <summary>
+        /// Button to switch to the next element.
+        /// </summary>
         [SerializeField]
         private Button ShowNextButton;
 
+        /// <summary>
+        /// Button to switch to the previous element.
+        /// </summary>
         [SerializeField]
         private Button ShowPreviousButton;
 
+        /// <summary>
+        /// Button to switch to list view.
+        /// </summary>
         [SerializeField]
         private Button ShowListViewButton;
 
+        /// <summary>
+        /// Button to switch to detail view.
+        /// </summary>
         [SerializeField]
         private Button ShowDetailViewButton;
 
+        /// <summary>
+        /// Button to create a new tile.
+        /// </summary>
         [SerializeField]
         private Button NewTileButton;
+
+        #endregion // Editor variables
 
         public List<TileData> SavedTiles { get { return m_SavedTiles; } }
 
@@ -50,58 +84,12 @@ namespace HoloLensPlanner.TEST
             ShowPreviousButton.onClick.AddListener(showPrevious);
             ShowDetailViewButton.onClick.AddListener(showDetailView);
             ShowListViewButton.onClick.AddListener(showListView);
-
-            NewTileButton.onClick.AddListener(CreateTile);
+            NewTileButton.onClick.AddListener(createTile);
 
             TileMenuListView.Instance.gameObject.SetActive(true);
             TileMenuDetailView.Instance.gameObject.SetActive(false);
 
             //Hide();
-        }
-
-        private void loadTiles()
-        {
-            // first get all saved tile files
-            string[] savedTilesPaths = Directory.GetFiles(GlobalSettings.Instance.PathLibrary.SavedTilesPath, "*." + GlobalSettings.Instance.PathLibrary.SavedTilesType);
-            foreach (var savedTilePath in savedTilesPaths)
-            {
-                string tileName = Path.GetFileNameWithoutExtension(savedTilePath);
-                var tile = new TileData();
-                tile.LoadFromJson(tileName);
-                m_SavedTiles.Add(tile);
-            }
-        }
-
-        private void showNext()
-        {
-            switch (m_State)
-            {
-                case TileMenuState.ListView:
-                    TileMenuListView.Instance.ShowNextPage();
-                    break;
-                case TileMenuState.DetailView:
-                    TileMenuDetailView.Instance.ShowNextTile();
-                    break;
-                default:
-                    printStateError();
-                    break;
-            }
-        }
-
-        private void showPrevious()
-        {
-            switch (m_State)
-            {
-                case TileMenuState.ListView:
-                    TileMenuListView.Instance.ShowPreviousPage();
-                    break;
-                case TileMenuState.DetailView:
-                    TileMenuDetailView.Instance.ShowPreviousTile();
-                    break;
-                default:
-                    printStateError();
-                    break;
-            }
         }
 
         /// <summary>
@@ -134,16 +122,88 @@ namespace HoloLensPlanner.TEST
             TileMenuListView.Instance.Show(pageIndex);
         }
 
+        /// <summary>
+        /// Shows the TileMenu.
+        /// </summary>
         public void Show()
         {
             gameObject.SetActive(true);
         }
 
+        /// <summary>
+        /// Hides the TileMenu.
+        /// </summary>
         public void Hide()
         {
             gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// Adds the given tile to the saved tiles.
+        /// </summary>
+        /// <param name="tile"></param>
+        public void AddToCachedTiles(TileData tile)
+        {
+            m_SavedTiles.Add(tile);
+        }
+
+        /// <summary>
+        /// Loads the tiles into <see cref="m_SavedTiles"/>. 
+        /// </summary>
+        private void loadTiles()
+        {
+            // first get all saved tile files
+            string[] savedTilesPaths = Directory.GetFiles(GlobalSettings.Instance.PathLibrary.SavedTilesPath, "*." + GlobalSettings.Instance.PathLibrary.SavedTilesType);
+            foreach (var savedTilePath in savedTilesPaths)
+            {
+                string tileName = Path.GetFileNameWithoutExtension(savedTilePath);
+                var tile = new TileData();
+                tile.LoadFromJson(tileName);
+                m_SavedTiles.Add(tile);
+            }
+        }
+
+        /// <summary>
+        /// Shows the next element.
+        /// </summary>
+        private void showNext()
+        {
+            switch (m_State)
+            {
+                case TileMenuState.ListView:
+                    TileMenuListView.Instance.ShowNextPage();
+                    break;
+                case TileMenuState.DetailView:
+                    TileMenuDetailView.Instance.ShowNextTile();
+                    break;
+                default:
+                    printStateError();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Shows the previous element.
+        /// </summary>
+        private void showPrevious()
+        {
+            switch (m_State)
+            {
+                case TileMenuState.ListView:
+                    TileMenuListView.Instance.ShowPreviousPage();
+                    break;
+                case TileMenuState.DetailView:
+                    TileMenuDetailView.Instance.ShowPreviousTile();
+                    break;
+                default:
+                    printStateError();
+                    break;
+            }
+        }
+        
+        /// <summary>
+        /// Shows the detail view with the first tile in the curret page.
+        /// </summary>
         private void showDetailView()
         {
             // nothing to do if already in detal view
@@ -156,10 +216,11 @@ namespace HoloLensPlanner.TEST
 
             int tileIndex = TileMenuListView.Instance.CurrentPage * ObjectPage.MaxObjectsCount;
             TileMenuDetailView.Instance.Show(tileIndex);
-
-            
         }
 
+        /// <summary>
+        /// Shows the list view on the page where the last current tile was.
+        /// </summary>
         private void showListView()
         {
             // nothing to do if already in list view
@@ -173,7 +234,10 @@ namespace HoloLensPlanner.TEST
             TileMenuListView.Instance.Show(pageIndex);
         }
 
-        private void CreateTile()
+        /// <summary>
+        /// Calls the <see cref="TileMenuDetailView"/> to create a new tile. 
+        /// </summary>
+        private void createTile()
         {
             // nothing to do if already in new tile view
             if (m_State == TileMenuState.NewTileView)
@@ -186,32 +250,15 @@ namespace HoloLensPlanner.TEST
             }
 
             m_State = TileMenuState.NewTileView;
-
-            TileMenuDetailView.Instance.NewTile();
+            TileMenuDetailView.Instance.CreateTile();
         }
 
+        /// <summary>
+        /// Prints a default state error.
+        /// </summary>
         private void printStateError()
         {
             Debug.Log("Case " + m_State + " not implemented!");
-        }
-
-        public void addToCachedTiles(TileData tile)
-        {
-            m_SavedTiles.Add(tile);
-        }
-
-        public void updateCachedTiles(TileData tile)
-        {
-            try
-            {
-                int tileIndex = m_SavedTiles.FindIndex(t => t.Guid == tile.Guid);
-                m_SavedTiles[tileIndex] = tile;
-            }
-            catch (System.Exception)
-            {
-
-                throw;
-            }
         }
     }
 }

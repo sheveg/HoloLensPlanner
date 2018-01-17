@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HoloLensPlanner.TEST
+namespace HoloLensPlanner
 {
     [CreateAssetMenu(menuName = "Libraries/PathLibrary")]
     public class PathLibrary : ScriptableObject

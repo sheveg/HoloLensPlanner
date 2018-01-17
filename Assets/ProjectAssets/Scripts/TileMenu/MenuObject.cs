@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace HoloLensPlanner.TEST
+namespace HoloLensPlanner
 {
     public class MenuObject : MonoBehaviour
     {

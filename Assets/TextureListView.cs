@@ -1,5 +1,4 @@
 ﻿using HoloLensPlanner;
-using HoloLensPlanner.TEST;
 using HoloToolkit.Unity;
 using System.Collections;
 using System.Collections.Generic;

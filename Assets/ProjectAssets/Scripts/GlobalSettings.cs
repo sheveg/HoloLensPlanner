@@ -7,9 +7,9 @@ namespace HoloLensPlanner
 {
     public class GlobalSettings : Singleton<GlobalSettings>
     {
-        public TEST.TextureLibrary TextureLibrary;
+        public TextureLibrary TextureLibrary;
 
-        public TEST.PathLibrary PathLibrary;
+        public PathLibrary PathLibrary;
 
         protected override void Awake()
         {

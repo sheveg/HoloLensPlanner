@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-namespace HoloLensPlanner.TEST
+namespace HoloLensPlanner
 {
 
     [CreateAssetMenu(menuName = "Libraries/TextureLibrary")]

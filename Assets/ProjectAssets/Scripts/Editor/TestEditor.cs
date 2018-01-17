@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using HoloLensPlanner;
-using HoloLensPlanner.TEST;
 
 [CustomEditor(typeof(TilesGenerator))]
 public class TestEditor : Editor

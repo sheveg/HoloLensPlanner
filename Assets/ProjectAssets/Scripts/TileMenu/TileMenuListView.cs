@@ -3,27 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 using HoloToolkit.Unity;
 using UnityEngine.UI;
+using HoloLensPlanner.Utilities;
 
-namespace HoloLensPlanner.TEST
+namespace HoloLensPlanner
 {
     /// <summary>
     /// TileMenuListView is responsible for handling input from the list view buttons and showing the saved tiles in a list display.
     /// </summary>
     public class TileMenuListView : SingleInstance<TileMenuListView>
     {
+        #region Editor variables
+
+        /// <summary>
+        /// Prefab for a default object page.
+        /// </summary>
         [SerializeField]
         private ObjectPage ObjectPagePrefab;
 
+        /// <summary>
+        /// Transform parent of all spawned pages.
+        /// </summary>
         [SerializeField]
         private Transform PageParent;
 
+        /// <summary>
+        /// Text component to show the curennt page.
+        /// </summary>
         [SerializeField]
         private Text PageText;
 
-        // List of needed pages to show the saved tiles
+        #endregion // Editor variables
+
+        #region Cached variables
+
+        /// <summary>
+        /// Current page index the user is lookit at.
+        /// </summary>
+        public int CurrentPage { get; private set; }
+
+        /// <summary>
+        /// List of needed pages to show the saved tiles.
+        /// </summary>
         private List<ObjectPage> m_ObjectPages = new List<ObjectPage>();
 
-        public int CurrentPage { get; private set; }
+        #endregion // Cached variables
+
+        #region Public methods
 
         /// <summary>
         /// Creates enough pages to load the given tiles and fills up the pages.
@@ -41,8 +66,8 @@ namespace HoloLensPlanner.TEST
             updatePageText();
             // we need to create at least one page, even when there are no saved tiles, but we cannot fill pages in this case
             if (tiles.Count > 0)
-                fillPages(tiles);
-
+                fillPagesInformation(tiles);
+            // show the first page as the default page
             if (neededPages > 1)
             {
                 for (int i = 1; i < m_ObjectPages.Count; i++)
@@ -50,6 +75,36 @@ namespace HoloLensPlanner.TEST
                     m_ObjectPages[i].gameObject.SetActive(false);
                 }
             }
+        }
+
+        /// <summary>
+        /// Updates the page count and creates new pages if needed and fills them with tile information.
+        /// </summary>
+        /// <param name="tiles"></param>
+        public void UpdatePages(List<TileData> tiles)
+        {
+            int neededPages = Mathf.CeilToInt(tiles.Count / (float)ObjectPage.MaxObjectsCount);
+            int oldPageCount = m_ObjectPages.Count;
+            if (m_ObjectPages.Count < neededPages)
+            {
+                for (int i = m_ObjectPages.Count; i < neededPages; i++)
+                {
+                    var page = Instantiate(ObjectPagePrefab, PageParent);
+                    m_ObjectPages.Add(page);
+                }
+                updatePageText();              
+                // show the last page if they are updated
+                if (neededPages > 1)
+                {
+                    for (int i = 0; i < m_ObjectPages.Count - 1; i++)
+                    {
+                        m_ObjectPages[i].gameObject.SetActive(false);
+                    }
+                    m_ObjectPages[m_ObjectPages.Count - 1].gameObject.SetActive(true);
+                }
+            }
+            // we start updating the information at the old last page
+            fillPagesInformation(tiles, oldPageCount - 1);
         }
 
         /// <summary>
@@ -82,7 +137,7 @@ namespace HoloLensPlanner.TEST
         /// <param name="pageIndex"></param>
         public void ShowPage(int pageIndex)
         {
-            int wrappedPageIndex = wrapPageIndex(pageIndex);
+            int wrappedPageIndex = MathUtility.WrapArrayIndex(pageIndex, m_ObjectPages.Count);
             if (pageIndex == CurrentPage || wrappedPageIndex == CurrentPage)
                 return;
 
@@ -110,30 +165,32 @@ namespace HoloLensPlanner.TEST
             ShowPage(pageIndex);
         }
 
+        #endregion // Public methods
+
+        #region Private internal methods
+
         /// <summary>
         /// Fills the pages with tile textures.
         /// </summary>
         /// <param name="tiles"></param>
-        private void fillPages(List<TileData> tiles)
+        private void fillPagesInformation(List<TileData> tiles, int startPage = 0)
         {
             // we go through each object holder of each page
-            for (int i = 0; i < m_ObjectPages.Count; i++)
+            for (int i = startPage; i < m_ObjectPages.Count; i++)
             {
                 for (int j = 0; j < m_ObjectPages[i].Objects.Count; j++)
                 {
                     int tileIndex = i * ObjectPage.MaxObjectsCount + j;
+                    bool activeState = false;
                     // as long as we did not load all tiles we load up the texture
                     if (tileIndex < tiles.Count)
                     {
                         m_ObjectPages[i].Objects[j].name = tiles[tileIndex].Name;
                         m_ObjectPages[i].Objects[j].ObjectImage.texture = GlobalSettings.Instance.TextureLibrary.Textures[tiles[tileIndex].TextureIndex];
                         m_ObjectPages[i].Objects[j].ObjectImage.GetComponent<Button>().onClick.AddListener(() => TileMenuManager.Instance.ShowDetailView(tileIndex));
+                        activeState = true;
                     }
-                    // otherwise we make the object template not visible
-                    else
-                    {
-                        m_ObjectPages[i].Objects[j].gameObject.SetActive(false);
-                    }
+                    m_ObjectPages[i].Objects[j].gameObject.SetActive(activeState);
                 }
             }
         }
@@ -146,24 +203,7 @@ namespace HoloLensPlanner.TEST
             PageText.text = string.Format("{0} / {1}", CurrentPage+1, m_ObjectPages.Count);
         }
 
-        /// <summary>
-        /// In Unity "%" is the mathematical rem not mod, they behave differentely for different signs of a,b so we need to transform rem to mod.
-        /// Source: https://answers.unity.com/questions/358574/modulus-operator-substitute-for-c.html
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        private int wrapPageIndex(int index)
-        {
-            if (m_ObjectPages.Count == 0)
-            {
-                Debug.Log("First tile. If not check code in TileMenuListView.cs.");
-                return (index % 1 + 1) % 1;
-            }
-            else
-            {
-                return (index % m_ObjectPages.Count + m_ObjectPages.Count) % m_ObjectPages.Count;
-            }
-        }
+        #endregion // Private internal methods
     }
 }
 

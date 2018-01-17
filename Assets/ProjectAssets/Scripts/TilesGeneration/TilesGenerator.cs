@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HoloLensPlanner.Utilities;
-using HoloLensPlanner.TEST;
 
 namespace HoloLensPlanner
 {
@@ -77,7 +76,7 @@ namespace HoloLensPlanner
             var tilePlane = new GameObject("TilePlane");
             tilePlane.transform.position = roomPlane.MeshPolygon.Center;
 
-            var jointSize = TileDimensionsLibrary.GetJointThickness(tileData.JointThickness) * 0.5f;
+            var jointSize = tileData.JointSize * 0.5f;
             var tileWidth = (tileData.Width + jointSize);
             var tileHeight = (tileData.Height + jointSize);
 
@@ -132,7 +131,7 @@ namespace HoloLensPlanner
             maskPlaneMeshFilter.mesh = maskPlaneMesh;
             var maskPlaneMeshRenderer = maskPlane.AddComponent<MeshRenderer>();
             maskPlane.transform.position = (mask_minXminZ + mask_minXmaxZ + mask_maxXminZ + mask_maxXmaxZ) / 4f;
-            maskPlane.transform.position += new Vector3(0f, TileDimensionsLibrary.GetTileThickness(tileData.TileThickness) * 0.5f + 0.0001f, 0f);
+            maskPlane.transform.position += new Vector3(0f, tileData.TileThickness * 0.5f + 0.0001f, 0f);
             maskPlane.transform.localScale = new Vector3(1f, -1f, 1f);
             maskPlane.GetComponent<Renderer>().material = DepthMaskMaterial;
 
@@ -141,7 +140,7 @@ namespace HoloLensPlanner
             {
                 var point1 = maskBoundaries[i];
                 var point2 = maskBoundaries[MathUtility.WrapArrayIndex(i + 1, maskBoundaries.Count)];
-                var point3 = point1 - new Vector3(0f, TileDimensionsLibrary.GetTileThickness(tileData.TileThickness), 0f);
+                var point3 = point1 - new Vector3(0f, tileData.TileThickness, 0f);
                 // create the joint plane in the center of two points
                 var jointMaskPlanePosition = (point1 + point2) * 0.5f;
                 // lower it depending on the tile thickness
@@ -164,7 +163,7 @@ namespace HoloLensPlanner
             {
                 var point1 = roomPlane.MeshPolygon.Points[i].transform.position;
                 var point2 = roomPlane.MeshPolygon.Points[MathUtility.WrapArrayIndex(i + 1, roomPlane.MeshPolygon.Points.Count)].transform.position;
-                var point3 = point1 - new Vector3(0f, TileDimensionsLibrary.GetTileThickness(tileData.TileThickness), 0f);
+                var point3 = point1 - new Vector3(0f, tileData.TileThickness, 0f);
                 // create the joint plane in the center of two points
                 var jointPlanePosition = (point1 + point2) * 0.5f;
                 // lower it depending on the tile thickness
