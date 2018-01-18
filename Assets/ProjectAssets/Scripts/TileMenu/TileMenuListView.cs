@@ -165,6 +165,14 @@ namespace HoloLensPlanner
             ShowPage(pageIndex);
         }
 
+        public void destroyPages()
+        {
+            for (int i = 0; i < m_ObjectPages.Count; i++)
+            {
+                Destroy(m_ObjectPages[i].gameObject);
+            }
+        }
+
         #endregion // Public methods
 
         #region Private internal methods

@@ -212,6 +212,11 @@ namespace HoloLensPlanner
             CreationHeader.gameObject.SetActive(true);
         }
 
+        public void updateTexture(int textureIndex)
+        {
+            TextureButton.GetComponent<RawImage>().texture = GlobalSettings.Instance.TextureLibrary.Textures[textureIndex];
+        }
+
         #endregion // Public methods
 
         #region Private internal methods
@@ -452,7 +457,10 @@ namespace HoloLensPlanner
                 NameButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text;
         }
 
-        private void editTexture() { }
+        private void editTexture()
+        {
+            TileMenuManager.Instance.showTextureListView();
+        }
 
         /// <summary>
         /// Enables the numbers keyboard.

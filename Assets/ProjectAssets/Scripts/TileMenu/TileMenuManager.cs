@@ -24,7 +24,11 @@ namespace HoloLensPlanner
         /// <summary>
         /// Corresponds to <see cref="TileMenuDetailView"/> in creation mode. 
         /// </summary>
-        NewTileView
+        NewTileView,
+        /// <summary>
+        /// Corresponds to <see cref="TextureListView"/>
+        /// </summary>
+        TextureListView
     }
 
     /// <summary>
@@ -232,6 +236,28 @@ namespace HoloLensPlanner
 
             int pageIndex = Mathf.CeilToInt(TileMenuDetailView.Instance.CurrentTile / ObjectPage.MaxObjectsCount);
             TileMenuListView.Instance.Show(pageIndex);
+        }
+
+        public void showTextureListView()
+        {
+            m_State = TileMenuState.TextureListView;
+            TileMenuDetailView.Instance.gameObject.SetActive(false);
+            TileMenuListView.Instance.destroyPages();
+            TextureListView.Instance.CreatePages();
+
+            TextureListView.Instance.gameObject.SetActive(true);
+        }
+
+        public void acceptTexture(int textureIndex)
+        {
+            m_State = TileMenuState.DetailView;
+            TextureListView.Instance.gameObject.SetActive(false);
+            
+            TextureListView.Instance.destroyPages();
+            TileMenuDetailView.Instance.updateTexture(textureIndex);
+            TileMenuDetailView.Instance.gameObject.SetActive(true);
+
+            TileMenuListView.Instance.CreatePages(m_SavedTiles);
         }
 
         /// <summary>

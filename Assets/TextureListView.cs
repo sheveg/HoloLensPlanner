@@ -18,17 +18,28 @@ public class TextureListView : Singleton<TextureListView> {
     [SerializeField]
     private Text PageText;
 
-    // List of needed pages to show the saved tiles
+    [SerializeField]
+    private Button AcceptTextureButton;
+
+    // List of needed pages to show the saved textures
     private List<ObjectPage> m_ObjectPages = new List<ObjectPage>();
 
     public int CurrentPage { get; private set; }
 
+    private int selectedTextureIndex;
+
+    public void Start()
+    {
+        AcceptTextureButton.onClick.AddListener(acceptTexture);
+    }
+
     /// <summary>
-    /// Creates enough pages to load the given tiles and fills up the pages.
+    /// Creates enough pages to load the given textures and fills up the pages.
     /// </summary>
     /// <param name="tiles"></param>
     public void CreatePages()
     {
+        AcceptTextureButton.gameObject.SetActive(true);
         List<Texture2D> textures = new List<Texture2D>();
         textures = GlobalSettings.Instance.TextureLibrary.Textures.OfType<Texture2D>().ToList();
         // round up , 9 elements and max 6 objects per page => 2 pages
@@ -111,6 +122,18 @@ public class TextureListView : Singleton<TextureListView> {
     }
 
     /// <summary>
+    /// Destroy pages of textures and hide acceptButton
+    /// </summary>
+    public void destroyPages()
+    {
+        AcceptTextureButton.gameObject.SetActive(false);
+        for (int i = 0; i < m_ObjectPages.Count; i++)
+        {
+            Destroy(m_ObjectPages[i].gameObject);
+        }
+    }
+
+    /// <summary>
     /// Fills the pages with tile textures.
     /// </summary>
     /// <param name="textures"></param>
@@ -126,7 +149,7 @@ public class TextureListView : Singleton<TextureListView> {
                 if (textureIndex < textures.Count)
                 {
                     m_ObjectPages[i].Objects[j].ObjectImage.texture = textures[textureIndex];
-                    m_ObjectPages[i].Objects[j].ObjectImage.GetComponent<Button>().onClick.AddListener(delegate { markTextureAsSelected(m_ObjectPages[i].Objects[j].ObjectImage); });
+                    m_ObjectPages[i].Objects[j].ObjectImage.GetComponent<Button>().onClick.AddListener(delegate { markTextureAsSelected(m_ObjectPages[i].Objects[j].ObjectImage, textureIndex); });
                 }
                 // otherwise we make the object template not visible
                 else
@@ -164,8 +187,9 @@ public class TextureListView : Singleton<TextureListView> {
         }
     }
 
-    private void markTextureAsSelected(RawImage sender)
+    private void markTextureAsSelected(RawImage sender, int textureIndex)
     {
+        selectedTextureIndex = textureIndex;
         //Delete outline for every object
         for (int i = 0; i < m_ObjectPages[CurrentPage].Objects.Count; i++)
         {
@@ -173,5 +197,11 @@ public class TextureListView : Singleton<TextureListView> {
         }
         //add outline to selected object
         //TODO
+    }
+
+    private void acceptTexture()
+    {
+        AcceptTextureButton.gameObject.SetActive(false);
+        TileMenuManager.Instance.acceptTexture(selectedTextureIndex);
     }
 }
