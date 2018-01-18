@@ -68,6 +68,12 @@ namespace HoloLensPlanner
         [SerializeField]
         private Button NewTileButton;
 
+        /// <summary>
+        /// Button to hide this view.
+        /// </summary>
+        [SerializeField]
+        private Button CloseButton;
+
         #endregion // Editor variables
 
         public List<TileData> SavedTiles { get { return m_SavedTiles; } }
@@ -89,6 +95,7 @@ namespace HoloLensPlanner
             ShowDetailViewButton.onClick.AddListener(showDetailView);
             ShowListViewButton.onClick.AddListener(showListView);
             NewTileButton.onClick.AddListener(createTile);
+            CloseButton.onClick.AddListener( () => Hide(true));
 
             TileMenuListView.Instance.gameObject.SetActive(true);
             TileMenuDetailView.Instance.gameObject.SetActive(false);
@@ -137,9 +144,11 @@ namespace HoloLensPlanner
         /// <summary>
         /// Hides the TileMenu.
         /// </summary>
-        public void Hide()
+        public void Hide(bool showMainMenu = false)
         {
             gameObject.SetActive(false);
+            if (showMainMenu)
+                MainMenuManager.Instance.Show();
         }
 
         /// <summary>

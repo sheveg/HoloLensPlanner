@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 
 namespace HoloLensPlanner
 {
@@ -23,6 +24,7 @@ namespace HoloLensPlanner
             if (GUILayout.Button("Apply Material"))
             {
                 m_UIOverlay.ApplyMaterial();
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             }
         }
     }

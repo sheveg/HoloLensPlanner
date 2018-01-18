@@ -2,22 +2,166 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HoloLensPlanner.Utilities;
+using HoloToolkit.Unity;
+using UnityEngine.UI;
+using HoloToolkit.Unity.InputModule;
+using HoloLensPlanner.GazeResponse;
+using System;
 
 namespace HoloLensPlanner
 {
+    public enum TilesGeneratorState
+    {
+        Idle,
+        ChooseSpawn,
+        ChooseDirection
+    }
+
     /// <summary>
     /// TilesGenerator can generate tile floor for a given tile on a given roomplane.
     /// </summary>
-    public class TilesGenerator : MonoBehaviour
+    public class TilesGenerator : SingleInstance<TilesGenerator>, IInputClickHandler
     {
+        /// <summary>
+        /// Default tile prefab with 1x1x1m scale.
+        /// </summary>
+        [SerializeField]
+        private TileObject DefaultTilePrefab;
 
-        public TileObject DefaultTile;
-        public Material DepthMaskMaterial;
-        public Material MaskResistentMaterial;
+        /// <summary>
+        /// Material for the mask.
+        /// </summary>
+        [SerializeField]
+        private Material DepthMaskMaterial;
 
-        public RoomPlane Plane;
-        public Transform Spawn;
-        public Transform Direction;
+        /// <summary>
+        /// Material which is not hidden by the mask.
+        /// </summary>
+        [SerializeField]
+        private Material MaskResistentMaterial;
+
+        /// <summary>
+        /// UI Instruction for choosing the spawn point.
+        /// </summary>
+        [SerializeField]
+        private Image SpawnPointInstruction;
+
+        /// <summary>
+        /// UI instruction for choosing the direction point.
+        /// </summary>
+        [SerializeField]
+        private Image DirectionPointInstruction;
+
+        /// <summary>
+        /// Button to cancel the floor tile creation from the spawn state.
+        /// </summary>
+        [SerializeField]
+        private Button CancelSpawn;
+
+        /// <summary>
+        /// Button to cancel the floor tile creation from the direction state.
+        /// </summary>
+        [SerializeField]
+        private Button CancelDirection;
+
+        /// <summary>
+        /// Button to switch to spawn state from direction state.
+        /// </summary>
+        [SerializeField]
+        private Button BackFromDirection;
+
+        /// <summary>
+        /// Tile floor if there is one created. (Read only)
+        /// </summary>
+        public GameObject FinishedTileFloor { get; private set; }
+
+        /// <summary>
+        /// Current state.
+        /// </summary>
+        private TilesGeneratorState m_State = TilesGeneratorState.Idle;
+
+        /// <summary>
+        /// Current tile data.
+        /// </summary>
+        private TileData m_CurrentTile = null;
+
+        /// <summary>
+        /// Current spawn point.
+        /// </summary>
+        private Transform m_CurrentSpawnPoint = null;
+
+        /// <summary>
+        /// Current direction point.
+        /// </summary>
+        private Transform m_CurrentDirectionPoint = null;
+
+        /// <summary>
+        /// Raycast plane of the floor plane.
+        /// </summary>
+        private Plane m_RaycastPlane;
+
+        /// <summary>
+        /// As the TileGenerator has also UI components we need to check wether the user is focusing the UI to avoid advancing in the state in this case.
+        /// </summary>
+        private bool m_IsUIFocused;
+
+        private void Start()
+        {
+            CancelSpawn.onClick.AddListener(reset);
+            CancelDirection.onClick.AddListener(reset);
+            BackFromDirection.onClick.AddListener(goBackToSpawnState);
+        }
+
+        private void Update()
+        {
+            if (m_State != TilesGeneratorState.Idle && GazeManager.Instance.HitObject != null && GazeManager.Instance.HitObject.transform.root == transform)
+            {
+                m_IsUIFocused = true;
+            }
+            else
+            {
+                m_IsUIFocused = false;
+            }
+
+            if (m_State == TilesGeneratorState.ChooseSpawn)
+            {
+                updateSpawnPoint();
+            }
+            else if (m_State == TilesGeneratorState.ChooseDirection)
+            {
+                updateDirectionPoint();
+            }
+        }
+
+        public void OnInputClicked(InputClickedEventData eventData)
+        {
+            if (m_IsUIFocused)
+            {
+                eventData.Use();
+                return;
+            }
+
+            switch (m_State)
+            {
+                case TilesGeneratorState.ChooseSpawn:
+                    handleSpawnPointCase();
+                    break;
+                case TilesGeneratorState.ChooseDirection:
+                    handleDirectionPointCase();
+                    break;
+            }
+            eventData.Use();
+        }
+
+        public void CreateTileFloor(TileData tileData)
+        {
+            InputManager.Instance.PushModalInputHandler(gameObject);
+            SpawnPointInstruction.gameObject.SetActive(true);
+            m_State = TilesGeneratorState.ChooseSpawn;
+            m_RaycastPlane = new UnityEngine.Plane();
+            m_RaycastPlane.SetNormalAndPosition(Vector3.up, RoomManager.Instance.Floor.transform.position);
+            m_CurrentTile = tileData;
+        }
 
         /// <summary>
         /// Spawns an object which has the chosen tile spawned on the roomPlane with a mask around it.
@@ -26,7 +170,7 @@ namespace HoloLensPlanner
         /// <param name="roomPlane"></param>
         /// <param name="spawnPoint"></param>
         /// <param name="directionPoint"></param>
-        public void SpawnTilesOnFloor(TileData tileData, RoomPlane roomPlane, Transform spawnPoint, Transform directionPoint)
+        private void createTileFloorInternal(TileData tileData, RoomPlane roomPlane, Transform spawnPoint, Transform directionPoint)
         {
             // first create the copy so we do not mess with the original spawnpoint, we will destroy this object later on
             var spawnPointCopy = new GameObject("SpawnPointCopy");
@@ -98,7 +242,7 @@ namespace HoloLensPlanner
                 for (int j = 0; j < columns; j++)
                 {
                     Vector3 offset = i * tileHeight * minXminZ_Point.transform.forward + j * tileWidth * minXminZ_Point.transform.right;
-                    var currentTile = Instantiate(DefaultTile, startPosition + offset, minXminZ_Point.transform.rotation);
+                    var currentTile = Instantiate(DefaultTilePrefab, startPosition + offset, minXminZ_Point.transform.rotation);
                     currentTile.transform.parent = tilePlane.transform;
                     currentTile.LinkTile(tileData);
                 }
@@ -182,10 +326,13 @@ namespace HoloLensPlanner
 
             }
             // create a parent for overview purposes
-            var maskedTilePlane = new GameObject("maskedTilePlane");
-            maskedTilePlane.transform.position = tilePlane.transform.position;
-            tilePlane.transform.parent = maskedTilePlane.transform;
-            maskPlane.transform.parent = maskedTilePlane.transform;
+            if (FinishedTileFloor != null)
+                Destroy(FinishedTileFloor);
+
+            FinishedTileFloor = new GameObject("finishedTileFloor");
+            FinishedTileFloor.transform.position = tilePlane.transform.position;
+            tilePlane.transform.parent = FinishedTileFloor.transform;
+            maskPlane.transform.parent = FinishedTileFloor.transform;
 
             // cleanup
             Destroy(minXminZ_Point);
@@ -193,6 +340,152 @@ namespace HoloLensPlanner
             Destroy(maxXminZ_Point);
             Destroy(maxXmaxZ_Point);
             Destroy(spawnPointCopy);
+        }
+
+        private void handleSpawnPointCase()
+        {
+            if (m_CurrentSpawnPoint != null)
+            {
+                m_State = TilesGeneratorState.ChooseDirection;
+                SpawnPointInstruction.gameObject.SetActive(false);
+                DirectionPointInstruction.gameObject.SetActive(true);
+            }
+            else
+                WarningManager.Instance.ShowWarning("No spawn point chosen for the tiles!");
+        }
+
+        private void handleDirectionPointCase()
+        {
+            if (m_CurrentDirectionPoint != null)
+            {
+                createTileFloorInternal(m_CurrentTile, RoomManager.Instance.Floor, m_CurrentSpawnPoint, m_CurrentDirectionPoint);
+                reset();
+                MainMenuManager.Instance.Show();
+            }
+            else
+                WarningManager.Instance.ShowWarning("No direction point chosen for the tiles!");
+        }
+
+        private void goBackToSpawnState()
+        {
+            if (m_State != TilesGeneratorState.ChooseDirection)
+                return;
+
+            m_CurrentDirectionPoint.GetComponent<GazeResponder>().ForceOnFocusExit();
+            m_CurrentDirectionPoint = null;
+            m_CurrentSpawnPoint.GetComponent<GazeResponder>().ForceOnFocusExit();
+            m_CurrentSpawnPoint = null;
+            SpawnPointInstruction.gameObject.SetActive(true);
+            DirectionPointInstruction.gameObject.SetActive(false);
+            m_State = TilesGeneratorState.ChooseSpawn;
+        }
+
+        private void reset()
+        {
+            if(m_CurrentSpawnPoint)
+                m_CurrentSpawnPoint.GetComponent<GazeResponder>().ForceOnFocusExit();
+            if(m_CurrentDirectionPoint)
+                m_CurrentDirectionPoint.GetComponent<GazeResponder>().ForceOnFocusExit();
+
+            m_CurrentSpawnPoint = null;
+            m_CurrentDirectionPoint = null;
+            m_CurrentTile = null;
+
+            DirectionPointInstruction.gameObject.SetActive(false);
+            SpawnPointInstruction.gameObject.SetActive(false);
+
+            InputManager.Instance.PopModalInputHandler();
+            m_State = TilesGeneratorState.Idle;
+        }
+
+        /// <summary>
+        /// Updates the spawnPoint.
+        /// </summary>
+        private void updateSpawnPoint()
+        {
+            Transform newSpawnPoint;
+            if ((newSpawnPoint = getNearestPoint()) != null)
+            {
+                // update the new spawn point and adjust the old spawn point
+                if (newSpawnPoint != m_CurrentSpawnPoint)
+                {
+                    if (m_CurrentSpawnPoint != null)
+                    {
+                        var oldPolyPointGazeResponder = m_CurrentSpawnPoint.GetComponent<GazeResponder>();
+                        if (oldPolyPointGazeResponder)
+                        {
+                            oldPolyPointGazeResponder.ForceOnFocusExit();
+                        }
+                    }
+                    m_CurrentSpawnPoint = newSpawnPoint;
+                    var polyPointGazeResponder = m_CurrentSpawnPoint.GetComponent<GazeResponder>();
+                    if (polyPointGazeResponder)
+                    {
+                        polyPointGazeResponder.ForceOnFocusEnter();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the direction point.
+        /// </summary>
+        private void updateDirectionPoint()
+        {
+            Transform newDirectionPoint;
+            // exclude the spawn point as the direction point needs to be another point
+            if ((newDirectionPoint = getNearestPoint(m_CurrentSpawnPoint)) != null)
+            {
+                // update the new direction point and adjust the old direction point
+                if (newDirectionPoint != m_CurrentDirectionPoint)
+                {
+                    if (m_CurrentDirectionPoint != null)
+                    {
+                        var oldPolyPointGazeResponder = m_CurrentDirectionPoint.GetComponent<GazeResponder>();
+                        if (oldPolyPointGazeResponder)
+                        {
+                            oldPolyPointGazeResponder.ForceOnFocusExit();
+                        }
+                    }
+                    m_CurrentDirectionPoint = newDirectionPoint;
+                    var polyPointGazeResponder = m_CurrentDirectionPoint.GetComponent<GazeResponder>();
+                    if (polyPointGazeResponder)
+                    {
+                        polyPointGazeResponder.ForceOnFocusEnter();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the neareast point from the intersection point between the gaze forward vector and the floor plane.
+        /// </summary>
+        /// <returns></returns>
+        private Transform getNearestPoint(Transform excludePoint = null)
+        {
+            // cast a ray from the gaze (camera) to the plane of the floor
+            float rayDistance;
+            if (m_RaycastPlane.Raycast(GazeManager.Instance.Rays[0], out rayDistance))
+            {
+                // find the nearest point to the intersection point
+                var minDistanceIndex = -1;
+                var minDistance = float.MaxValue;
+                var gazeOnFloorPlane = GazeManager.Instance.Rays[0].GetPoint(rayDistance);
+                for (int i = 0; i < RoomManager.Instance.Floor.MeshPolygon.Points.Count; i++)
+                {
+                    if (RoomManager.Instance.Floor.MeshPolygon.Points[i].transform == excludePoint)
+                        continue;
+
+                    var currentDistance = (RoomManager.Instance.Floor.MeshPolygon.Points[i].transform.position - gazeOnFloorPlane).sqrMagnitude;
+                    if (currentDistance < minDistance)
+                    {
+                        minDistance = currentDistance;
+                        minDistanceIndex = i;
+                    }
+                }
+                return RoomManager.Instance.Floor.MeshPolygon.Points[minDistanceIndex].transform;
+            }
+            else return null;
         }
     }
 }

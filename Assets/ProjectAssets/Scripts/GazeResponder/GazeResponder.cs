@@ -38,6 +38,11 @@ namespace HoloLensPlanner.GazeResponse
         protected bool m_IsFocused = false;
 
         /// <summary>
+        /// If this is true then the focus can be forced to enter/exit independent of the gaze.
+        /// </summary>
+        protected bool m_FocusLocked = false;
+
+        /// <summary>
         /// Reference of th current coroutine if any. Used to stop a running coroutine when a focus change occurs before a
         /// coroutine is done.
         /// </summary>
@@ -70,17 +75,40 @@ namespace HoloLensPlanner.GazeResponse
 
         public void OnFocusEnter()
         {
-            if (!InputManager.Instance.IsInputEnabled)
+            if (!InputManager.Instance.IsInputEnabled || m_FocusLocked || m_IsFocused)
                 return;
-
             m_IsFocused = true;
             handleFocusChange();
         }
 
         public void OnFocusExit()
         {
+            if (m_FocusLocked || !m_IsFocused)
+                return;
             m_IsFocused = false;
             handleFocusChange();
+        }
+
+        /// <summary>
+        /// Forces the object to enter the OnFocus method even if it is not focused by the gaze. Call <see cref="ForceOnFocusExit"/> to disable this behaviour. 
+        /// </summary>
+        public void ForceOnFocusEnter()
+        {
+            if (m_FocusLocked)
+                return;
+            OnFocusEnter();
+            m_FocusLocked = true;
+        }
+
+        /// <summary>
+        /// Forces the object to exit the OnFocus method even if it is focused by the gaze. Call <see cref="ForceOnFocusEnter"/> to enable this behaviour again. 
+        /// </summary>
+        public void ForceOnFocusExit()
+        {
+            if (!m_FocusLocked)
+                return;
+            m_FocusLocked = false;
+            OnFocusExit();
         }
 
         /// <summary>

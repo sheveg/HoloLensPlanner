@@ -25,13 +25,11 @@ namespace HoloLensPlanner
         {
             m_IsFocused = true;
             InputManager.Instance.PushModalInputHandler(gameObject);
-            Debug.Log("FocusEnter");
         }
 
         public void OnFocusExit()
         {
             m_IsFocused = false;
-            Debug.Log("FocusExit");
             InputManager.Instance.PopModalInputHandler();
         }
 

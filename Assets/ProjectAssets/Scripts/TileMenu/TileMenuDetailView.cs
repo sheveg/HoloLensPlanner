@@ -132,6 +132,7 @@ namespace HoloLensPlanner
             // accepting the edit mode saves the values to the current tile
             AcceptEditButton.onClick.AddListener(disableEditing);
             AcceptEditButton.onClick.AddListener(saveTile);
+            PlaceTileButton.onClick.AddListener(placeTiles);
         }
 
         #endregion // Monobehaviour methods
@@ -240,6 +241,19 @@ namespace HoloLensPlanner
                 TileMenuManager.Instance.SavedTiles[CurrentTile] = tile;
             }
             tile.SaveToJson();
+        }
+
+        private void placeTiles()
+        {
+            if (RoomManager.Instance.Floor != null)
+            {
+                TileMenuManager.Instance.Hide();
+                TilesGenerator.Instance.CreateTileFloor(TileMenuManager.Instance.SavedTiles[CurrentTile]);
+            }
+            else
+            {
+                WarningManager.Instance.ShowWarning("You need to create a floor first!");
+            }
         }
 
         /// <summary>

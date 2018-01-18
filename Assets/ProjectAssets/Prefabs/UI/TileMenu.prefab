@@ -1403,6 +1403,7 @@ MonoBehaviour:
   ShowListViewButton: {fileID: 114011552058273454}
   ShowDetailViewButton: {fileID: 114202056047654550}
   NewTileButton: {fileID: 114572001035163314}
+  CloseButton: {fileID: 114999694039762484}
 --- !u!114 &114336827113444500
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2011,6 +2012,7 @@ MonoBehaviour:
     type: 2}
   PageParent: {fileID: 224410895446293798}
   PageText: {fileID: 114436578917083282}
+  AcceptTextureButton: {fileID: 0}
 --- !u!114 &114660075866157404
 MonoBehaviour:
   m_ObjectHideFlags: 1

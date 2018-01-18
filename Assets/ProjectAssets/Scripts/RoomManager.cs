@@ -15,7 +15,7 @@ namespace HoloLensPlanner
 
         public RoomPlane RoomPlanePrefab;
 
-        public GameObject Floor { get; private set; }
+        public RoomPlane Floor { get; private set; }
         public GameObject Ceiling { get; private set; }
         public List<GameObject> Walls { get; private set; }
 
@@ -136,7 +136,7 @@ namespace HoloLensPlanner
         {
             RoomPlane floor = Instantiate(RoomPlanePrefab, position, Quaternion.identity);
             floor.gameObject.name = "Floor";
-            Floor = floor.gameObject;
+            Floor = floor;
             return floor;
 
         }
