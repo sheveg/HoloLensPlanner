@@ -131,6 +131,7 @@ public class TextureListView : Singleton<TextureListView> {
         {
             Destroy(m_ObjectPages[i].gameObject);
         }
+        m_ObjectPages.Clear();
     }
 
     /// <summary>
@@ -139,6 +140,8 @@ public class TextureListView : Singleton<TextureListView> {
     /// <param name="textures"></param>
     private void fillPages(List<Texture2D> textures)
     {
+        int page = 0;
+        int texture = 0;
         // we go through each object holder of each page
         for (int i = 0; i < m_ObjectPages.Count; i++)
         {
@@ -148,8 +151,10 @@ public class TextureListView : Singleton<TextureListView> {
                 // as long as we did not load all tiles we load up the texture
                 if (textureIndex < textures.Count)
                 {
-                    m_ObjectPages[i].Objects[j].ObjectImage.texture = textures[textureIndex];
-                    m_ObjectPages[i].Objects[j].ObjectImage.GetComponent<Button>().onClick.AddListener(delegate { markTextureAsSelected(m_ObjectPages[i].Objects[j].ObjectImage, textureIndex); });
+                    page = i;
+                    texture = j;
+                    m_ObjectPages[page].Objects[texture].ObjectImage.texture = textures[textureIndex];
+                    m_ObjectPages[page].Objects[texture].ObjectImage.GetComponent<Button>().onClick.AddListener(delegate { markTextureAsSelected(m_ObjectPages[page].Objects[texture].ObjectImage, textureIndex); });
                 }
                 // otherwise we make the object template not visible
                 else

@@ -215,17 +215,14 @@ namespace HoloLensPlanner
 
         public void updateTexture(int textureIndex)
         {
+            m_CurrentTextureIndex = textureIndex;
             TextureButton.GetComponent<RawImage>().texture = GlobalSettings.Instance.TextureLibrary.Textures[textureIndex];
         }
-
-        #endregion // Public methods
-
-        #region Private internal methods
 
         /// <summary>
         /// Saves the current tile and adds it to the cached tiles if it is a new one.
         /// </summary>
-        private void saveTile()
+        public void saveTile()
         {
             var tile = getTileInformationFromButtons();
             if (tile.Guid == Guid.Empty)
@@ -242,6 +239,10 @@ namespace HoloLensPlanner
             }
             tile.SaveToJson();
         }
+
+        #endregion // Public methods
+
+        #region Private internal methods
 
         private void placeTiles()
         {

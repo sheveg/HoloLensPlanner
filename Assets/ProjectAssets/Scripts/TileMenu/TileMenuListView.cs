@@ -104,7 +104,7 @@ namespace HoloLensPlanner
                 }
             }
             // we start updating the information at the old last page
-            fillPagesInformation(tiles, oldPageCount - 1);
+            fillPagesInformation(tiles, 0);
         }
 
         /// <summary>
@@ -171,7 +171,10 @@ namespace HoloLensPlanner
             {
                 Destroy(m_ObjectPages[i].gameObject);
             }
+            m_ObjectPages.Clear();
         }
+
+        
 
         #endregion // Public methods
 

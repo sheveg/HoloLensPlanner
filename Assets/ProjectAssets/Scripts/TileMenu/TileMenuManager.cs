@@ -240,6 +240,11 @@ namespace HoloLensPlanner
             if (m_State == TileMenuState.ListView)
                 return;
 
+            if (m_State != TileMenuState.NewTileView)
+            {
+                TileMenuListView.Instance.UpdatePages(m_SavedTiles);
+            }
+
             m_State = TileMenuState.ListView;
             TileMenuDetailView.Instance.Hide();
 
@@ -260,9 +265,10 @@ namespace HoloLensPlanner
         public void acceptTexture(int textureIndex)
         {
             m_State = TileMenuState.DetailView;
+
+            TextureListView.Instance.destroyPages();
             TextureListView.Instance.gameObject.SetActive(false);
             
-            TextureListView.Instance.destroyPages();
             TileMenuDetailView.Instance.updateTexture(textureIndex);
             TileMenuDetailView.Instance.gameObject.SetActive(true);
 
