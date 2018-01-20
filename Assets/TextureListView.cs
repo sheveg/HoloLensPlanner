@@ -1,4 +1,5 @@
 ﻿using HoloLensPlanner;
+using HoloLensPlanner.GazeResponse;
 using HoloToolkit.Unity;
 using System.Collections;
 using System.Collections.Generic;
@@ -154,7 +155,7 @@ public class TextureListView : Singleton<TextureListView> {
                     page = i;
                     texture = j;
                     m_ObjectPages[page].Objects[texture].ObjectImage.texture = textures[textureIndex];
-                    m_ObjectPages[page].Objects[texture].ObjectImage.GetComponent<Button>().onClick.AddListener(delegate { markTextureAsSelected(m_ObjectPages[page].Objects[texture].ObjectImage, textureIndex); });
+                    m_ObjectPages[page].Objects[texture].ObjectImage.GetComponent<Button>().onClick.AddListener(delegate { markTextureAsSelected(textureIndex); });
                 }
                 // otherwise we make the object template not visible
                 else
@@ -192,16 +193,16 @@ public class TextureListView : Singleton<TextureListView> {
         }
     }
 
-    private void markTextureAsSelected(RawImage sender, int textureIndex)
+    private void markTextureAsSelected(int textureIndex)
     {
         selectedTextureIndex = textureIndex;
         //Delete outline for every object
         for (int i = 0; i < m_ObjectPages[CurrentPage].Objects.Count; i++)
         {
-            
+            m_ObjectPages[CurrentPage].Objects[i].gameObject.GetComponent<Outline>().enabled = false;
         }
-        //add outline to selected object
-        //TODO
+
+        m_ObjectPages[CurrentPage].Objects[textureIndex % ObjectPage.MaxObjectsCount].gameObject.GetComponent<Outline>().enabled = true;
     }
 
     private void acceptTexture()
