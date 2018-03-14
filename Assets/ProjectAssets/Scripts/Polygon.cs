@@ -17,7 +17,22 @@ namespace HoloLensPlanner
         /// <summary>
         /// Helper variable to check whether the polygon is done.
         /// </summary>
-        public bool IsFinished { get; set; }
+        public bool IsFinished
+        {
+            get { return m_IsFinished; }
+            set {
+                m_IsFinished = value;
+                if (m_IsFinished)
+                {
+                    foreach (var point in Points)
+                    {
+                        point.enabled = false;
+                    }
+                }
+            }
+        }
+
+        private bool m_IsFinished;
 
         /// <summary>
         /// Cross reference to a <see cref="RoomPlane"/> when the polygon is finished. 
