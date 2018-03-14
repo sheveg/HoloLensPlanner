@@ -170,7 +170,7 @@ namespace HoloLensPlanner
         /// <param name="roomPlane"></param>
         /// <param name="spawnPoint"></param>
         /// <param name="directionPoint"></param>
-        private void createTileFloorInternal(TileData tileData, RoomPlane roomPlane, Transform spawnPoint, Transform directionPoint)
+        private bool createTileFloorInternal(TileData tileData, RoomPlane roomPlane, Transform spawnPoint, Transform directionPoint)
         {
             // first create the copy so we do not mess with the original spawnpoint, we will destroy this object later on
             var spawnPointCopy = new GameObject("SpawnPointCopy");
@@ -269,7 +269,17 @@ namespace HoloLensPlanner
                 maskPlaneHole.Add(new Vector2(point.transform.position.x - mask_center.x, point.transform.position.z - mask_center.z));
             }
             maskPlaneHoles.Add(maskPlaneHole);
-            Mesh maskPlaneMesh = MeshUtility.CreatePolygonMesh(maskPlaneVertices, maskPlaneHoles);
+            // this method can fail for intersecting constraints therefore we need a try/catch block
+            Mesh maskPlaneMesh = null;
+            try
+            {
+                maskPlaneMesh = MeshUtility.CreatePolygonMesh(maskPlaneVertices, maskPlaneHoles);
+            }
+            catch
+            {
+                // indicate that the tile creation process was not successful
+                return false;
+            } 
             var maskPlane = new GameObject("MaskPlane");
             var maskPlaneMeshFilter = maskPlane.AddComponent<MeshFilter>();
             maskPlaneMeshFilter.mesh = maskPlaneMesh;
@@ -340,6 +350,7 @@ namespace HoloLensPlanner
             Destroy(maxXminZ_Point);
             Destroy(maxXmaxZ_Point);
             Destroy(spawnPointCopy);
+            return true;
         }
 
         private void handleSpawnPointCase()
@@ -349,6 +360,7 @@ namespace HoloLensPlanner
                 m_State = TilesGeneratorState.ChooseDirection;
                 SpawnPointInstruction.gameObject.SetActive(false);
                 DirectionPointInstruction.gameObject.SetActive(true);
+                Debug.Log("SpawnPoint created!");
             }
             else
                 WarningManager.Instance.ShowWarning("No spawn point chosen for the tiles!");
@@ -358,9 +370,13 @@ namespace HoloLensPlanner
         {
             if (m_CurrentDirectionPoint != null)
             {
-                createTileFloorInternal(m_CurrentTile, RoomManager.Instance.Floor, m_CurrentSpawnPoint, m_CurrentDirectionPoint);
+                if (!createTileFloorInternal(m_CurrentTile, RoomManager.Instance.Floor, m_CurrentSpawnPoint, m_CurrentDirectionPoint))
+                {
+                    WarningManager.Instance.ShowWarning("Oops, something went wrong, try again!", 3f);
+                }
                 reset();
                 MainMenuManager.Instance.Show();
+                Debug.Log("DirectionPoint created!");
             }
             else
                 WarningManager.Instance.ShowWarning("No direction point chosen for the tiles!");

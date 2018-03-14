@@ -79,6 +79,12 @@ namespace HoloLensPlanner
 
         public void CreateFloorPlane()
         {
+            if (Floor != null)
+                Destroy(Floor.gameObject);
+
+            if (TilesGenerator.Instance.FinishedTileFloor != null)
+                Destroy(TilesGenerator.Instance.FinishedTileFloor.gameObject);
+
             CurrentPlaneType = PlaneType.Floor;
             InputManager.Instance.PushModalInputHandler(gameObject);
         }
@@ -114,8 +120,6 @@ namespace HoloLensPlanner
                 // for now we assume that the floor has no stairs or ramps,
                 // so it should consist of points approx. on the same plane
                 case PlaneType.Floor:
-                    if (Floor != null)
-                        Destroy(Floor);
                     roomPlane = createFloor(polygon.Center);
                     break;
                 case PlaneType.Ceiling:

@@ -23,3 +23,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ProjectAssets/Scenes/MainScene.unity
     guid: 51cc8d52895c94245b7b83c57214f605
+  - enabled: 1
+    path: Assets/ProjectAssets/Scenes/MainScene Egor.unity
+    guid: 8aea13d4123b3f341bff493c98052716
+  - enabled: 1
+    path: Assets/ProjectAssets/Scenes/StartScene Egor.unity
+    guid: b87395a1d7d13884a85dac66cdb5a503
