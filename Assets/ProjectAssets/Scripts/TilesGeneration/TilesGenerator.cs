@@ -52,17 +52,17 @@ namespace HoloLensPlanner
         [SerializeField]
         private Image DirectionPointInstruction;
 
-        /// <summary>
-        /// Button to cancel the floor tile creation from the spawn state.
-        /// </summary>
-        [SerializeField]
-        private Button CancelSpawn;
+        ///// <summary>
+        ///// Button to cancel the floor tile creation from the spawn state.
+        ///// </summary>
+        //[SerializeField]
+        //private Button CancelSpawn;
 
-        /// <summary>
-        /// Button to cancel the floor tile creation from the direction state.
-        /// </summary>
-        [SerializeField]
-        private Button CancelDirection;
+        ///// <summary>
+        ///// Button to cancel the floor tile creation from the direction state.
+        ///// </summary>
+        //[SerializeField]
+        //private Button CancelDirection;
 
         /// <summary>
         /// Button to switch to spawn state from direction state.
@@ -107,8 +107,8 @@ namespace HoloLensPlanner
 
         private void Start()
         {
-            CancelSpawn.onClick.AddListener(reset);
-            CancelDirection.onClick.AddListener(reset);
+            //CancelSpawn.onClick.AddListener(reset);
+            //CancelDirection.onClick.AddListener(reset);
             BackFromDirection.onClick.AddListener(goBackToSpawnState);
         }
 
@@ -371,7 +371,7 @@ namespace HoloLensPlanner
                 DirectionPointInstruction.gameObject.SetActive(true);
             }
             else
-                WarningManager.Instance.ShowWarning("No spawn point chosen for the tiles!");
+                TextManager.Instance.ShowWarning("No spawn point chosen for the tiles!");
         }
 
         private void handleDirectionPointCase()
@@ -380,13 +380,13 @@ namespace HoloLensPlanner
             {
                 if (!createTileFloorInternal(m_CurrentTile, RoomManager.Instance.Floor, m_CurrentSpawnPoint, m_CurrentDirectionPoint))
                 {
-                    WarningManager.Instance.ShowWarning("Oops, something went wrong, try again!", 3f);
+                    TextManager.Instance.ShowWarning("Oops, something went wrong, try again!", 3f);
                 }
                 reset();
                 MainMenuManager.Instance.Show();
             }
             else
-                WarningManager.Instance.ShowWarning("No direction point chosen for the tiles!");
+                TextManager.Instance.ShowWarning("No direction point chosen for the tiles!");
         }
 
         private void goBackToSpawnState()

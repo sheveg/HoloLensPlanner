@@ -19,6 +19,8 @@ namespace HoloLensPlanner
         public GameObject Ceiling { get; private set; }
         public List<GameObject> Walls { get; private set; }
 
+        private const string createFloorTutorialText = "Klick to place the corners of the floor plane. Klick and hold to create the floor plane.";
+
         /// <summary>
         /// Planetype of the current roomplane which is in edit/creation mode.
         /// </summary>
@@ -60,7 +62,7 @@ namespace HoloLensPlanner
                 }
                 else
                 {
-                    WarningManager.Instance.ShowWarning("You need at least four points to create a floor!");
+                    TextManager.Instance.ShowWarning("You need at least four points to create a floor!");
                 }
             }
         }
@@ -79,6 +81,8 @@ namespace HoloLensPlanner
 
         public void CreateFloorPlane()
         {
+            TextManager.Instance.ShowTutorial(createFloorTutorialText);
+
             if (Floor != null)
                 Destroy(Floor.gameObject);
 
@@ -133,6 +137,7 @@ namespace HoloLensPlanner
             roomPlane.Setup(polygon, CurrentPlaneType.Value);
             CurrentPlaneType = null;
             InputManager.Instance.PopModalInputHandler();
+            TextManager.Instance.HideTutorial();
             MainMenuManager.Instance.Show();
         }
 
