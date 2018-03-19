@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -496,6 +496,11 @@ Prefab:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 426209662}
+    - target: {fileID: 114679710264446606, guid: 163afe14f49a3c24f8c604ee06e42f6e,
+        type: 2}
+      propertyPath: MainSceneName
+      value: MainScene_Fabi
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 163afe14f49a3c24f8c604ee06e42f6e, type: 2}
   m_IsPrefabParent: 0

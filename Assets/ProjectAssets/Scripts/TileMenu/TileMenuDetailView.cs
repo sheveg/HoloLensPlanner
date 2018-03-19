@@ -112,6 +112,18 @@ namespace HoloLensPlanner
 
         private Guid m_CurrentGuid;
 
+        /// <summary>
+        /// Component for blending. Canvasgroup has an alpha value which blends the whole UI.
+        /// </summary>
+        private CanvasGroup m_CanvasGroup;
+
+        /// <summary>
+        /// When we show/hide the menu we simply enable/disable following the camera and blend it out/in.
+        /// </summary>
+        private SimpleTagalong m_TagAlong;
+
+        private const float m_HideAlpha = 0.2f;
+
         #endregion // Cached variables
 
         #region MonoBehaviour methods
@@ -133,11 +145,26 @@ namespace HoloLensPlanner
             AcceptEditButton.onClick.AddListener(disableEditing);
             AcceptEditButton.onClick.AddListener(saveTile);
             PlaceTileButton.onClick.AddListener(placeTiles);
+
+            m_CanvasGroup = GetComponent<CanvasGroup>();
+            m_TagAlong = GetComponent<SimpleTagalong>();
         }
 
         #endregion // Monobehaviour methods
 
         #region Public methods
+
+        public void StartFollow()
+        {
+            m_CanvasGroup.alpha = 1f;
+            //m_TagAlong.enabled = true;
+        }
+
+        public void StopFollow()
+        {
+            m_CanvasGroup.alpha = m_HideAlpha;
+            //m_TagAlong.enabled = false;
+        }
 
         /// <summary>
         /// Shows the detail view with the current tile.
@@ -411,6 +438,7 @@ namespace HoloLensPlanner
         {
             showNumbersKeyboard();
             KeyboardWithNumbers.Instance.OnTextSubmitted += acceptWidthFromKeyboard;
+            KeyboardWithNumbers.Instance.OnClosed += closeKeyboard;
         }
 
         private void acceptWidthFromKeyboard(object sender, EventArgs e)
@@ -418,12 +446,15 @@ namespace HoloLensPlanner
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptWidthFromKeyboard;
             if(!string.IsNullOrEmpty(KeyboardWithNumbers.Instance.InputField.text))
                 WidthButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text + " cm";
+            StartFollow();
+            KeyboardWithNumbers.Instance.OnClosed -= closeKeyboard;
         }
 
         private void editHeight()
         {
             showNumbersKeyboard();
             KeyboardWithNumbers.Instance.OnTextSubmitted += acceptHeightFromKeyboard;
+            KeyboardWithNumbers.Instance.OnClosed += closeKeyboard;
         }
 
         private void acceptHeightFromKeyboard(object sender, EventArgs e)
@@ -431,12 +462,15 @@ namespace HoloLensPlanner
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptHeightFromKeyboard;
             if (!string.IsNullOrEmpty(KeyboardWithNumbers.Instance.InputField.text))
                 HeightButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text + " cm";
+            StartFollow();
+            KeyboardWithNumbers.Instance.OnClosed -= closeKeyboard;
         }
 
         private void editThickness()
         {
             showNumbersKeyboard();
             KeyboardWithNumbers.Instance.OnTextSubmitted += acceptThicknessFromKeyboard;
+            KeyboardWithNumbers.Instance.OnClosed += closeKeyboard;
         }
 
         private void acceptThicknessFromKeyboard(object sender, EventArgs e)
@@ -444,12 +478,15 @@ namespace HoloLensPlanner
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptThicknessFromKeyboard;
             if (!string.IsNullOrEmpty(KeyboardWithNumbers.Instance.InputField.text))
                 ThicknessButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text + " mm";
+            StartFollow();
+            KeyboardWithNumbers.Instance.OnClosed -= closeKeyboard;
         }
 
         private void editJointSize()
         {
             showNumbersKeyboard();
             KeyboardWithNumbers.Instance.OnTextSubmitted += acceptJointSizeFromKeyboard;
+            KeyboardWithNumbers.Instance.OnClosed += closeKeyboard;
         }
 
         private void acceptJointSizeFromKeyboard(object sender, EventArgs e)
@@ -457,12 +494,15 @@ namespace HoloLensPlanner
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptJointSizeFromKeyboard;
             if (!string.IsNullOrEmpty(KeyboardWithNumbers.Instance.InputField.text))
                 JointSizeButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text + " mm";
+            StartFollow();
+            KeyboardWithNumbers.Instance.OnClosed -= closeKeyboard;
         }
 
         private void editName()
         {
             showAlphaKeyboard();
             KeyboardWithNumbers.Instance.OnTextSubmitted += acceptNameFromKeyboard;
+            KeyboardWithNumbers.Instance.OnClosed += closeKeyboard;
         }
 
         private void acceptNameFromKeyboard(object sender, EventArgs e)
@@ -470,6 +510,19 @@ namespace HoloLensPlanner
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptNameFromKeyboard;
             if (!string.IsNullOrEmpty(KeyboardWithNumbers.Instance.InputField.text))
                 NameButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text;
+            StartFollow();
+            KeyboardWithNumbers.Instance.OnClosed -= closeKeyboard;
+        }
+
+        private void closeKeyboard(object sender, EventArgs e)
+        {
+            KeyboardWithNumbers.Instance.OnTextSubmitted -= closeKeyboard;
+            KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptWidthFromKeyboard;
+            KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptHeightFromKeyboard;
+            KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptNameFromKeyboard;
+            KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptJointSizeFromKeyboard;
+            KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptThicknessFromKeyboard;
+            StartFollow();
         }
 
         private void editTexture()
@@ -482,6 +535,7 @@ namespace HoloLensPlanner
         /// </summary>
         private void showNumbersKeyboard()
         {
+            StopFollow();
             KeyboardWithNumbers.Instance.FollowWithOffset(transform, 0.01f);
             KeyboardWithNumbers.Instance.PresentKeyboard(KeyboardWithNumbers.LayoutType.Number);
         }
@@ -491,6 +545,7 @@ namespace HoloLensPlanner
         /// </summary>
         private void showAlphaKeyboard()
         {
+            StopFollow();
             KeyboardWithNumbers.Instance.FollowWithOffset(transform, 0.01f);
             KeyboardWithNumbers.Instance.PresentKeyboard(KeyboardWithNumbers.LayoutType.Alpha);
         }
@@ -541,6 +596,7 @@ namespace HoloLensPlanner
             }
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptKeyboardInput;
             KeyboardWithNumbers.Instance.StopFollow();
+            StartFollow();
         }
 
         private void updateTileIndexText()

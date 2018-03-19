@@ -29,3 +29,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ProjectAssets/Scenes/StartScene Egor.unity
     guid: b87395a1d7d13884a85dac66cdb5a503
+  - enabled: 1
+    path: Assets/ProjectAssets/Scenes/MainScene_Fabi.unity
+    guid: b94d32a0a7141e740bd702dcfeb0263d

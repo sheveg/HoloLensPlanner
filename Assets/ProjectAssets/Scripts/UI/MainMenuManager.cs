@@ -39,6 +39,7 @@ namespace HoloLensPlanner
             m_TagAlong = GetComponent<SimpleTagalong>();
 
             TileMenuManager.Instance.Hide();
+            TextManager.Instance.Hide();
         }
 
         public void StartFollow()
@@ -65,8 +66,11 @@ namespace HoloLensPlanner
 
         private void createFloor()
         {
+            MainMenuManager.Instance.Hide();
+            TextManager.Instance.Show();
+            TextManager.Instance.writeText("Hallo Welt!");
             RoomManager.Instance.CreateFloorPlane();
-            StopFollow();
+            //StopFollow();
         }
 
         private void showObjectMenu()
@@ -77,10 +81,8 @@ namespace HoloLensPlanner
         private void showTileMenu()
         {
             TileMenuManager.Instance.Show();
-            Hide();
+            MainMenuManager.Instance.Hide();
         }
-
-
     }
 }
 
