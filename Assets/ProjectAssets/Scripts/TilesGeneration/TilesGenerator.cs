@@ -234,8 +234,11 @@ namespace HoloLensPlanner
             Vector3 startPosition = minXminZ_Point.transform.position + minXminZ_Point.transform.right * tileWidth / 2f + minXminZ_Point.transform.forward * tileHeight / 2f;
             // calculate the offset needed so that the tiles align perfectely at the spawn point
             Vector3 minToSpawn = minXminZ_Point.transform.InverseTransformPoint(spawnPoint.position);
-            float xOffset = tileWidth - Mathf.Repeat(minToSpawn.x, tileWidth);
-            float zOffset = tileHeight - Mathf.Repeat(minToSpawn.z, tileHeight);
+            // we need to move the whole tile plane at least a little so it cannot happen that a floor edge lies on the surrounding mask edge
+            // because the mesh creation algorithm in MeshUtility cannot create a mesh with overlapping edges => Mathf.Max(...)
+            float xOffset = Mathf.Max(tileWidth - Mathf.Repeat(minToSpawn.x, tileWidth), 0.001f);
+            float zOffset = Mathf.Max(tileHeight - Mathf.Repeat(minToSpawn.z, tileHeight), 0.001f);
+            Debug.Log(xOffset + ":" + zOffset);
             startPosition -= xOffset * minXminZ_Point.transform.right + zOffset * minXminZ_Point.transform.forward;
             // place the tiles
             for (int i = 0; i < rows; i++)
@@ -278,6 +281,12 @@ namespace HoloLensPlanner
             catch
             {
                 // indicate that the tile creation process was not successful
+                //Destroy(minXminZ_Point);
+                //Destroy(minXmaxZ_Point);
+                //Destroy(maxXminZ_Point);
+                //Destroy(maxXmaxZ_Point);
+                //Destroy(spawnPointCopy);
+                //Destroy(tilePlane);
                 return false;
             } 
             var maskPlane = new GameObject("MaskPlane");
@@ -360,7 +369,6 @@ namespace HoloLensPlanner
                 m_State = TilesGeneratorState.ChooseDirection;
                 SpawnPointInstruction.gameObject.SetActive(false);
                 DirectionPointInstruction.gameObject.SetActive(true);
-                Debug.Log("SpawnPoint created!");
             }
             else
                 WarningManager.Instance.ShowWarning("No spawn point chosen for the tiles!");
@@ -376,7 +384,6 @@ namespace HoloLensPlanner
                 }
                 reset();
                 MainMenuManager.Instance.Show();
-                Debug.Log("DirectionPoint created!");
             }
             else
                 WarningManager.Instance.ShowWarning("No direction point chosen for the tiles!");

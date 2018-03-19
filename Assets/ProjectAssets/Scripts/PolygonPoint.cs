@@ -17,19 +17,13 @@ namespace HoloLensPlanner
 
         public void OnInputClicked(InputClickedEventData eventData)
         {
-            Debug.Log("HitPoint");
-            if (GazeManager.Instance.HitObject == gameObject)
-            {
-                Debug.Log("HitPoint");
-                // use the click so no other events are triggered
-                eventData.Use();
-                deletePoint();
-            }
+            // use the click so no other events are triggered
+            eventData.Use();
+            deletePoint();
         }
 
         private void deletePoint()
         {
-            Debug.Log("DeletePoint");
             // if the polygon is in edit mode and this point is the last point created
             if (PolygonManager.Instance.CurrentPolygon == m_RootPolygon && !m_RootPolygon.IsFinished && m_RootPolygon.Points[m_RootPolygon.Points.Count - 1] == this)
             {
