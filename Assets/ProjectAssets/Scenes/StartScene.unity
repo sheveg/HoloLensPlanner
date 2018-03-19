@@ -386,6 +386,10 @@ Prefab:
       propertyPath: TargetTransform
       value: 
       objectReference: {fileID: 53949731}
+    - target: {fileID: 1689245737281230, guid: d4a9f15d8dc0e5645897ec9e9dce2092, type: 2}
+      propertyPath: m_Name
+      value: TextUI
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d4a9f15d8dc0e5645897ec9e9dce2092, type: 2}
   m_IsPrefabParent: 0

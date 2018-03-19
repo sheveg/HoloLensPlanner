@@ -133,7 +133,7 @@ namespace HoloLensPlanner
             roomPlane.Setup(polygon, CurrentPlaneType.Value);
             CurrentPlaneType = null;
             InputManager.Instance.PopModalInputHandler();
-            MainMenuManager.Instance.StartFollow();
+            MainMenuManager.Instance.Show();
         }
 
         private RoomPlane createFloor(Vector3 position)
