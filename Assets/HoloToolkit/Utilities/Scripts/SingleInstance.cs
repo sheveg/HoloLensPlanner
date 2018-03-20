@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using UnityEngine;
+using System.Linq;
 
 namespace HoloToolkit.Unity
 {
@@ -30,6 +31,11 @@ namespace HoloToolkit.Unity
                 }
                 return _Instance;
             }
+        }
+
+        private void Awake()
+        {
+            _Instance = (T)this;
         }
 
         /// <summary>

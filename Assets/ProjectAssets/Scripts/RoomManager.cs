@@ -19,7 +19,7 @@ namespace HoloLensPlanner
         public GameObject Ceiling { get; private set; }
         public List<GameObject> Walls { get; private set; }
 
-        private const string createFloorTutorialText = "Klick to place the corners of the floor plane. Klick and hold to create the floor plane.";
+        private const string createFloorTutorialText = "Click to place the corners of the floor. Click and hold to create the floor.";
 
         /// <summary>
         /// Planetype of the current roomplane which is in edit/creation mode.
@@ -81,8 +81,10 @@ namespace HoloLensPlanner
 
         public void CreateFloorPlane()
         {
-            TextManager.Instance.ShowTutorial(createFloorTutorialText);
-
+            //TextManager.Instance.ShowTutorial(createFloorTutorialText);
+            InstructionMenu.Instance.Instruction = createFloorTutorialText;
+            InstructionMenu.Instance.ShowFloatingInstruction();
+            MenuHub.Instance.ShowMenu(InstructionMenu.Instance.gameObject);
             if (Floor != null)
                 Destroy(Floor.gameObject);
 
@@ -138,7 +140,7 @@ namespace HoloLensPlanner
             CurrentPlaneType = null;
             InputManager.Instance.PopModalInputHandler();
             TextManager.Instance.HideTutorial();
-            MainMenuManager.Instance.Show();
+            MenuHub.Instance.ShowMenu(MainMenuManager.Instance.gameObject);
         }
 
         private RoomPlane createFloor(Vector3 position)

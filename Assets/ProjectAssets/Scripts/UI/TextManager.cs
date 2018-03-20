@@ -19,22 +19,6 @@ namespace HoloLensPlanner
             StartCoroutine(warningCoroutine(warning, showTime));
         }
 
-        private IEnumerator warningCoroutine(string warning, float showTime)
-        {
-            WarningText.text = warning;
-            WarningText.transform.parent.gameObject.SetActive(true);
-            yield return new WaitForSeconds(showTime);
-            WarningText.transform.parent.gameObject.SetActive(false);
-        }
-
-        private IEnumerator tutorialCoroutine(string tutorialText, float showTime)
-        {
-            TutorialText.text = tutorialText;
-            TutorialText.transform.parent.gameObject.SetActive(true);
-            yield return new WaitForSeconds(showTime);
-            TutorialText.transform.parent.gameObject.SetActive(false);
-        }
-
         public void ShowTutorial(string tutorialText)
         {
             TutorialText.text = tutorialText;
@@ -48,6 +32,22 @@ namespace HoloLensPlanner
 
         public void HideTutorial()
         {
+            TutorialText.transform.parent.gameObject.SetActive(false);
+        }
+
+        private IEnumerator warningCoroutine(string warning, float showTime)
+        {
+            WarningText.text = warning;
+            WarningText.transform.parent.gameObject.SetActive(true);
+            yield return new WaitForSeconds(showTime);
+            WarningText.transform.parent.gameObject.SetActive(false);
+        }
+
+        private IEnumerator tutorialCoroutine(string tutorialText, float showTime)
+        {
+            TutorialText.text = tutorialText;
+            TutorialText.transform.parent.gameObject.SetActive(true);
+            yield return new WaitForSeconds(showTime);
             TutorialText.transform.parent.gameObject.SetActive(false);
         }
     }

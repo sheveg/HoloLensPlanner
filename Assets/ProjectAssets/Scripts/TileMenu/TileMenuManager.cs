@@ -148,7 +148,7 @@ namespace HoloLensPlanner
         {
             gameObject.SetActive(false);
             if (showMainMenu)
-                MainMenuManager.Instance.Show();
+                MenuHub.Instance.ShowMenu(MainMenuManager.Instance.gameObject);
         }
 
         /// <summary>

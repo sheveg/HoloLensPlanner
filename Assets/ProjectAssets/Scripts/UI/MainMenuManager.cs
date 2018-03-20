@@ -41,31 +41,31 @@ namespace HoloLensPlanner
             TileMenuManager.Instance.Hide();
         }
 
-        public void StartFollow()
-        {
-            m_CanvasGroup.alpha = 1f;
-            m_TagAlong.enabled = true;
-        }
+        //public void StartFollow()
+        //{
+        //    m_CanvasGroup.alpha = 1f;
+        //    m_TagAlong.enabled = true;
+        //}
 
-        public void StopFollow()
-        {
-            m_CanvasGroup.alpha = m_HideAlpha;
-            m_TagAlong.enabled = false;
-        }
+        //public void StopFollow()
+        //{
+        //    m_CanvasGroup.alpha = m_HideAlpha;
+        //    m_TagAlong.enabled = false;
+        //}
 
-        public void Show()
-        {
-            gameObject.SetActive(true);
-        }
+        //public void Show()
+        //{
+        //    gameObject.SetActive(true);
+        //}
 
-        public void Hide()
-        {
-            gameObject.SetActive(false);
-        }
+        //public void Hide()
+        //{
+        //    gameObject.SetActive(false);
+        //}
 
         private void createFloor()
         {
-            MainMenuManager.Instance.Hide();
+            MenuHub.Instance.Pin();
             RoomManager.Instance.CreateFloorPlane();
             //StopFollow();
         }
@@ -77,8 +77,7 @@ namespace HoloLensPlanner
 
         private void showTileMenu()
         {
-            TileMenuManager.Instance.Show();
-            MainMenuManager.Instance.Hide();
+            MenuHub.Instance.ShowMenu(TileMenuManager.Instance.gameObject);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace HoloToolkit.Unity.SpatialMapping
 #if UNITY_2017_2_OR_NEWER
             if (!UnityEngine.XR.XRDevice.isPresent && Application.isEditor)
 #else
-            if (/*!UnityEngine.VR.VRDevice.isPresent && Application.isEditor*/true)
+            if (!UnityEngine.VR.VRDevice.isPresent && Application.isEditor)
 #endif
             {
                 // When in the Unity editor and not remoting, try loading saved meshes from a model.

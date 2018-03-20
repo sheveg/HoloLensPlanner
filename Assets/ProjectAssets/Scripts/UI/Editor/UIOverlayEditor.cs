@@ -26,6 +26,11 @@ namespace HoloLensPlanner
                 m_UIOverlay.ApplyMaterial();
                 EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             }
+            if (GUILayout.Button("Reset"))
+            {
+                m_UIOverlay.Reset();
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+            }
         }
     }
 }

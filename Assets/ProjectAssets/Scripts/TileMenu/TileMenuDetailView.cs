@@ -156,13 +156,13 @@ namespace HoloLensPlanner
 
         public void StartFollow()
         {
-            m_CanvasGroup.alpha = 1f;
+            //m_CanvasGroup.alpha = 1f;
             //m_TagAlong.enabled = true;
         }
 
         public void StopFollow()
         {
-            m_CanvasGroup.alpha = m_HideAlpha;
+            //m_CanvasGroup.alpha = m_HideAlpha;
             //m_TagAlong.enabled = false;
         }
 

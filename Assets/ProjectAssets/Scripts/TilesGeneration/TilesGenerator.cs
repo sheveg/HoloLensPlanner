@@ -281,12 +281,12 @@ namespace HoloLensPlanner
             catch
             {
                 // indicate that the tile creation process was not successful
-                //Destroy(minXminZ_Point);
-                //Destroy(minXmaxZ_Point);
-                //Destroy(maxXminZ_Point);
-                //Destroy(maxXmaxZ_Point);
-                //Destroy(spawnPointCopy);
-                //Destroy(tilePlane);
+                Destroy(minXminZ_Point);
+                Destroy(minXmaxZ_Point);
+                Destroy(maxXminZ_Point);
+                Destroy(maxXmaxZ_Point);
+                Destroy(spawnPointCopy);
+                Destroy(tilePlane);
                 return false;
             } 
             var maskPlane = new GameObject("MaskPlane");
@@ -383,7 +383,7 @@ namespace HoloLensPlanner
                     TextManager.Instance.ShowWarning("Oops, something went wrong, try again!", 3f);
                 }
                 reset();
-                MainMenuManager.Instance.Show();
+                MenuHub.Instance.ShowMenu(MainMenuManager.Instance.gameObject);
             }
             else
                 TextManager.Instance.ShowWarning("No direction point chosen for the tiles!");

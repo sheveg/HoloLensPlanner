@@ -33,6 +33,25 @@ namespace HoloLensPlanner
                 rawImg.material = OverlayMaterialImage;
             }
         }
+
+        public void Reset()
+        {
+            var images = GetComponentsInChildren<Image>(true);
+            foreach (var img in images)
+            {
+                img.material = null;
+            }
+            var texts = GetComponentsInChildren<Text>(true);
+            foreach (var text in texts)
+            {
+                text.material = null;
+            }
+            var rawImgs = GetComponentsInChildren<RawImage>(true);
+            foreach (var rawImg in rawImgs)
+            {
+                rawImg.material = null;
+            }
+        }
     }
 }
 

@@ -386,9 +386,54 @@ Prefab:
       propertyPath: TargetTransform
       value: 
       objectReference: {fileID: 53949731}
+    - target: {fileID: 224809704447245030, guid: d4a9f15d8dc0e5645897ec9e9dce2092,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224809704447245030, guid: d4a9f15d8dc0e5645897ec9e9dce2092,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224809704447245030, guid: d4a9f15d8dc0e5645897ec9e9dce2092,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 224809704447245030, guid: d4a9f15d8dc0e5645897ec9e9dce2092,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -34
+      objectReference: {fileID: 0}
+    - target: {fileID: 224809704447245030, guid: d4a9f15d8dc0e5645897ec9e9dce2092,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 48
+      objectReference: {fileID: 0}
+    - target: {fileID: 224106697983778838, guid: d4a9f15d8dc0e5645897ec9e9dce2092,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 68
+      objectReference: {fileID: 0}
+    - target: {fileID: 114932521682924260, guid: d4a9f15d8dc0e5645897ec9e9dce2092,
+        type: 2}
+      propertyPath: TutorialText
+      value: 
+      objectReference: {fileID: 595675649}
+    - target: {fileID: 1893234110763208, guid: d4a9f15d8dc0e5645897ec9e9dce2092, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d4a9f15d8dc0e5645897ec9e9dce2092, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &595675649 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114298851667334434, guid: d4a9f15d8dc0e5645897ec9e9dce2092,
+    type: 2}
+  m_PrefabInternal: {fileID: 595675648}
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!1001 &623231223
 Prefab:
   m_ObjectHideFlags: 0
