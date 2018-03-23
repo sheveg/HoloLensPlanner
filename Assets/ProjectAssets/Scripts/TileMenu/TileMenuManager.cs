@@ -95,7 +95,7 @@ namespace HoloLensPlanner
             ShowDetailViewButton.onClick.AddListener(showDetailView);
             ShowListViewButton.onClick.AddListener(showListView);
             NewTileButton.onClick.AddListener(createTile);
-            CloseButton.onClick.AddListener( () => Hide(true));
+            CloseButton.onClick.AddListener( () => MenuHub.Instance.ShowMenu(MainMenuManager.Instance.gameObject) );
 
             TileMenuListView.Instance.gameObject.SetActive(true);
             TileMenuDetailView.Instance.gameObject.SetActive(false);
@@ -131,24 +131,6 @@ namespace HoloLensPlanner
             m_State = TileMenuState.ListView;
             TileMenuDetailView.Instance.Hide();
             TileMenuListView.Instance.Show(pageIndex);
-        }
-
-        /// <summary>
-        /// Shows the TileMenu.
-        /// </summary>
-        public void Show()
-        {
-            gameObject.SetActive(true);
-        }
-
-        /// <summary>
-        /// Hides the TileMenu.
-        /// </summary>
-        public void Hide(bool showMainMenu = false)
-        {
-            gameObject.SetActive(false);
-            if (showMainMenu)
-                MenuHub.Instance.ShowMenu(MainMenuManager.Instance.gameObject);
         }
 
         /// <summary>

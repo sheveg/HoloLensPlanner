@@ -8,7 +8,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TextureListView : Singleton<TextureListView> {
+public class TextureListView : SingleInstance<TextureListView> {
 
     [SerializeField]
     private ObjectPage ObjectPagePrefab;
@@ -27,7 +27,7 @@ public class TextureListView : Singleton<TextureListView> {
 
     public int CurrentPage { get; private set; }
 
-    private int selectedTextureIndex;
+    private int m_SelectedTextureIndex;
 
     public void Start()
     {
@@ -62,6 +62,8 @@ public class TextureListView : Singleton<TextureListView> {
                 m_ObjectPages[i].gameObject.SetActive(false);
             }
         }
+        // highlight the texture of the current edited tile
+        markTextureAsSelected(TileMenuDetailView.Instance.CurrentTextureIndex);
     }
 
     /// <summary>
@@ -195,7 +197,7 @@ public class TextureListView : Singleton<TextureListView> {
 
     private void markTextureAsSelected(int textureIndex)
     {
-        selectedTextureIndex = textureIndex;
+        m_SelectedTextureIndex = textureIndex;
         //Delete outline for every object
         for (int i = 0; i < m_ObjectPages[CurrentPage].Objects.Count; i++)
         {
@@ -208,6 +210,6 @@ public class TextureListView : Singleton<TextureListView> {
     private void acceptTexture()
     {
         AcceptTextureButton.gameObject.SetActive(false);
-        TileMenuManager.Instance.acceptTexture(selectedTextureIndex);
+        TileMenuManager.Instance.acceptTexture(m_SelectedTextureIndex);
     }
 }

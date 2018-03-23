@@ -20,7 +20,7 @@ namespace HoloLensPlanner
     ///       To retrieve the input from the Keyboard, subscribe to the textEntered event. Note that
     ///       tapping 'Close' on the Keyboard will not fire the textEntered event. You must tap 'Enter' to
     ///       get the textEntered event.
-    public class KeyboardWithNumbers : Singleton<KeyboardWithNumbers>, IFocusable
+    public class KeyboardWithNumbers : Singleton<KeyboardWithNumbers>
     {
         /// <summary>
         /// Layout type enum for the type of keyboard layout to use.  
@@ -268,22 +268,6 @@ namespace HoloLensPlanner
         }
 
         /// <summary>
-        /// Enable input again when the user focuses the keyboard.
-        /// </summary>
-        public void OnFocusEnter()
-        {
-            InputManager.Instance.PopInputDisable();
-        }
-
-        /// <summary>
-        /// Disables the input when the user is not focusing the keyboard when it is open.
-        /// </summary>
-        public void OnFocusExit()
-        {
-            InputManager.Instance.PushInputDisable();
-        }
-
-        /// <summary>
         /// Intermediary function for text update events.
         /// Workaround for strange leftover reference when unsubscribing.
         /// </summary>
@@ -313,11 +297,6 @@ namespace HoloLensPlanner
         private void UpdateCaratPosition(int newPos)
         {
             InputField.caretPosition = newPos;
-        }
-
-        private void OnEnable()
-        {
-            InputManager.Instance.PushInputDisable();
         }
 
         /// <summary>

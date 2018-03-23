@@ -108,7 +108,7 @@ namespace HoloLensPlanner
 
         private Button m_SelectedButton;
 
-        private int m_CurrentTextureIndex;
+        public int CurrentTextureIndex { get; private set; }
 
         private Guid m_CurrentGuid;
 
@@ -181,7 +181,7 @@ namespace HoloLensPlanner
 
             //Save GUID and textureIndex of tile
             //Both needed to correctly store tile later
-            m_CurrentTextureIndex = TileMenuManager.Instance.SavedTiles[CurrentTile].TextureIndex;
+            CurrentTextureIndex = TileMenuManager.Instance.SavedTiles[CurrentTile].TextureIndex;
             m_CurrentGuid = TileMenuManager.Instance.SavedTiles[CurrentTile].Guid;
 
             loadCurrentTile();
@@ -234,7 +234,7 @@ namespace HoloLensPlanner
             NameButton.GetComponentInChildren<Text>().text = TileData.DefaultName;
 
             TextureButton.GetComponent<RawImage>().texture = GlobalSettings.Instance.TextureLibrary.Textures[TileData.DefaultTextureIndex];
-            m_CurrentTextureIndex = TileData.DefaultTextureIndex;
+            CurrentTextureIndex = TileData.DefaultTextureIndex;
             m_CurrentGuid = Guid.Empty;
             enableEditing();
             CreationHeader.gameObject.SetActive(true);
@@ -242,7 +242,7 @@ namespace HoloLensPlanner
 
         public void updateTexture(int textureIndex)
         {
-            m_CurrentTextureIndex = textureIndex;
+            CurrentTextureIndex = textureIndex;
             TextureButton.GetComponent<RawImage>().texture = GlobalSettings.Instance.TextureLibrary.Textures[textureIndex];
         }
 
@@ -275,7 +275,7 @@ namespace HoloLensPlanner
         {
             if (RoomManager.Instance.Floor != null)
             {
-                TileMenuManager.Instance.Hide();
+                MenuHub.Instance.ShowMenu(MainMenuManager.Instance.gameObject);
                 TilesGenerator.Instance.CreateTileFloor(TileMenuManager.Instance.SavedTiles[CurrentTile]);
             }
             else
@@ -294,7 +294,7 @@ namespace HoloLensPlanner
                 ParserUtility.StringToFloat(WidthButton.GetComponentInChildren<Text>().text) / 100f,
                 ParserUtility.StringToFloat(ThicknessButton.GetComponentInChildren<Text>().text) / 1000f,
                 ParserUtility.StringToFloat(JointSizeButton.GetComponentInChildren<Text>().text) / 1000f,
-                m_CurrentTextureIndex,
+                CurrentTextureIndex,
                 NameButton.GetComponentInChildren<Text>().text,
                 m_CurrentGuid);
             return tile;
@@ -410,7 +410,7 @@ namespace HoloLensPlanner
         /// <param name="button"></param>
         private void enableButton(Button button)
         {
-            button.enabled = true;
+            button.interactable = true;
             GazeResponder gazeRes;
             if ((gazeRes = button.gameObject.GetComponent<GazeResponder>()) != null)
                 gazeRes.enabled = true;
@@ -425,7 +425,7 @@ namespace HoloLensPlanner
         /// <param name="button"></param>
         private void disableButton(Button button)
         {
-            button.enabled = false;
+            button.interactable = false;
             GazeResponder gazeRes;
             if ((gazeRes = button.gameObject.GetComponent<GazeResponder>()) != null)
                 gazeRes.enabled = false;
@@ -548,36 +548,6 @@ namespace HoloLensPlanner
             StopFollow();
             KeyboardWithNumbers.Instance.FollowWithOffset(transform, 0.01f);
             KeyboardWithNumbers.Instance.PresentKeyboard(KeyboardWithNumbers.LayoutType.Alpha);
-        }
-
-
-        private void editButtonInformation(Button button)
-        {
-            m_SelectedButton = button;
-
-            if (button.Equals(HeightButton) || button.Equals(WidthButton))
-            {                
-                KeyboardWithNumbers.Instance.FollowWithOffset(button.transform, 0.01f);
-                KeyboardWithNumbers.Instance.PresentKeyboard(KeyboardWithNumbers.LayoutType.Number);
-
-                //Now done by simpleTagalong script
-                //KeyboardNumbers.Instance.gameObject.transform.position = b.transform.position - 0.4f * b.transform.forward;
-
-                KeyboardWithNumbers.Instance.OnTextSubmitted += acceptKeyboardInput;
-            }
-            else if (button.Equals(NameButton))
-            {
-                KeyboardWithNumbers.Instance.FollowWithOffset(button.transform, 0.01f);
-                KeyboardWithNumbers.Instance.PresentKeyboard(KeyboardWithNumbers.LayoutType.Alpha);
-                KeyboardWithNumbers.Instance.OnTextSubmitted += acceptKeyboardInput;
-            }
-            else if (button.Equals(TextureButton))
-            {
-
-                this.gameObject.SetActive(false);
-                TextureListView.Instance.CreatePages();
-                TextureListView.Instance.Show(Mathf.CeilToInt(m_CurrentTextureIndex / ObjectPage.MaxObjectsCount));
-            }
         }
 
         private void acceptKeyboardInput(object sender, EventArgs e)

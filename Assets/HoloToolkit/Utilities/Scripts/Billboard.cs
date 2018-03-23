@@ -9,8 +9,12 @@ namespace HoloToolkit.Unity
     {
         // Rotate about all axes.
         Free,
-        // Rotate about an individual axis.
-        Y
+        // Rotate about the X-axis.
+        X,
+        // Rotate about the Y-axis.
+        Y,
+        // Rotate about the Z-axis
+        Z
     }
 
     /// <summary>
@@ -53,10 +57,15 @@ namespace HoloToolkit.Unity
             // Adjust for the pivot axis.
             switch (PivotAxis)
             {
+                case PivotAxis.X:
+                    directionToTarget.x = 0.0f;
+                    break;
                 case PivotAxis.Y:
                     directionToTarget.y = 0.0f;
                     break;
-
+                case PivotAxis.Z:
+                    directionToTarget.z = 0.0f;
+                    break;
                 case PivotAxis.Free:
                 default:
                     // No changes needed.
