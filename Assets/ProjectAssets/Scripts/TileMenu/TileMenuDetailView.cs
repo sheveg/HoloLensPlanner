@@ -130,6 +130,7 @@ namespace HoloLensPlanner
 
         private void Start()
         {
+            Debug.Log("updateTileIndexText");
             WidthButton.onClick.AddListener(editWidth);
             HeightButton.onClick.AddListener(editHeight);
             NameButton.onClick.AddListener(editName);
@@ -154,24 +155,13 @@ namespace HoloLensPlanner
 
         #region Public methods
 
-        public void StartFollow()
-        {
-            //m_CanvasGroup.alpha = 1f;
-            //m_TagAlong.enabled = true;
-        }
-
-        public void StopFollow()
-        {
-            //m_CanvasGroup.alpha = m_HideAlpha;
-            //m_TagAlong.enabled = false;
-        }
-
         /// <summary>
         /// Shows the detail view with the current tile.
         /// </summary>
         /// <param name="tileIndex"></param>
         public void Show(int tileIndex)
         {
+            Debug.Log("updateTileIndexText");
             gameObject.SetActive(true);
             if (!TileCountText.gameObject.activeSelf)
             {
@@ -195,6 +185,7 @@ namespace HoloLensPlanner
         /// </summary>
         public void Hide()
         {
+            Debug.Log("updateTileIndexText");
             gameObject.SetActive(false);
         }
 
@@ -203,6 +194,7 @@ namespace HoloLensPlanner
         /// </summary>
         public void ShowNextTile()
         {
+            Debug.Log("updateTileIndexText");
             Show(CurrentTile + 1);
         }
 
@@ -211,6 +203,7 @@ namespace HoloLensPlanner
         /// </summary>
         public void ShowPreviousTile()
         {
+            Debug.Log("updateTileIndexText");
             Show(CurrentTile - 1);
         }
 
@@ -219,6 +212,7 @@ namespace HoloLensPlanner
         /// </summary>
         public void CreateTile()
         {
+            Debug.Log("updateTileIndexText");
             if (gameObject.activeSelf == false)
             {
                 gameObject.SetActive(true);
@@ -242,6 +236,7 @@ namespace HoloLensPlanner
 
         public void updateTexture(int textureIndex)
         {
+            Debug.Log("updateTileIndexText");
             CurrentTextureIndex = textureIndex;
             TextureButton.GetComponent<RawImage>().texture = GlobalSettings.Instance.TextureLibrary.Textures[textureIndex];
         }
@@ -251,6 +246,7 @@ namespace HoloLensPlanner
         /// </summary>
         public void saveTile()
         {
+            Debug.Log("updateTileIndexText");
             var tile = getTileInformationFromButtons();
             if (tile.Guid == Guid.Empty)
             {
@@ -273,6 +269,7 @@ namespace HoloLensPlanner
 
         private void placeTiles()
         {
+            Debug.Log("updateTileIndexText");
             if (RoomManager.Instance.Floor != null)
             {
                 MenuHub.Instance.ShowMenu(MainMenuManager.Instance.gameObject);
@@ -289,6 +286,7 @@ namespace HoloLensPlanner
         /// </summary>
         private TileData getTileInformationFromButtons()
         {
+            Debug.Log("updateTileIndexText");
             TileData tile = new TileData(
                 ParserUtility.StringToFloat(HeightButton.GetComponentInChildren<Text>().text) / 100f,
                 ParserUtility.StringToFloat(WidthButton.GetComponentInChildren<Text>().text) / 100f,
@@ -305,6 +303,7 @@ namespace HoloLensPlanner
         /// </summary>
         private void loadCurrentTile()
         {
+            Debug.Log("updateTileIndexText");
             loadTexture();
             loadWidth();
             loadHeight();
@@ -317,33 +316,39 @@ namespace HoloLensPlanner
 
         private void loadTexture()
         {
+            Debug.Log("updateTileIndexText");
             TextureButton.GetComponent<RawImage>().texture = GlobalSettings.Instance.TextureLibrary.Textures[TileMenuManager.Instance.SavedTiles[CurrentTile].TextureIndex];
         }
 
         private void loadWidth()
         {
+            Debug.Log("updateTileIndexText");
             float widthInCM = TileMenuManager.Instance.SavedTiles[CurrentTile].Width * 100;
             WidthButton.GetComponentInChildren<Text>().text = (widthInCM).ToString("n0") + " cm";
         }
 
         private void loadHeight()
         {
+            Debug.Log("updateTileIndexText");
             float heightInCM = TileMenuManager.Instance.SavedTiles[CurrentTile].Height * 100;
             HeightButton.GetComponentInChildren<Text>().text = (heightInCM).ToString("n0") + " cm";
         }
 
         private void loadJointSize()
         {
+            Debug.Log("updateTileIndexText");
             JointSizeButton.GetComponentInChildren<Text>().text = (TileMenuManager.Instance.SavedTiles[CurrentTile].JointSize * 1000).ToString("n0") + " mm";
         }
 
         private void loadThickness()
         {
+            Debug.Log("updateTileIndexText");
             ThicknessButton.GetComponentInChildren<Text>().text = (TileMenuManager.Instance.SavedTiles[CurrentTile].TileThickness * 1000).ToString("n0") + " mm";
         }
 
         private void loadName()
         {
+            Debug.Log("updateTileIndexText");
             string name = TileMenuManager.Instance.SavedTiles[CurrentTile].Name;
             NameButton.GetComponentInChildren<Text>().text = name;
         }
@@ -355,6 +360,7 @@ namespace HoloLensPlanner
         /// </summary>
         private void changeEditMode()
         {
+            Debug.Log("updateTileIndexText");
             if (!m_EditMode)
             {
                 enableEditing();
@@ -370,6 +376,7 @@ namespace HoloLensPlanner
         /// </summary>
         private void enableEditing()
         {
+            Debug.Log("updateTileIndexText");
             m_EditMode = true;
             enableButton(TextureButton);
             enableButton(WidthButton);
@@ -389,6 +396,7 @@ namespace HoloLensPlanner
         /// </summary>
         private void disableEditing()
         {
+            Debug.Log("updateTileIndexText");
             m_EditMode = false;
             disableButton(TextureButton);
             disableButton(WidthButton);
@@ -410,12 +418,13 @@ namespace HoloLensPlanner
         /// <param name="button"></param>
         private void enableButton(Button button)
         {
+            Debug.Log("updateTileIndexText");
             button.interactable = true;
             GazeResponder gazeRes;
             if ((gazeRes = button.gameObject.GetComponent<GazeResponder>()) != null)
                 gazeRes.enabled = true;
-            Outline o;
-            if ((o = button.GetComponent<Outline>()) != null)
+            CustomOutline o;
+            if ((o = button.GetComponent<CustomOutline>()) != null)
                 o.enabled = true;
         }
 
@@ -425,17 +434,19 @@ namespace HoloLensPlanner
         /// <param name="button"></param>
         private void disableButton(Button button)
         {
+            Debug.Log("updateTileIndexText");
             button.interactable = false;
             GazeResponder gazeRes;
             if ((gazeRes = button.gameObject.GetComponent<GazeResponder>()) != null)
                 gazeRes.enabled = false;
-            Outline o;
-            if ((o = button.GetComponent<Outline>()) != null)
+            CustomOutline o;
+            if ((o = button.GetComponent<CustomOutline>()) != null)
                 o.enabled = false;
         }
 
         private void editWidth()
         {
+            Debug.Log("updateTileIndexText");
             showNumbersKeyboard();
             KeyboardWithNumbers.Instance.OnTextSubmitted += acceptWidthFromKeyboard;
             KeyboardWithNumbers.Instance.OnClosed += closeKeyboard;
@@ -443,15 +454,16 @@ namespace HoloLensPlanner
 
         private void acceptWidthFromKeyboard(object sender, EventArgs e)
         {
+            Debug.Log("updateTileIndexText");
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptWidthFromKeyboard;
             if(!string.IsNullOrEmpty(KeyboardWithNumbers.Instance.InputField.text))
                 WidthButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text + " cm";
-            StartFollow();
             KeyboardWithNumbers.Instance.OnClosed -= closeKeyboard;
         }
 
         private void editHeight()
         {
+            Debug.Log("updateTileIndexText");
             showNumbersKeyboard();
             KeyboardWithNumbers.Instance.OnTextSubmitted += acceptHeightFromKeyboard;
             KeyboardWithNumbers.Instance.OnClosed += closeKeyboard;
@@ -459,15 +471,16 @@ namespace HoloLensPlanner
 
         private void acceptHeightFromKeyboard(object sender, EventArgs e)
         {
+            Debug.Log("updateTileIndexText");
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptHeightFromKeyboard;
             if (!string.IsNullOrEmpty(KeyboardWithNumbers.Instance.InputField.text))
                 HeightButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text + " cm";
-            StartFollow();
             KeyboardWithNumbers.Instance.OnClosed -= closeKeyboard;
         }
 
         private void editThickness()
         {
+            Debug.Log("updateTileIndexText");
             showNumbersKeyboard();
             KeyboardWithNumbers.Instance.OnTextSubmitted += acceptThicknessFromKeyboard;
             KeyboardWithNumbers.Instance.OnClosed += closeKeyboard;
@@ -475,15 +488,16 @@ namespace HoloLensPlanner
 
         private void acceptThicknessFromKeyboard(object sender, EventArgs e)
         {
+            Debug.Log("updateTileIndexText");
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptThicknessFromKeyboard;
             if (!string.IsNullOrEmpty(KeyboardWithNumbers.Instance.InputField.text))
                 ThicknessButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text + " mm";
-            StartFollow();
             KeyboardWithNumbers.Instance.OnClosed -= closeKeyboard;
         }
 
         private void editJointSize()
         {
+            Debug.Log("updateTileIndexText");
             showNumbersKeyboard();
             KeyboardWithNumbers.Instance.OnTextSubmitted += acceptJointSizeFromKeyboard;
             KeyboardWithNumbers.Instance.OnClosed += closeKeyboard;
@@ -491,15 +505,16 @@ namespace HoloLensPlanner
 
         private void acceptJointSizeFromKeyboard(object sender, EventArgs e)
         {
+            Debug.Log("updateTileIndexText");
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptJointSizeFromKeyboard;
             if (!string.IsNullOrEmpty(KeyboardWithNumbers.Instance.InputField.text))
                 JointSizeButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text + " mm";
-            StartFollow();
             KeyboardWithNumbers.Instance.OnClosed -= closeKeyboard;
         }
 
         private void editName()
         {
+            Debug.Log("updateTileIndexText");
             showAlphaKeyboard();
             KeyboardWithNumbers.Instance.OnTextSubmitted += acceptNameFromKeyboard;
             KeyboardWithNumbers.Instance.OnClosed += closeKeyboard;
@@ -507,26 +522,27 @@ namespace HoloLensPlanner
 
         private void acceptNameFromKeyboard(object sender, EventArgs e)
         {
+            Debug.Log("updateTileIndexText");
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptNameFromKeyboard;
             if (!string.IsNullOrEmpty(KeyboardWithNumbers.Instance.InputField.text))
                 NameButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text;
-            StartFollow();
             KeyboardWithNumbers.Instance.OnClosed -= closeKeyboard;
         }
 
         private void closeKeyboard(object sender, EventArgs e)
         {
+            Debug.Log("updateTileIndexText");
             KeyboardWithNumbers.Instance.OnTextSubmitted -= closeKeyboard;
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptWidthFromKeyboard;
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptHeightFromKeyboard;
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptNameFromKeyboard;
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptJointSizeFromKeyboard;
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptThicknessFromKeyboard;
-            StartFollow();
         }
 
         private void editTexture()
         {
+            Debug.Log("updateTileIndexText");
             TileMenuManager.Instance.showTextureListView();
         }
 
@@ -535,7 +551,7 @@ namespace HoloLensPlanner
         /// </summary>
         private void showNumbersKeyboard()
         {
-            StopFollow();
+            Debug.Log("updateTileIndexText");
             KeyboardWithNumbers.Instance.FollowWithOffset(transform, 0.01f);
             KeyboardWithNumbers.Instance.PresentKeyboard(KeyboardWithNumbers.LayoutType.Number);
         }
@@ -545,13 +561,14 @@ namespace HoloLensPlanner
         /// </summary>
         private void showAlphaKeyboard()
         {
-            StopFollow();
+            Debug.Log("updateTileIndexText");
             KeyboardWithNumbers.Instance.FollowWithOffset(transform, 0.01f);
             KeyboardWithNumbers.Instance.PresentKeyboard(KeyboardWithNumbers.LayoutType.Alpha);
         }
 
         private void acceptKeyboardInput(object sender, EventArgs e)
         {
+            Debug.Log("updateTileIndexText");
             if (m_SelectedButton.Equals(HeightButton))
             {
                 HeightButton.GetComponentInChildren<Text>().text = KeyboardWithNumbers.Instance.InputField.text + " cm";                
@@ -566,11 +583,11 @@ namespace HoloLensPlanner
             }
             KeyboardWithNumbers.Instance.OnTextSubmitted -= acceptKeyboardInput;
             KeyboardWithNumbers.Instance.StopFollow();
-            StartFollow();
         }
 
         private void updateTileIndexText()
         {
+            Debug.Log("updateTileIndexText");
             TileCountText.text = string.Format("{0} / {1}", CurrentTile + 1, TileMenuManager.Instance.SavedTiles.Count);
         }
 
