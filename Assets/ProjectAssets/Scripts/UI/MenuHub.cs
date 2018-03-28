@@ -24,6 +24,12 @@ namespace HoloLensPlanner
         private Button PinButton;
 
         /// <summary>
+        /// Image background when hub is pinned for additional visual cue.
+        /// </summary>
+        [SerializeField]
+        private Image PinnedBackground;
+
+        /// <summary>
         /// Reference to the current active menu from the menu list.
         /// </summary>
         public GameObject CurrentMenu { get; private set; }
@@ -85,7 +91,7 @@ namespace HoloLensPlanner
             m_Pinned = true;
             m_Tagalong.enabled = false;
             PinButton.transform.localEulerAngles = m_PinLockedRotation;
-
+            PinnedBackground.gameObject.SetActive(true);
         }
 
         /// <summary>
@@ -96,6 +102,7 @@ namespace HoloLensPlanner
             m_Pinned = false;
             m_Tagalong.enabled = true;
             PinButton.transform.localEulerAngles = m_PinIdleRotation;
+            PinnedBackground.gameObject.SetActive(false);
         }
 
         /// <summary>
