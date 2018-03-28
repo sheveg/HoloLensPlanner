@@ -403,7 +403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WarningText: {fileID: 114727049660048168}
-  TutorialText: {fileID: 0}
+  TutorialText: {fileID: 114298851667334434}
 --- !u!114 &114960694560078708
 MonoBehaviour:
   m_ObjectHideFlags: 1

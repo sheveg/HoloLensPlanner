@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace HoloLensPlanner
 {
-    public class TextManager : Singleton<TextManager>
+    public class TextManager : SingleInstance<TextManager>
     {
         [SerializeField]
         private Text WarningText;

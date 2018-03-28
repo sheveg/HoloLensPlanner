@@ -12,7 +12,7 @@ namespace HoloLensPlanner
     /// <summary>
     /// RoomManager holds a reference of the current room the user is in. Provides functions to create a <see cref="RoomPlane"/>. 
     /// </summary>
-    public class RoomManager : Singleton<RoomManager>, IInputClickHandler, IHoldHandler
+    public class RoomManager : SingleInstance<RoomManager>, IInputClickHandler, IHoldHandler
     {
         [SerializeField]
         private RoomPlane RoomPlanePrefab;

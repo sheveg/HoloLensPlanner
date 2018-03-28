@@ -9,7 +9,7 @@ namespace HoloLensPlanner
     /// <summary>
     /// Manages all geometries in the scene
     /// </summary>
-    public class PolygonManager : Singleton<PolygonManager>, IPolygonClosable
+    public class PolygonManager : SingleInstance<PolygonManager>, IPolygonClosable
     {
         public PolygonLine LinePrefab;
         public PolygonPoint PointPrefab;
