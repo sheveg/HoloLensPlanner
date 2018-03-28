@@ -155,12 +155,18 @@ namespace HoloLensPlanner
 
         public void CreateTileFloor(TileData tileData)
         {
-            InputManager.Instance.PushModalInputHandler(gameObject);
+            StartCoroutine(createTileFloorInternal(tileData));           
+        }
+
+        private IEnumerator createTileFloorInternal(TileData tileData)
+        {
             SpawnPointInstruction.gameObject.SetActive(true);
             m_State = TilesGeneratorState.ChooseSpawn;
             m_RaycastPlane = new UnityEngine.Plane();
             m_RaycastPlane.SetNormalAndPosition(Vector3.up, RoomManager.Instance.Floor.transform.position);
             m_CurrentTile = tileData;
+            yield return null;
+            InputManager.Instance.PushModalInputHandler(gameObject);
         }
 
         /// <summary>
