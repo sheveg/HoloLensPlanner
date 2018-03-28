@@ -485,6 +485,20 @@ namespace HoloLensPlanner
             }
         }
 
+        private bool isPlaneFocused()
+        {
+            foreach (var point in RoomManager.Instance.Floor.MeshPolygon.Points)
+            {
+                var viewPortPosition = CameraCache.Main.WorldToViewportPoint(point.transform.position);
+                // if one point is seeable by the camera then the plane itself is focused
+                if (!(viewPortPosition.x > 1f || viewPortPosition.x < 0f) && (viewPortPosition.y > 1f || viewPortPosition.y < 0f))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// Returns the neareast point from the intersection point between the gaze forward vector and the floor plane.
         /// </summary>
