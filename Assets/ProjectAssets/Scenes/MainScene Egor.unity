@@ -628,6 +628,48 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1455420075706910, guid: dc9199e55b3904f4983e08de9bd38cf5, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1350586124985538, guid: dc9199e55b3904f4983e08de9bd38cf5, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1148883703931690, guid: dc9199e55b3904f4983e08de9bd38cf5, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224007271773244436, guid: dc9199e55b3904f4983e08de9bd38cf5,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 114420903039498816, guid: dc9199e55b3904f4983e08de9bd38cf5,
+        type: 2}
+      propertyPath: m_FontData.m_Alignment
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 224007271773244436, guid: dc9199e55b3904f4983e08de9bd38cf5,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114420903039498816, guid: dc9199e55b3904f4983e08de9bd38cf5,
+        type: 2}
+      propertyPath: m_FontData.m_AlignByGeometry
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114420903039498816, guid: dc9199e55b3904f4983e08de9bd38cf5,
+        type: 2}
+      propertyPath: m_FontData.m_VerticalOverflow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114420903039498816, guid: dc9199e55b3904f4983e08de9bd38cf5,
+        type: 2}
+      propertyPath: m_Text
+      value: 10 cm
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dc9199e55b3904f4983e08de9bd38cf5, type: 2}
   m_IsPrefabParent: 0
