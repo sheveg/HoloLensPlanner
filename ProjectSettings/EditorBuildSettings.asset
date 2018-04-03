@@ -5,30 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 6224c6a981da8434689340db1ae25813
-  - enabled: 0
-    path: Assets/HoloToolkit-Examples/SpatialUnderstanding/Scenes/SpatialUnderstandingExample.unity
-    guid: 7ecf1c34f0ac4b4449076e91efc011be
-  - enabled: 0
-    path: Assets/HoloToolkit-Examples/GazeRuler/Scenes/GazeRulerExample.unity
-    guid: 5cfd18f07ba96e54eb82e85707f53c58
-  - enabled: 0
-    path: Assets/ProjectAssets/FliesenScene.unity
-    guid: 7d821e914ef65b24cba6ccbecd3e71e5
-  - enabled: 0
-    path: Assets/ProjectAssets/Scenes/StartScene.unity
-    guid: 5d8f00ce697015c4dba52d0ef6154bdb
-  - enabled: 0
-    path: Assets/ProjectAssets/Scenes/MainScene.unity
-    guid: 51cc8d52895c94245b7b83c57214f605
-  - enabled: 0
-    path: Assets/ProjectAssets/Scenes/StartScene Egor.unity
-    guid: b87395a1d7d13884a85dac66cdb5a503
   - enabled: 1
-    path: Assets/ProjectAssets/Scenes/MainScene Egor.unity
-    guid: 8aea13d4123b3f341bff493c98052716
-  - enabled: 0
-    path: Assets/ProjectAssets/Scenes/MainScene_Fabi.unity
-    guid: b94d32a0a7141e740bd702dcfeb0263d
+    path: Assets/Scenes/MainScene.unity
+    guid: fe0577b27717a724298e9ba9752c8a3c
