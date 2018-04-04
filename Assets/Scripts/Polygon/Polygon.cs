@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HoloLensPlanner.Utilities;
 
 namespace HoloLensPlanner
 {
@@ -13,6 +14,8 @@ namespace HoloLensPlanner
         /// Points representing the polygon.
         /// </summary>
         public List<PolygonPoint> Points { get; set; }
+
+
 
         /// <summary>
         /// Helper variable to check whether the polygon is done.
@@ -42,7 +45,19 @@ namespace HoloLensPlanner
         /// <summary>
         /// Average center of the polygon.
         /// </summary>
-        public Vector3 Center { get { return calculateCenter(); } }
+        public Vector3 Center {
+            get
+            {
+                if (!m_Center.HasValue)
+                    m_Center = calculateCenter();
+                return m_Center.Value;
+            }
+        }
+
+        /// <summary>
+        /// Cached center reference.
+        /// </summary>
+        private Vector3? m_Center;
 
         private void Awake()
         {

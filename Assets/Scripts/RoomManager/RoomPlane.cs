@@ -21,6 +21,42 @@ namespace HoloLensPlanner
 
         public PlaneType Type { get; private set; }
 
+        /// <summary>
+        /// Area of the RoomPlane. (Default value: -1)
+        /// </summary>
+        public float Area
+        {
+            get
+            {
+                if (m_Area < 0f)
+                    m_Area = calculateArea();
+                return m_Area;
+            }
+        }
+
+        /// <summary>
+        /// Perimeter of the RoomPlane. (Default value: -1)
+        /// </summary>
+        public float Perimeter
+        {
+            get
+            {
+                if (m_Perimeter < 0f)
+                    m_Perimeter = calculatePerimeter();
+                return m_Perimeter;
+            }
+        }
+
+        /// <summary>
+        /// Cached variable of the area.
+        /// </summary>
+        private float m_Area = -1f;
+
+        /// <summary>
+        /// Cached variable of the perimeter.
+        /// </summary>
+        private float m_Perimeter = -1f;
+
         private Material m_MaterialCopy;
 
         private MeshFilter m_MeshFilter;
@@ -77,6 +113,39 @@ namespace HoloLensPlanner
             MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
             m_MaterialCopy = new Material(Material);
             meshRenderer.material = m_MaterialCopy;
+        }
+
+        /// <summary>
+        /// Returns the polygon points in local space.
+        /// </summary>
+        /// <returns></returns>
+        private List<Vector2> getLocalSpacePolygonPoints()
+        {
+            List<Vector2> localSpacePoints = new List<Vector2>();
+            foreach (var point in MeshPolygon.Points)
+            {
+                var localPoint3DSpace = transform.InverseTransformPoint(point.transform.position);
+                localSpacePoints.Add(new Vector2(localPoint3DSpace.x, localPoint3DSpace.z));
+            }
+            return localSpacePoints;
+        }
+
+        /// <summary>
+        /// Returns the area of the polygon.
+        /// </summary>
+        /// <returns></returns>
+        private float calculateArea()
+        {
+            return MathUtility.GetPolygonArea(getLocalSpacePolygonPoints());
+        }
+
+        /// <summary>
+        /// Returns the perimeter of the polygon.
+        /// </summary>
+        /// <returns></returns>
+        private float calculatePerimeter()
+        {
+            return MathUtility.GetPolygonPerimeter(getLocalSpacePolygonPoints());
         }
     }
 }

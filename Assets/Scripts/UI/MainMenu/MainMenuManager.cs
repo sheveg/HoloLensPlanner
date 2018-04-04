@@ -9,7 +9,7 @@ namespace HoloLensPlanner
     public class MainMenuManager : SingleInstance<MainMenuManager>
     {
         [SerializeField]
-        private Button CreateFloorButton;
+        private Button ShowFloorMenuButton;
 
         [SerializeField]
         private Button ShowTileMenuButton;
@@ -21,15 +21,14 @@ namespace HoloLensPlanner
 
         private void Start()
         {
-            CreateFloorButton.onClick.AddListener(createFloor);
+            ShowFloorMenuButton.onClick.AddListener(showFloorMenu);
             ShowTileMenuButton.onClick.AddListener(showTileMenu);
             ShowObjectMenuButton.onClick.AddListener(showObjectMenu);
         }
 
-        private void createFloor()
+        private void showFloorMenu()
         {
-            MenuHub.Instance.Pin();
-            RoomManager.Instance.CreateFloorPlane();
+            MenuHub.Instance.ShowMenu(FloorMenuManager.Instance.gameObject);
         }
 
         private void showObjectMenu()
