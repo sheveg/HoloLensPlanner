@@ -43,7 +43,7 @@ namespace HoloLensPlanner
         public GameObject Ceiling { get; private set; }
         public List<GameObject> Walls { get; private set; }
 
-        private const string createFloorTutorialText = "Click to place the corners of the floor. Click and hold to create the floor.";
+        private const string createFloorTutorialText = "Click to place the corners of the floor.\n\nClick and hold to create the floor.\n\nClick on a created point to delete it.";
 
         private IEnumerator m_TimerAnimation;
         private bool m_HoldFinished;
@@ -162,6 +162,8 @@ namespace HoloLensPlanner
                 // so it should consist of points approx. on the same plane
                 case PlaneType.Floor:
                     roomPlane = createFloor(polygon.Center);
+                    roomPlane.Setup(polygon, CurrentPlaneType.Value);
+                    FloorTransformOperator.Instance.Create();
                     break;
                 case PlaneType.Ceiling:
                 case PlaneType.Wall:
@@ -169,13 +171,11 @@ namespace HoloLensPlanner
                     break;
             }
             if (roomPlane == null)
-                return;
-
-            roomPlane.Setup(polygon, CurrentPlaneType.Value);
+                return;           
             CurrentPlaneType = null;
             InputManager.Instance.PopModalInputHandler();
             TextManager.Instance.HideTutorial();
-            MenuHub.Instance.ShowMenu(MainMenuManager.Instance.gameObject);
+            MenuHub.Instance.ShowDefaultMenu();
             if (SpatialMappingManager.IsInitialized)
             {
                 SpatialMappingManager.Instance.DrawVisualMeshes = false;

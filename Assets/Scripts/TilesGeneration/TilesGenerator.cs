@@ -387,7 +387,7 @@ namespace HoloLensPlanner
                     TextManager.Instance.ShowWarning("Oops, something went wrong, try again!", 3f);
                 }
                 reset();
-                MenuHub.Instance.ShowMenu(MainMenuManager.Instance.gameObject);
+                MenuHub.Instance.ShowDefaultMenu();
             }
             else
                 TextManager.Instance.ShowWarning("No direction point chosen for the tiles!");

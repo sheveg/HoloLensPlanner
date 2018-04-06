@@ -13,8 +13,7 @@ namespace HoloLensPlanner
         /// <summary>
         /// Scale value for the scale event.
         /// </summary>
-        [SerializeField]
-        private float FocusScale = 1.2f;
+        public float FocusScale = 1.2f;
 
         /// <summary>
         /// Helper variable to determine whether the object is focused.

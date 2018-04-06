@@ -68,12 +68,6 @@ namespace HoloLensPlanner
         [SerializeField]
         private Button NewTileButton;
 
-        /// <summary>
-        /// Button to hide this view.
-        /// </summary>
-        [SerializeField]
-        private Button CloseButton;
-
         #endregion // Editor variables
 
         public List<TileData> SavedTiles { get { return m_SavedTiles; } }
@@ -95,7 +89,6 @@ namespace HoloLensPlanner
             ShowDetailViewButton.onClick.AddListener(showDetailView);
             ShowListViewButton.onClick.AddListener(showListView);
             NewTileButton.onClick.AddListener(createTile);
-            CloseButton.onClick.AddListener( () => MenuHub.Instance.ShowMenu(MainMenuManager.Instance.gameObject) );
 
             TileMenuListView.Instance.gameObject.SetActive(true);
             TileMenuDetailView.Instance.gameObject.SetActive(false);

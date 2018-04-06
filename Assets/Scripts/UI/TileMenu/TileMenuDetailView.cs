@@ -262,7 +262,7 @@ namespace HoloLensPlanner
         {        
             if (RoomManager.Instance.Floor != null)
             {
-                MenuHub.Instance.ShowMenu(MainMenuManager.Instance.gameObject);
+                MenuHub.Instance.ShowDefaultMenu();
                 TilesGenerator.Instance.CreateTileFloor(TileMenuManager.Instance.SavedTiles[CurrentTile]);
             }
             else
