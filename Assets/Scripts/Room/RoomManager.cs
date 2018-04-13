@@ -43,7 +43,7 @@ namespace HoloLensPlanner
         public GameObject Ceiling { get; private set; }
         public List<GameObject> Walls { get; private set; }
 
-        private const string createFloorTutorialText = "Click to place the corners of the floor.\n\nClick and hold to create the floor.\n\nClick on a created point to delete it.";
+        private const string createFloorTutorialText = "Klicken Sie im Raum um Eckpunkte zu setzen.\n\nKlicken Sie auf einen Eckpunkt um ihn zu löschen.\n\nZur Bestätigung klicken und halten.";
 
         private IEnumerator m_TimerAnimation;
         private bool m_HoldFinished;
@@ -88,7 +88,7 @@ namespace HoloLensPlanner
             }
             else
             {
-                TextManager.Instance.ShowWarning("You need at least four points to create a floor!");
+                TextManager.Instance.ShowWarning("Sie brauchen mindestens 4 Punkte um den Boden zu erstellen!");
             }
         }
 

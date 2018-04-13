@@ -267,7 +267,7 @@ namespace HoloLensPlanner
             }
             else
             {
-                TextManager.Instance.ShowWarning("You need to create a floor first!");
+                TextManager.Instance.ShowWarning("Sie müssen zuerst einen Boden erstellen!");
             }
         }
 

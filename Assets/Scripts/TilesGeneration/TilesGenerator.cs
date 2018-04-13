@@ -375,7 +375,7 @@ namespace HoloLensPlanner
                 DirectionPointInstruction.gameObject.SetActive(true);
             }
             else
-                TextManager.Instance.ShowWarning("No spawn point chosen for the tiles!");
+                TextManager.Instance.ShowWarning("Kein Ausgangspunkt ausgewählt!");
         }
 
         private void handleDirectionPointCase()
@@ -384,13 +384,13 @@ namespace HoloLensPlanner
             {
                 if (!createTileFloorInternal(m_CurrentTile, RoomManager.Instance.Floor, m_CurrentSpawnPoint, m_CurrentDirectionPoint))
                 {
-                    TextManager.Instance.ShowWarning("Oops, something went wrong, try again!", 3f);
+                    TextManager.Instance.ShowWarning("Oops, versuchen Sie es nochmal!", 3f);
                 }
                 reset();
                 MenuHub.Instance.ShowDefaultMenu();
             }
             else
-                TextManager.Instance.ShowWarning("No direction point chosen for the tiles!");
+                TextManager.Instance.ShowWarning("Kein Richtungspunkt ausgewählt!");
         }
 
         private void goBackToSpawnState()

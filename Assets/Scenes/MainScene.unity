@@ -327,6 +327,46 @@ Prefab:
       propertyPath: EditBackground
       value: 
       objectReference: {fileID: 568868862}
+    - target: {fileID: 114414920261542334, guid: fa717c05b92dc1f44b5da839e69a83d0,
+        type: 2}
+      propertyPath: m_Text
+      value: Auf das Plus Symbol klicken um einen neuen Boden zu erstellen.
+      objectReference: {fileID: 0}
+    - target: {fileID: 114414920261542334, guid: fa717c05b92dc1f44b5da839e69a83d0,
+        type: 2}
+      propertyPath: m_FontData.m_FontSize
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 114414920261542334, guid: fa717c05b92dc1f44b5da839e69a83d0,
+        type: 2}
+      propertyPath: m_FontData.m_MinSize
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114619985680243072, guid: fa717c05b92dc1f44b5da839e69a83d0,
+        type: 2}
+      propertyPath: m_Text
+      value: "Boden Men\xFC"
+      objectReference: {fileID: 0}
+    - target: {fileID: 114019731780695318, guid: fa717c05b92dc1f44b5da839e69a83d0,
+        type: 2}
+      propertyPath: m_Text
+      value: "Fliesen Men\xFC"
+      objectReference: {fileID: 0}
+    - target: {fileID: 114607508179797270, guid: fa717c05b92dc1f44b5da839e69a83d0,
+        type: 2}
+      propertyPath: m_Text
+      value: Obenansicht
+      objectReference: {fileID: 0}
+    - target: {fileID: 114752096375153754, guid: fa717c05b92dc1f44b5da839e69a83d0,
+        type: 2}
+      propertyPath: m_Text
+      value: Neue Fliese erstellen!
+      objectReference: {fileID: 0}
+    - target: {fileID: 114678039514701790, guid: fa717c05b92dc1f44b5da839e69a83d0,
+        type: 2}
+      propertyPath: m_Text
+      value: Namen hier eingeben
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fa717c05b92dc1f44b5da839e69a83d0, type: 2}
   m_IsPrefabParent: 0
@@ -400,7 +440,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Choose a floor point for the direction
+  m_Text: "Richtungspunkt ausw\xE4hlen um die Kante zu best\xE4tigen!"
 --- !u!222 &68315502
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -626,16 +666,19 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Click on the floor or on the points to change their position.
-
-
-    Air tap on the edit icon to deactivate the edit mode again.'
+  m_Text: "Klicken Sie auf den Boden oder die Eckpunkte um sie zu bearbeiten.\n\nAuf
+    das Stift Symbol klicken um die Bearbeitung zu best\xE4tigen."
 --- !u!222 &283696101
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 283696098}
+--- !u!224 &286926006 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 224083770706198200, guid: 3587292718fbe254eb691e2c3bb8587d,
+    type: 2}
+  m_PrefabInternal: {fileID: 1157097547}
 --- !u!1 &386981187
 GameObject:
   m_ObjectHideFlags: 0
@@ -839,6 +882,74 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &401304471
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 401304472}
+  - component: {fileID: 401304474}
+  - component: {fileID: 401304473}
+  m_Layer: 5
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &401304472
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 401304471}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -19.99998}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 286926006}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -325.98114}
+  m_SizeDelta: {x: 800, y: 130}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &401304473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 401304471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &401304474
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 401304471}
 --- !u!1 &500700224
 GameObject:
   m_ObjectHideFlags: 0
@@ -909,7 +1020,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Choose a floor point as the spawn point
+  m_Text: "Eckpunkt als Ausgangspunkt ausw\xE4hlen!"
 --- !u!222 &500700227
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1086,10 +1197,10 @@ RectTransform:
   m_Father: {fileID: 756698436}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 60, y: 60}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &720072972
 MonoBehaviour:
@@ -1254,8 +1365,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 6.5, y: -61.000835}
-  m_SizeDelta: {x: 60, y: 60}
+  m_AnchoredPosition: {x: 6.5, y: -70}
+  m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1025842189
 GameObject:
@@ -1696,10 +1807,10 @@ RectTransform:
   m_Father: {fileID: 756698436}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00076081604, y: 0.0000027790666}
-  m_SizeDelta: {x: 60, y: 60}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1432857902
 MonoBehaviour:
@@ -1721,8 +1832,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 1f4641809b047df48954f63a9cca92d0, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 5ad7fd46eb302f541a172e462feab5fb, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

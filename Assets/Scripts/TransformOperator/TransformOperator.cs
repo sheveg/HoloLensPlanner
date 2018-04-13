@@ -45,12 +45,9 @@ namespace HoloLensPlanner
         [SerializeField]
         private TransformButton Button_Z_Neg;
 
-        private BoxCollider m_Collider;
-
         private void Awake()
         {
-            m_Collider = GetComponent<BoxCollider>();
-            m_Collider.enabled = false;
+            GetComponent<BoxCollider>().enabled = false;
         }
 
         public void AttachToTarget(Transform target, bool xEnabled, bool yEnabled, bool zEnabled, TransformPosition position)
@@ -103,7 +100,7 @@ namespace HoloLensPlanner
 
         private void positionAboveTarget(Transform target)
         {
-            transform.position = target.transform.position + Vector3.up * m_Collider.size.y;
+            transform.position = target.transform.position + Vector3.up * GetComponent<BoxCollider>().size.y * transform.localScale.y;
         }
 
         private void positionCenteredToTarget(Transform target)

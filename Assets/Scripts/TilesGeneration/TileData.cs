@@ -89,7 +89,7 @@ namespace HoloLensPlanner
         public const float DefaultTileThicknessInMM = 8f;
         public const float DefaultJointThicknessInMM = 2f;
         public const int DefaultTextureIndex = 0;
-        public const string DefaultName = "New Tile";
+        public const string DefaultName = "Neue Fliese";
 
         public TileData()
         {

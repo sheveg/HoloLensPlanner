@@ -25,6 +25,7 @@ namespace HoloLensPlanner
             m_TransformOperators.Clear();
             m_LastTransformOperator = null;
             var transformOperator = Instantiate(TranformOperatorPrefab);
+            transformOperator.transform.localScale *= 0.5f;
             transformOperator.AttachToTarget(RoomManager.Instance.Floor.transform, false, true, false, TransformPosition.Above);
             transformOperator.gameObject.SetActive(false);
             m_TransformOperators.Add(RoomManager.Instance.Floor.gameObject, transformOperator);
@@ -38,22 +39,6 @@ namespace HoloLensPlanner
             }
             m_Initialized = true;
         }
-
-        //public void Show(GameObject g)
-        //{
-        //    if (!m_Initialized || !m_TransformOperators.ContainsKey(g) )
-        //        return;
-
-        //    m_TransformOperators[g].gameObject.SetActive(true);
-        //}
-
-        //public void Hide(GameObject g)
-        //{
-        //    if (!m_Initialized || !m_TransformOperators.ContainsKey(g) )
-        //        return;
-
-        //    m_TransformOperators[g].gameObject.SetActive(false);
-        //}
 
         public void ChangeState(GameObject g)
         {
