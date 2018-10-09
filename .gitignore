@@ -1,5 +1,6 @@
 ### Added for default HoloLens Build directory###
 /UWP/
+/App
 
 # Created by https://www.gitignore.io/api/unity,visualstudio
 
