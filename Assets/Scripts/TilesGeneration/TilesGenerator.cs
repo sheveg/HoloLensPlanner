@@ -104,6 +104,11 @@ namespace HoloLensPlanner
         /// </summary>
         private bool m_IsUIFocused;
 
+        /// <summary>
+        /// Holds number of visible tiles.
+        /// </summary>
+        public int numberOfVisibleTiles = 0;
+
         private void Start()
         {
             //CancelSpawn.onClick.AddListener(reset);
@@ -224,6 +229,7 @@ namespace HoloLensPlanner
             // create a parent object for all the tiles
             var tilePlane = new GameObject("TilePlane");
             tilePlane.transform.position = roomPlane.MeshPolygon.Center;
+            tilePlane.AddComponent<TiledPlane>();
 
             var jointSize = tileData.JointSize * 0.5f;
             var tileWidth = (tileData.Width + jointSize);
@@ -250,6 +256,7 @@ namespace HoloLensPlanner
                 {
                     Vector3 offset = i * tileHeight * minXminZ_Point.transform.forward + j * tileWidth * minXminZ_Point.transform.right;
                     var currentTile = Instantiate(DefaultTilePrefab, startPosition + offset, minXminZ_Point.transform.rotation);
+                    tilePlane.GetComponent<TiledPlane>().tiles.Add(currentTile);
                     currentTile.transform.parent = tilePlane.transform;
                     currentTile.LinkTile(tileData);
                 }
@@ -356,6 +363,8 @@ namespace HoloLensPlanner
             FinishedTileFloor.transform.position = tilePlane.transform.position;
             tilePlane.transform.parent = FinishedTileFloor.transform;
             maskPlane.transform.parent = FinishedTileFloor.transform;
+
+            markVisibleTiles(roomPlane, tilePlane.GetComponent<TiledPlane>().tiles);
 
             // cleanup
             Destroy(minXminZ_Point);
@@ -527,6 +536,75 @@ namespace HoloLensPlanner
                 return RoomManager.Instance.Floor.MeshPolygon.Points[minDistanceIndex].transform;
             }
             else return null;
+        }
+
+        /// <summary>
+        /// Marks tiles as visible, if they are visible on the floor
+        /// Helps to count needed tiles
+        /// </summary>
+        /// <param name="plane"></param>
+        /// <param name="tiles"></param>
+        /// <returns></returns>
+        private void markVisibleTiles(RoomPlane plane, List<TileObject> tiles)
+        {
+            var planePoints = plane.MeshPolygon.Points;
+            Vector2[] points = new Vector2[planePoints.Count];
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i] = new Vector2(planePoints[i].transform.position.x, planePoints[i].transform.position.z);
+            }
+
+            foreach (var tile in tiles)
+            {
+                // get all 4 corners of the tile
+                var tileBounds = tile.GetComponent<Renderer>().bounds;
+
+                Vector2 tileCorner1 = new Vector2(tileBounds.min.x, tileBounds.min.z);
+                Vector2 tileCorner2 = new Vector2(tileBounds.max.x, tileBounds.max.z);
+                Vector2 tileCorner3 = new Vector2(tileBounds.min.x, tileBounds.max.z);
+                Vector2 tileCorner4 = new Vector2(tileBounds.max.x, tileBounds.min.z);
+
+                // check if one of the corners is inside the polynom
+                if (MathUtility.IsPointInPolygon(tileCorner1, points))
+                {
+                    tile.Visible = true;
+                }
+                if (MathUtility.IsPointInPolygon(tileCorner2, points))
+                {
+                    tile.Visible = true;
+                }
+                if (MathUtility.IsPointInPolygon(tileCorner3, points))
+                {
+                    tile.Visible = true;
+                }
+                if (MathUtility.IsPointInPolygon(tileCorner4, points))
+                {
+                    tile.Visible = true;
+                }
+            }
+
+            // saves number of visible tiles in variable
+            numberOfVisibleTiles = countVisibleTiles(tiles);
+        }
+
+        /// <summary>
+        /// Counts number of visible tiles.
+        /// </summary>
+        /// <param name="tiles"></param>
+        /// <returns></returns>
+        private int countVisibleTiles(List<TileObject> tiles)
+        {
+            int count = 0;
+            foreach (var tile in tiles)
+            {
+                if (tile.Visible)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
     }
 }

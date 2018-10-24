@@ -15,6 +15,8 @@ namespace HoloLensPlanner
         [SerializeField]
         private Transform TileJoint;
 
+        public bool Visible = false;
+
         TileData m_Tile;
 
         public void LinkTile(TileData tileData)
@@ -38,6 +40,9 @@ namespace HoloLensPlanner
            
         }
 
-   
+        private void OnTriggerEnter(Collider other)
+        {
+            Visible = true;
+        }
     }
 }

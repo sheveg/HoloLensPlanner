@@ -103,5 +103,52 @@ namespace HoloLensPlanner.Utilities
             }
             return temp;
         }
+
+        public static bool ContainsPoint(Vector3[] polyPoints, Vector3 p)
+        { 
+            var j = polyPoints.Length - 1;
+            var inside = false; 
+
+            for (int i = 0; i < polyPoints.Length; j = i++)
+            { 
+                if (((polyPoints[i].z <= p.z && p.y<polyPoints[j].z) || (polyPoints[j].z <= p.z && p.y<polyPoints[i].z)) && 
+                    (p.x < (polyPoints[j].x - polyPoints[i].x) * (p.z - polyPoints[i].z) / (polyPoints[j].z - polyPoints[i].z) + polyPoints[i].x))
+                {
+                    inside = !inside;
+
+                }
+            } 
+            return inside;
+        }
+
+        //public static bool IsInPolygon(this PolygonPoint testPoint, Polygon polygon)
+        //{
+        //    if (polygon.Points.Count < 3) return false;
+        //    bool isInPolygon = false;
+        //    var lastVertex = polygon.Points[polygon.Points.Count - 1];
+        //    foreach (var vertex in polygon.Points)
+        //    {
+        //        if (testPoint.transform.position.y.IsBetween(lastVertex.transform.position.y, vertex.transform.position.y))
+        //        {
+        //            double t = (testPoint.transform.position.y - lastVertex.transform.position.y) / (vertex.transform.position.y - lastVertex.transform.position.y);
+        //            double x = t * (vertex.transform.position.x - lastVertex.transform.position.x) + lastVertex.transform.position.x;
+        //            if (x >= testPoint.transform.position.x) isInPolygon = !isInPolygon;
+        //        }
+        //        else
+        //        {
+        //            if (testPoint.transform.position.y == lastVertex.transform.position.y && testPoint.transform.position.x < lastVertex.transform.position.x && vertex.transform.position.y > testPoint.transform.position.y) isInPolygon = !isInPolygon;
+        //            if (testPoint.transform.position.y == vertex.transform.position.y && testPoint.transform.position.x < vertex.transform.position.x && lastVertex.transform.position.y > testPoint.transform.position.y) isInPolygon = !isInPolygon;
+        //        }
+
+        //        lastVertex = vertex;
+        //    }
+
+        //    return isInPolygon;
+        //}
+
+        //public static bool IsBetween(this float x, float a, float b)
+        //{
+        //    return (x - a) * (x - b) < 0;
+        //}
     }
 }

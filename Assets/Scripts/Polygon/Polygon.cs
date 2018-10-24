@@ -15,8 +15,6 @@ namespace HoloLensPlanner
         /// </summary>
         public List<PolygonPoint> Points { get; set; }
 
-
-
         /// <summary>
         /// Helper variable to check whether the polygon is done.
         /// </summary>

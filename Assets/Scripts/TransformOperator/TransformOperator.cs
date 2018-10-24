@@ -22,6 +22,9 @@ namespace HoloLensPlanner
         Centered
     }
 
+    /// <summary>
+    /// TransformOperator is used to move the corners of the floor plane or the floor plane itself
+    /// </summary>
     [RequireComponent(typeof(BoxCollider))]
     public class TransformOperator : InteractionReceiver
     {

@@ -40,6 +40,12 @@ namespace HoloLensPlanner
         private Text PerimeterText;
 
         /// <summary>
+        /// Text to display the number of tiles of the current floor.
+        /// </summary>
+        [SerializeField]
+        private Text NumberOfTilesText;
+
+        /// <summary>
         /// Top view image of the current floor.
         /// </summary>
         [SerializeField]
@@ -99,12 +105,16 @@ namespace HoloLensPlanner
             createFloorImage();
             updateAreaText();
             updatePerimeterText();
+            updateNumberOfTilesText();
         }
 
         private void createFloor()
         {
             MenuHub.Instance.Pin();
             RoomManager.Instance.CreateFloorPlane();
+
+            // set number of tiles to 0
+            TilesGenerator.Instance.numberOfVisibleTiles = 0;
         }
 
         private void editFloor()
@@ -203,6 +213,12 @@ namespace HoloLensPlanner
         {
             if (RoomManager.Instance.Floor != null)
                 PerimeterText.text = RoomManager.Instance.Floor.Perimeter.ToString("n2") + " m";
+        }
+
+        private void updateNumberOfTilesText()
+        {
+            if (RoomManager.Instance.Floor != null)
+                NumberOfTilesText.text = TilesGenerator.Instance.numberOfVisibleTiles.ToString("n0") + " tiles";
         }
     }
 }
