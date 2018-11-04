@@ -121,34 +121,34 @@ namespace HoloLensPlanner.Utilities
             return inside;
         }
 
-        //public static bool IsInPolygon(this PolygonPoint testPoint, Polygon polygon)
-        //{
-        //    if (polygon.Points.Count < 3) return false;
-        //    bool isInPolygon = false;
-        //    var lastVertex = polygon.Points[polygon.Points.Count - 1];
-        //    foreach (var vertex in polygon.Points)
-        //    {
-        //        if (testPoint.transform.position.y.IsBetween(lastVertex.transform.position.y, vertex.transform.position.y))
-        //        {
-        //            double t = (testPoint.transform.position.y - lastVertex.transform.position.y) / (vertex.transform.position.y - lastVertex.transform.position.y);
-        //            double x = t * (vertex.transform.position.x - lastVertex.transform.position.x) + lastVertex.transform.position.x;
-        //            if (x >= testPoint.transform.position.x) isInPolygon = !isInPolygon;
-        //        }
-        //        else
-        //        {
-        //            if (testPoint.transform.position.y == lastVertex.transform.position.y && testPoint.transform.position.x < lastVertex.transform.position.x && vertex.transform.position.y > testPoint.transform.position.y) isInPolygon = !isInPolygon;
-        //            if (testPoint.transform.position.y == vertex.transform.position.y && testPoint.transform.position.x < vertex.transform.position.x && lastVertex.transform.position.y > testPoint.transform.position.y) isInPolygon = !isInPolygon;
-        //        }
+        /// <summary>
+        /// Gets the coordinates of the intersection point of two lines.
+        /// </summary>
+        /// <param name="A1">A point on the first line.</param>
+        /// <param name="A2">Another point on the first line.</param>
+        /// <param name="B1">A point on the second line.</param>
+        /// <param name="B2">Another point on the second line.</param>
+        /// <param name="found">Is set to false of there are no solution. true otherwise.</param>
+        /// <returns>The intersection point coordinates. Returns Vector2.zero if there is no solution.</returns>
+        public static Vector2 GetIntersectionPointCoordinates(Vector2 A1, Vector2 A2, Vector2 B1, Vector2 B2, out bool found)
+        {
+            float tmp = (B2.x - B1.x) * (A2.y - A1.y) - (B2.y - B1.y) * (A2.x - A1.x);
 
-        //        lastVertex = vertex;
-        //    }
+            if (tmp == 0)
+            {
+                // No solution!
+                found = false;
+                return Vector2.zero;
+            }
 
-        //    return isInPolygon;
-        //}
+            float mu = ((A1.x - B1.x) * (A2.y - A1.y) - (A1.y - B1.y) * (A2.x - A1.x)) / tmp;
 
-        //public static bool IsBetween(this float x, float a, float b)
-        //{
-        //    return (x - a) * (x - b) < 0;
-        //}
+            found = true;
+
+            return new Vector2(
+                B1.x + (B2.x - B1.x) * mu,
+                B1.y + (B2.y - B1.y) * mu
+            );
+        }
     }
 }

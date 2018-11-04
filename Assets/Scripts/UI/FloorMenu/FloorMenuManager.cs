@@ -218,7 +218,7 @@ namespace HoloLensPlanner
         private void updateNumberOfTilesText()
         {
             if (RoomManager.Instance.Floor != null)
-                NumberOfTilesText.text = TilesGenerator.Instance.numberOfVisibleTiles.ToString("n0") + " tiles";
+                NumberOfTilesText.text = TilesGenerator.Instance.numberOfVisibleTiles.ToString("n0") + " Fliesen";
         }
     }
 }

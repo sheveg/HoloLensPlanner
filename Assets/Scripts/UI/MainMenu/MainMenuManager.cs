@@ -17,13 +17,19 @@ namespace HoloLensPlanner
         [SerializeField]
         private Button ShowObjectMenuButton;
 
+        [SerializeField]
+        private Button AssistantButton;
+
         private const float m_HideAlpha = 0.2f;
+
+        private bool assistantOn = false;
 
         private void Start()
         {
             ShowFloorMenuButton.onClick.AddListener(showFloorMenu);
             ShowTileMenuButton.onClick.AddListener(showTileMenu);
             ShowObjectMenuButton.onClick.AddListener(showObjectMenu);
+            AssistantButton.onClick.AddListener(startAssistant);
         }
 
         private void showFloorMenu()
@@ -39,6 +45,21 @@ namespace HoloLensPlanner
         private void showTileMenu()
         {
             MenuHub.Instance.ShowMenu(TileMenuManager.Instance.gameObject);
+        }
+
+        private void startAssistant()
+        {
+            if (!assistantOn)
+            {
+                MenuHub.Instance.ShowMenu(AssistantManager.Instance.gameObject);
+                AssistantManager.Instance.activate();
+                assistantOn = !assistantOn;
+            }
+            else
+            {
+                AssistantManager.Instance.deactivate();
+                assistantOn = !assistantOn;
+            }
         }
     }
 }

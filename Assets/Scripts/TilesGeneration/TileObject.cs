@@ -13,11 +13,11 @@ namespace HoloLensPlanner
         private Material FaceMaterial;
 
         [SerializeField]
-        private Transform TileJoint;
+        public Transform TileJoint;
 
         public bool Visible = false;
 
-        TileData m_Tile;
+        public TileData m_Tile;
 
         public void LinkTile(TileData tileData)
         {

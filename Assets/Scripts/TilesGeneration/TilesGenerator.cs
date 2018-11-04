@@ -28,6 +28,12 @@ namespace HoloLensPlanner
         private TileObject DefaultTilePrefab;
 
         /// <summary>
+        /// Default joint prefab with 1x1x1m scale.
+        /// </summary>
+        [SerializeField]
+        private GameObject DefaultJointPrefab;
+
+        /// <summary>
         /// Material for the mask.
         /// </summary>
         [SerializeField]
@@ -230,6 +236,12 @@ namespace HoloLensPlanner
             var tilePlane = new GameObject("TilePlane");
             tilePlane.transform.position = roomPlane.MeshPolygon.Center;
             tilePlane.AddComponent<TiledPlane>();
+            AssistantManager.Instance.TilePlane = tilePlane;
+
+            // create a parent object for all the joints
+            var assistantPlane = new GameObject("JointPlane");
+            assistantPlane.transform.position = roomPlane.MeshPolygon.Center;
+            AssistantManager.Instance.JointPlane = assistantPlane;
 
             var jointSize = tileData.JointSize * 0.5f;
             var tileWidth = (tileData.Width + jointSize);
@@ -250,16 +262,19 @@ namespace HoloLensPlanner
             float xOffset = Mathf.Max(tileWidth - Mathf.Repeat(minToSpawn.x, tileWidth), 0.001f);
             float zOffset = Mathf.Max(tileHeight - Mathf.Repeat(minToSpawn.z, tileHeight), 0.001f);
             startPosition -= xOffset * minXminZ_Point.transform.right + zOffset * minXminZ_Point.transform.forward;
-            // place the tiles
+            // place the tiles and joints
             for (int i = 0; i < rows; i++)
+            {
                 for (int j = 0; j < columns; j++)
                 {
+                    // place tiles
                     Vector3 offset = i * tileHeight * minXminZ_Point.transform.forward + j * tileWidth * minXminZ_Point.transform.right;
                     var currentTile = Instantiate(DefaultTilePrefab, startPosition + offset, minXminZ_Point.transform.rotation);
                     tilePlane.GetComponent<TiledPlane>().tiles.Add(currentTile);
                     currentTile.transform.parent = tilePlane.transform;
                     currentTile.LinkTile(tileData);
                 }
+            }
 
             // create the mask plane with has the room plane polygon as a hole
             var maskPlaneVertices = new List<Vector2>();
@@ -309,6 +324,50 @@ namespace HoloLensPlanner
             maskPlane.transform.localScale = new Vector3(1f, -1f, 1f);
             maskPlane.GetComponent<Renderer>().material = DepthMaskMaterial;
 
+            // create joint plane
+            var Pos = (maskBoundaries[0] + maskBoundaries[MathUtility.WrapArrayIndex(0 + 1, maskBoundaries.Count)]) * 0.5f;
+            var Pos2 = (maskBoundaries[3] + maskBoundaries[MathUtility.WrapArrayIndex(3 + 1, maskBoundaries.Count)]) * 0.5f;
+
+            var columnCounter = 0;
+            var rowCounter = 0;
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    if (columnCounter < columns)
+                    {
+                        // place joints
+                        Vector3 offsetColumns = i * tileHeight * minXminZ_Point.transform.forward + j * tileWidth * minXminZ_Point.transform.right;
+                        var currentJointColumn = Instantiate(DefaultJointPrefab, Pos + offsetColumns, minXminZ_Point.transform.rotation);
+
+                        // TODO add joints to assistantManager
+                        currentJointColumn.transform.parent = assistantPlane.transform;
+                        currentJointColumn.transform.localScale = new Vector3(tileData.JointSize, tileData.TileThickness, (maskBoundaries[MathUtility.WrapArrayIndex(1, maskBoundaries.Count)] - maskBoundaries[0]).magnitude - 0.42f);
+
+                        AssistantManager.Instance.verticalJoints.Add(currentJointColumn); 
+
+                        columnCounter++;
+                    }
+
+                    if (rowCounter < rows)
+                    {
+                        // place joints
+                        Vector3 offsetRows = i * tileWidth * minXminZ_Point.transform.right + j * tileHeight * minXminZ_Point.transform.forward;
+                        var currentJointRow = Instantiate(DefaultJointPrefab, Pos2 + offsetRows, minXminZ_Point.transform.rotation);
+
+                        // TODO add joints to assistantManager
+                        currentJointRow.transform.parent = assistantPlane.transform;
+                        currentJointRow.transform.localScale = new Vector3((maskBoundaries[MathUtility.WrapArrayIndex(2, maskBoundaries.Count)] - maskBoundaries[1]).magnitude - 0.22f, tileData.TileThickness, tileData.JointSize);
+
+                        AssistantManager.Instance.horizontalJoints.Add(currentJointRow);
+                        rowCounter++;
+                    }
+                }
+            }
+
+            assistantPlane.gameObject.SetActive(false);
+
             // create mask planes at the outer boundary of the maskplane so we mask the border tile joints as well
             for (int i = 0; i < maskBoundaries.Count; i++)
             {
@@ -331,6 +390,8 @@ namespace HoloLensPlanner
                 jointMaskPlane.name = "jointMaskPlane";
                 jointMaskPlane.transform.parent = maskPlane.transform;
             }
+
+
 
             // create planes at the corner of the roomplane so it looks like these are the tiles ends so we can see the joints from the side
             for (int i = 0; i < roomPlane.MeshPolygon.Points.Count; i++)
@@ -363,6 +424,7 @@ namespace HoloLensPlanner
             FinishedTileFloor.transform.position = tilePlane.transform.position;
             tilePlane.transform.parent = FinishedTileFloor.transform;
             maskPlane.transform.parent = FinishedTileFloor.transform;
+            assistantPlane.transform.parent = FinishedTileFloor.transform;
 
             markVisibleTiles(roomPlane, tilePlane.GetComponent<TiledPlane>().tiles);
 

@@ -187,6 +187,7 @@ namespace HoloLensPlanner
             RoomPlane floor = Instantiate(RoomPlanePrefab, position, Quaternion.identity);
             floor.gameObject.name = "Floor";
             Floor = floor;
+            AssistantManager.Instance.Floor = floor;
             return floor;
 
         }
